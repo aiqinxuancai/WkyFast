@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <FontFamily x:Key="DefaultFont">Microsoft Yahei UI,Segoe UI, Lucida Sans Unicode, Verdana</FontFamily>
+    <FontFamily x:Key="HeaderFontFamily">Microsoft Yahei UI,Segoe UI Light, Lucida Sans Unicode, Verdana</FontFamily>
+    <FontFamily x:Key="ContentFontFamily">Microsoft Yahei UI,Segoe UI, Lucida Sans Unicode, Verdana</FontFamily>
+    <FontFamily x:Key="ToggleSwitchFontFamily">Microsoft Yahei UI,Segoe UI Semibold, Segoe UI, Lucida Sans Unicode, Verdana</FontFamily>
+    <FontFamily x:Key="ToggleSwitchHeaderFontFamily">Microsoft Yahei UI,Segoe UI Semibold, Segoe UI, Lucida Sans Unicode, Verdana</FontFamily>
+
+
+    <FontFamily x:Key="MahApps.Fonts.Family.Button">Microsoft Yahei UI,Segoe UI, Lucida Sans Unicode, Verdana</FontFamily>
+    <FontFamily x:Key="MahApps.Fonts.Family.Header">Microsoft Yahei UI,Segoe UI Light, Lucida Sans Unicode, Verdana</FontFamily>
+    <FontFamily x:Key="MahApps.Fonts.Family.Window.Title">Microsoft Yahei UI,Segoe UI Light, Lucida Sans Unicode, Verdana</FontFamily>
+    <FontFamily x:Key="MahApps.Fonts.Family.Control">Microsoft Yahei UI,Segoe UI, Lucida Sans Unicode, Verdana</FontFamily>
+    <FontFamily x:Key="MahApps.Fonts.Family.ToggleSwitch">Microsoft Yahei UI,Segoe UI, Lucida Sans Unicode, Verdana</FontFamily>
+    <FontFamily x:Key="MahApps.Fonts.Family.ToggleSwitch.Header">Microsoft Yahei UI,Segoe UI, Lucida Sans Unicode, Verdana</FontFamily>
+
+</ResourceDictionary>
