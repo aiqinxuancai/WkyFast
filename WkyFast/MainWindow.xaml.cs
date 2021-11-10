@@ -1,6 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -15,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WkyFast.View.Model;
 
 namespace WkyFast
 {
@@ -49,11 +51,36 @@ namespace WkyFast
         {
             InitializeComponent();
 
+
+            LoadWin11Style();
+            LoadMainTabView();
+
+            //支持选中？
+            //默认加载第一个？的面板？
+        }
+
+        public void LoadWin11Style()
+        {
             //win11
             IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
             var attribute = DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE;
             var preference = DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
             DwmSetWindowAttribute(hWnd, attribute, ref preference, sizeof(uint));
+        }
+
+        public void LoadMainTabView()
+        {
+            ObservableCollection<MainTabItemModel> model = new ObservableCollection<MainTabItemModel>();
+            model.Add(new MainTabItemModel() { Title = "下载列表" });
+            model.Add(new MainTabItemModel() { Title = "订阅列表" });
+            WkyMainTabView.ViewModel = model;
+            WkyMainTabView.OnConfigSelected += WkyMainTabView_OnConfigSelected;
+        }
+
+
+        private void WkyMainTabView_OnConfigSelected(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
