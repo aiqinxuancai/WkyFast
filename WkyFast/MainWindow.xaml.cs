@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WkyFast.Utils;
 using WkyFast.View.Model;
 
 namespace WkyFast
@@ -25,48 +26,20 @@ namespace WkyFast
     /// </summary>
     public partial class MainWindow : MetroWindow
     {    
-        // The enum flag for DwmSetWindowAttribute's second parameter, which tells the function what attribute to set.
-        public enum DWMWINDOWATTRIBUTE
-        {
-            DWMWA_WINDOW_CORNER_PREFERENCE = 33
-        }
 
-        // The DWM_WINDOW_CORNER_PREFERENCE enum for DwmSetWindowAttribute's third parameter, which tells the function
-        // what value of the enum to set.
-        public enum DWM_WINDOW_CORNER_PREFERENCE
-        {
-            DWMWCP_DEFAULT = 0,
-            DWMWCP_DONOTROUND = 1,
-            DWMWCP_ROUND = 2,
-            DWMWCP_ROUNDSMALL = 3
-        }
-
-        // Import dwmapi.dll and define DwmSetWindowAttribute in C# corresponding to the native function.
-        [DllImport("dwmapi.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern long DwmSetWindowAttribute(IntPtr hwnd,
-                                                         DWMWINDOWATTRIBUTE attribute,
-                                                         ref DWM_WINDOW_CORNER_PREFERENCE pvAttribute,
-                                                         uint cbAttribute);
         public MainWindow()
         {
             InitializeComponent();
 
+            IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
+            Win11Style.LoadWin11Style(hWnd);
 
-            LoadWin11Style();
             LoadMainTabView();
 
             //支持选中？
             //默认加载第一个？的面板？
         }
 
-        public void LoadWin11Style()
-        {
-            //win11
-            IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
-            var attribute = DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE;
-            var preference = DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
-            DwmSetWindowAttribute(hWnd, attribute, ref preference, sizeof(uint));
-        }
 
         public void LoadMainTabView()
         {
