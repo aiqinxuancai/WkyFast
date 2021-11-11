@@ -7,7 +7,7 @@
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
         xmlns:tb="http://www.hardcodet.net/taskbar" xmlns:view="clr-namespace:WkyFast.View"
-                 Title="MainWindow" Height="450" Width="700" Icon="icon.ico" TitleBarHeight="28" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" >
+                 Title="MainWindow" Height="450" Width="700" Icon="icon.ico" TitleBarHeight="28" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded" >
 
 
 
@@ -35,7 +35,7 @@
       />
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal" Margin="10">
-                <Button Style="{StaticResource AQButtonGreen}" Content="添加任务" Width="80"></Button>
+                <Button x:Name="AddTaskButton" Style="{StaticResource AQButtonGreen}" Content="添加任务" Width="80" Click="AddTaskButton_Click"></Button>
                 <Button Style="{StaticResource AQButtonBlue}" Content="添加订阅" Width="80" Margin="10,0,0,0"></Button>
             </StackPanel>
         </Grid>

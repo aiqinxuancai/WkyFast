@@ -84,6 +84,64 @@
         </Setter>
     </Style>
 
+    <!--Blue圆角-->
+    <Style x:Key="AQButtonBlueCornerRadius" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource AQBackgroundNormal}" />
+        <Setter Property="BorderBrush" Value="{StaticResource AQBorderBrushTransparent}" />
+        <Setter Property="Foreground" Value="{StaticResource AQForeground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            SnapsToDevicePixels="True"
+                            CornerRadius="20">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!--<Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource AQBackgroundMouseOver}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource AQBorderBrushTransparent}" />
+                        </Trigger>-->
+
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation To="{StaticResource AQColorBackgroundMouseOver}"
+                                        Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" 
+                                        FillBehavior="HoldEnd" Duration="0:0:0.25" AutoReverse="False" RepeatBehavior="1x"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                                            Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" 
+                                            FillBehavior="HoldEnd" Duration="0:0:0.25" AutoReverse="False" RepeatBehavior="1x"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{StaticResource AQBackgroundPressed}" />
+                            <Setter Property="BorderBrush" Value="{StaticResource AQBorderBrushTransparent}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{StaticResource AQBackgroundEnabled}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <!--Black-Highlight-->
     <Color x:Key="AQColorBackgroundHighlightBlackNormal">#FFE6E6E6</Color>
