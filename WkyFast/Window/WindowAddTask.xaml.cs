@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WkyFast.Service;
 
 namespace WkyFast.Window
 {
@@ -30,6 +31,18 @@ namespace WkyFast.Window
             WindowAddTask dialog = new WindowAddTask();
             dialog.Owner = owner;
             dialog.ShowDialog();
+        }
+
+        private void ConfirmButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            //TODO 支持选择设备和磁盘？？
+            //WkyAccountManager.WkyApi.CreateTaskWithUrlResolve();
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
