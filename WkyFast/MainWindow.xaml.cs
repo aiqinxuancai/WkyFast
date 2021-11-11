@@ -1,5 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,6 +25,7 @@ using WkyFast.Service;
 using WkyFast.Utils;
 using WkyFast.View.Model;
 using WkyFast.Window;
+using WkyApiSharp.Service.Model;
 
 namespace WkyFast
 {
@@ -47,7 +50,7 @@ namespace WkyFast
 
         private async void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            await ShowLoginAccount();
+            await ShowLoginAccount(true);
         }
 
         public void LoadMainTabView()
@@ -70,13 +73,10 @@ namespace WkyFast
             WindowAddTask.Show(this);
         }
 
-        
 
-        private async Task ShowLoginAccount(string setEmail = "", string setPassword = "")
+        private async Task ShowLoginAccount(bool useSessionLogin)
         {
             //登录过程
-
-
             LoginDialogDelegate loginDialogDelegate = async delegate (WkyFast.Window.LoginDialog loginDialog,
                 LoginDialogTapType type,
                 string email,
@@ -85,7 +85,7 @@ namespace WkyFast
                 bool autoLogin) {
                     if (type == LoginDialogTapType.Login)
                     {
-                        await AutoLogin(email, password, savePassword, autoLogin);
+                        await AutoLoginWithAccount(email, password, savePassword, autoLogin);
                     }
                 };
 
@@ -95,20 +95,39 @@ namespace WkyFast
 
             if (autoLogin && !string.IsNullOrWhiteSpace(mail) && !string.IsNullOrWhiteSpace(password))
             {
-                //自动登录 不使用seesion？
-                await AutoLogin(mail, password, true, autoLogin);
+                //先使用seesion
+                bool useSession = false;
+                if (useSessionLogin && File.Exists("Session.json"))
+                {
+                    //检查日期
+                    Debug.WriteLine("使用session");
+                    var sessionContent = File.ReadAllText("Session.json");
+                    WkyApiLoginResultModel loginResultModel = JsonConvert.DeserializeObject<WkyApiLoginResultModel>(sessionContent);
+
+                    //检查session是否可用
+                    var api = new WkyApiSharp.Service.WkyApi(sessionContent);
+                    var listPeer = await api.ListPeer();
+
+                    if (listPeer.Rtn == 0) //使用session登录
+                    {
+                        Debug.WriteLine("Session可用");
+                        useSession = true;
+                        WkyAccountManager.WkyApi = api;
+                        var sn = listPeer.Result.Last().ResultClass.Devices.First().DeviceSn;
+                        var turn = await api.GetTurnServer(sn);
+
+                        Debug.WriteLine("session登录完成");
+                    }
+                }
+
+                if (!useSession) //没有使用
+                {
+                    await AutoLoginWithAccount(mail, password, true, autoLogin);
+                }
+
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(setEmail))
-                {
-                    mail = setEmail;
-                }
-                if (!string.IsNullOrWhiteSpace(setPassword))
-                {
-                    password = setPassword;
-                }
-
                 //打开登录弹窗
                 WkyFast.Window.LoginDialog loginDialog = new WkyFast.Window.LoginDialog(loginDialogDelegate,
                     mail,
@@ -120,7 +139,7 @@ namespace WkyFast
             }
         }
 
-        private async Task AutoLogin(string email, string password, bool savePassword, bool autoLogin)
+        private async Task AutoLoginWithAccount(string email, string password, bool savePassword, bool autoLogin)
         {
             //TODO
             var controller = await this.ShowProgressAsync("正在登录", "...");
@@ -135,7 +154,9 @@ namespace WkyFast
             {
                 await HideVisibleDialogs(this);
                 Debug.WriteLine("登录成功");
-                File.WriteAllText("Session.json", WkyAccountManager.WkyApi.GetSessionContent());
+
+                var sessionContent = WkyAccountManager.WkyApi.GetSessionContent();
+                File.WriteAllText("Session.json", sessionContent);
 
                 if (savePassword)
                 {
@@ -153,7 +174,7 @@ namespace WkyFast
             {
                 await HideVisibleDialogs(this);
                 MessageDialogResult messageResult = await this.ShowMessageAsync("登录失败", "0.0");
-                await ShowLoginAccount();
+                await ShowLoginAccount(false);
             }
         }
 

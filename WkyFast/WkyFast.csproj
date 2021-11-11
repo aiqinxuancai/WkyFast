@@ -40,7 +40,7 @@
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
-    <PackageReference Include="WkyApiSharp" Version="1.0.1" />
+    <PackageReference Include="WkyApiSharp" Version="1.0.6" />
   </ItemGroup>
 
 </Project>

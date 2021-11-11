@@ -13,7 +13,7 @@ namespace WkyFast.Service
 {
     public class WkyAccountManager
     {
-        public static WkyApi WkyApi { set; get; }
+        public static WkyApi WkyApi { set; get; } 
 
         private const string kConfigPath = @".\UserConfig.json";
 
