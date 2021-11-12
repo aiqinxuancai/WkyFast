@@ -48,7 +48,7 @@
                         <Setter Property="AlternatingRowBackground" Value="{DynamicResource GrayBrush10}" />
                     </Style>
                 </DataGrid.Style>
-                <DataGrid.RowStyle>
+                <!--<DataGrid.RowStyle>
                     <Style TargetType="{x:Type DataGridRow}">
                         <Setter Property="Background" Value="#00FF8B8B" />
                         <Style.Triggers>
@@ -62,7 +62,7 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </DataGrid.RowStyle>
+                </DataGrid.RowStyle>-->
                 <DataGrid.Columns>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
