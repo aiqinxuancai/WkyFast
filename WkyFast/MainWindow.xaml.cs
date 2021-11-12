@@ -115,7 +115,7 @@ namespace WkyFast
                         WkyAccountManager.WkyApi = api;
                         var sn = listPeer.Result.Last().ResultClass.Devices.First().DeviceSn;
                         var turn = await api.GetTurnServer(sn);
-
+                        Debug.WriteLine(turn.ToString());
                         Debug.WriteLine("session登录完成");
                     }
                 }
