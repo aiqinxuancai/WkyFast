@@ -35,7 +35,19 @@
       />
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal" Margin="10">
-                <Button x:Name="AddTaskButton" Style="{StaticResource AQButtonGreen}" Content="添加任务" Width="80" Click="AddTaskButton_Click"></Button>
+                <Border ClipToBounds="True" CornerRadius="4" Background="#10000000">
+                    <ComboBox x:Name="DeviceComboBox" 
+                              mah:ControlsHelper.FocusBorderBrush="Transparent" 
+                              Background="Transparent" 
+                              mah:ControlsHelper.MouseOverBorderBrush="Transparent" 
+                              BorderBrush="Transparent" 
+                              Width="180"
+                              DisplayMemberPath="DeviceName" 
+                              SelectionChanged="DeviceComboBox_SelectionChanged">
+                        
+                    </ComboBox>
+                </Border>
+                <Button x:Name="AddTaskButton" Style="{StaticResource AQButtonGreen}" Margin="10,0,0,0" Content="添加任务" Width="80" Click="AddTaskButton_Click"></Button>
                 <Button Style="{StaticResource AQButtonBlue}" Content="添加订阅" Width="80" Margin="10,0,0,0"></Button>
             </StackPanel>
         </Grid>

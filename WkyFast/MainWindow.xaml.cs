@@ -73,6 +73,18 @@ namespace WkyFast
             WindowAddTask.Show(this);
         }
 
+        /// <summary>
+        /// 更新UI上的
+        /// </summary>
+        /// <returns></returns>
+        private async Task SelectDevice()
+        {
+            await WkyApiManager.UpdateDevice();
+
+            DeviceComboBox.ItemsSource = WkyApiManager.DeviceList;
+            DeviceComboBox.SelectedItem = WkyApiManager.SelectDevice();
+        }
+
 
         private async Task ShowLoginAccount(bool useSessionLogin)
         {
@@ -90,7 +102,7 @@ namespace WkyFast
                 };
 
 
-            WkyAccountManager.LoadPasswrod(out var mail, out var password, out var autoLogin);
+            WkyUserManager.LoadPasswrod(out var mail, out var password, out var autoLogin);
 
 
             if (autoLogin && !string.IsNullOrWhiteSpace(mail) && !string.IsNullOrWhiteSpace(password))
@@ -112,10 +124,13 @@ namespace WkyFast
                     {
                         Debug.WriteLine("Session可用");
                         useSession = true;
-                        WkyAccountManager.WkyApi = api;
-                        var sn = listPeer.Result.Last().ResultClass.Devices.First().DeviceSn;
-                        var turn = await api.GetTurnServer(sn);
-                        Debug.WriteLine(turn.ToString());
+                        WkyApiManager.WkyApi = api;
+                        //var sn = listPeer.Result.Last().ResultClass.Devices.First().DeviceSn;
+                        //var turn = await api.GetTurnServer(sn);
+                        //Debug.WriteLine(turn.ToString());
+
+                        await SelectDevice();
+
                         Debug.WriteLine("session登录完成");
                     }
                 }
@@ -146,25 +161,27 @@ namespace WkyFast
             controller.SetIndeterminate();
             await Task.Delay(1000);
 
-            WkyAccountManager.WkyApi = new WkyApiSharp.Service.WkyApi(email, password);
+            WkyApiManager.WkyApi = new WkyApiSharp.Service.WkyApi(email, password);
 
-            var loginResult = await WkyAccountManager.WkyApi.Login();
+            var loginResult = await WkyApiManager.WkyApi.Login();
 
             if (loginResult)
             {
                 await HideVisibleDialogs(this);
                 Debug.WriteLine("登录成功");
 
-                var sessionContent = WkyAccountManager.WkyApi.GetSessionContent();
+                var sessionContent = WkyApiManager.WkyApi.GetSessionContent();
                 File.WriteAllText("Session.json", sessionContent);
+
+                await SelectDevice();
 
                 if (savePassword)
                 {
-                    WkyAccountManager.SavePassword(email, password, autoLogin);
+                    WkyUserManager.SavePassword(email, password, autoLogin);
                 }
                 else
                 {
-                    WkyAccountManager.SavePassword(email, "", autoLogin);
+                    WkyUserManager.SavePassword(email, "", autoLogin);
                 }
 
                 //GlobalNotification.Default.Post(GlobalNotificationType.NotificationLoginSuccess, resultSession);
@@ -206,5 +223,13 @@ namespace WkyFast
         }
 
 
+        private void DeviceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            WkyApiSharp.Service.Model.ListPeer.Device? device = DeviceComboBox.SelectedItem as WkyApiSharp.Service.Model.ListPeer.Device;
+            if (device != null)
+            {
+                AppConfig.ConfigData.LastDeviceId = device.DeviceId;
+            }
+        }
     }
 }
