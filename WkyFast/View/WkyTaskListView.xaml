@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="WkyFast.View.WkyTaskListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WkyFast.View"
+             mc:Ignorable="d" 
+             x:Name="Self"
+             d:DesignHeight="450" d:DesignWidth="500">
+    <Grid>
+        <ScrollViewer>
+        <StackPanel CanVerticallyScroll="True">
+            <!--<TextBox Text="{Binding ViewModel.Text, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" />
+                <Slider Minimum="0" Maximum="100" Value="{Binding ViewModel.Number, ElementName=Self}" />-->
+            <DataGrid x:Name="MainDataGrid"  
+                          PreviewMouseWheel="UIElement_OnPreviewMouseWheel" ScrollViewer.CanContentScroll="True"
+                  ItemsSource="{Binding ViewModel, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" 
+                  AutoGenerateColumns="False" 
+                  HeadersVisibility="None" 
+                  GridLinesVisibility="Horizontal"
+                  CanUserAddRows="False"
+                  
+                  Background="Transparent" 
+                  
+                  HorizontalScrollBarVisibility="Disabled">
+                <DataGrid.Resources>
+                    <!--<SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.MouseOver" Color="#CC9DD3FA" />-->
+                    <!--<SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background" Color="#20000000" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.Inactive" Color="Transparent" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.MouseOver" Color="Blue" />-->
+                    <!--<Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Red" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>-->
+                </DataGrid.Resources>
+                <DataGrid.HorizontalGridLinesBrush>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#00000000" Offset="0"/>
+                        <GradientStop Color="#00000000" Offset=".5"/>
+                        <GradientStop Color="#00000000" Offset="1"/>
+                    </LinearGradientBrush>
+                </DataGrid.HorizontalGridLinesBrush>
+                <DataGrid.Style>
+                    <Style BasedOn="{StaticResource MahApps.Styles.DataGrid}" TargetType="{x:Type DataGrid}">
+                        <Setter Property="AlternatingRowBackground" Value="{DynamicResource GrayBrush10}" />
+                    </Style>
+                </DataGrid.Style>
+                <DataGrid.RowStyle>
+                    <Style TargetType="{x:Type DataGridRow}">
+                        <Setter Property="Background" Value="#00FF8B8B" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsMouseOver, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="True">
+                                <Setter Property="Background" Value="#F0FAFF" />
+                                <Setter Property="Foreground" Value="Red" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=IsSelected, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="True">
+                                <Setter Property="Background" Value="#F0FAFF" />
+                                <Setter Property="Foreground" Value="Red" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.Width>
+                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
+                                    </Grid.Width>
+                                    <StackPanel Margin="5,5" >
+                                            <TextBlock Text="{Binding Name}"></TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </StackPanel>
+
+        </ScrollViewer>
+    </Grid>
+</UserControl>

@@ -82,7 +82,21 @@ namespace WkyFast
             await WkyApiManager.UpdateDevice();
 
             DeviceComboBox.ItemsSource = WkyApiManager.DeviceList;
-            DeviceComboBox.SelectedItem = WkyApiManager.SelectDevice();
+
+            var device = WkyApiManager.SelectDevice();
+
+            DeviceComboBox.SelectedItem = device;
+
+            if (!string.IsNullOrWhiteSpace(device?.Peerid))
+            {
+                await WkyApiManager.WkyApi.RemoteDownloadLogin(device?.Peerid);
+                var remoteDownloadListResult = await WkyApiManager.WkyApi.RemoteDownloadList(device?.Peerid);
+                var obList = new ObservableCollection<WkyApiSharp.Service.Model.RemoteDownloadList.Task>(remoteDownloadListResult.Tasks.ToList());
+                WkyTaskListView.ViewModel = obList;
+            }
+            
+
+            //刷新下载列表
         }
 
 
