@@ -83,7 +83,7 @@ namespace WkyFast
 
             DeviceComboBox.ItemsSource = WkyApiManager.DeviceList;
 
-            var device = WkyApiManager.SelectDevice();
+            var device = await WkyApiManager.SelectDevice();
 
             DeviceComboBox.SelectedItem = device;
 

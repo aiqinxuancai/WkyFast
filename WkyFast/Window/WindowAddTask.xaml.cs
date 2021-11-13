@@ -37,11 +37,22 @@ namespace WkyFast.Window
             dialog.ShowDialog();
         }
 
-        private void ConfirmButton_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-
+            ConfirmButton.IsEnabled = false;
             //TODO 支持选择设备和磁盘？？
             //WkyAccountManager.WkyApi.CreateTaskWithUrlResolve();
+            var urlResoleResult = await WkyApiManager.WkyApi.UrlResolve(WkyApiManager.NowDevice.Peerid, UrlTextBox.Text);
+            if (urlResoleResult.Rtn == 0)
+            {
+                var createResult = await WkyApiManager.WkyApi.CreateTaskWithUrlResolve(WkyApiManager.NowDevice.Peerid, WkyApiManager.GetUsbInfoDefPath(), urlResoleResult);
+                if (createResult.Rtn == 0)
+                {
+                    this.Close();
+                }
+            }
+
+            ConfirmButton.IsEnabled = true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
