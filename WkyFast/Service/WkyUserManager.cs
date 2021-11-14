@@ -15,6 +15,16 @@ namespace WkyFast.Service
     /// </summary>
     public class WkyUserManager
     {
+        private static WkyUserManager instance = new WkyUserManager();
+
+        public static WkyUserManager Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+
         private const string kConfigPath = @".\UserConfig.json";
 
         private const string kAesKey = @"T7v5Te7hbq5kukbB";
@@ -27,7 +37,7 @@ namespace WkyFast.Service
         /// </summary>
         /// <param name="mail"></param>
         /// <param name="password"></param>
-        public static void SavePassword(string mail, string password, bool autoLogin)
+        public void SavePassword(string mail, string password, bool autoLogin)
         {
             try
             {
@@ -48,7 +58,7 @@ namespace WkyFast.Service
         /// </summary>
         /// <param name="mail"></param>
         /// <param name="password"></param>
-        public static void LoadPasswrod(out string mail, out string password, out bool autoLogin)
+        public void LoadPasswrod(out string mail, out string password, out bool autoLogin)
         {
             try
             {

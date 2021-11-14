@@ -22,9 +22,9 @@ namespace WkyFast.Window
     /// <summary>
     /// WindowAddTask.xaml 的交互逻辑
     /// </summary>
-    public partial class WindowAddTask : MetroWindow
+    public partial class WindowAddSubscription : MetroWindow
     {
-        public WindowAddTask()
+        public WindowAddSubscription()
         {
             InitializeComponent();
             IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
@@ -52,21 +52,6 @@ namespace WkyFast.Window
             return false;
         }
 
-        private async Task<bool> RunBtFileDownload(string filePath)
-        {
-            var btResoleResult = await WkyApiManager.Instance.WkyApi.BtCheck(WkyApiManager.Instance.NowDevice.Peerid, filePath);
-            if (btResoleResult.Rtn == 0)
-            {
-                var createResult = await WkyApiManager.Instance.WkyApi.CreateTaskWithBtCheck(WkyApiManager.Instance.NowDevice.Peerid, WkyApiManager.Instance.GetUsbInfoDefPath(), btResoleResult);
-                if (createResult.Rtn == 0)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             ConfirmButton.IsEnabled = false;
@@ -88,48 +73,10 @@ namespace WkyFast.Window
             ConfirmButton.IsEnabled = true;
         }
 
-
-
-
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private async void UrlTextBox_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                // Note that you can have more than one file.
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                var file = files[0];
-                //HandleFile(file);
-
-                //判断是不是BT
-                if (!file.EndsWith(".torrent"))
-                {
-                    return;
-                }
-
-                try
-                {
-                    var result = await RunBtFileDownload(file);
-                }
-                catch (Exception ex)
-                {
-                    await this.ShowMessageAsync("添加异常，请重试", ex.ToString());
-                }
-                
-            }
-            else if (e.Data.GetDataPresent(DataFormats.Text))
-            {
-                //粘贴上去？
-            }
-        }
-
-        private void UrlTextBox_PreviewDragOver(object sender, DragEventArgs e)
-        {
-            e.Handled = true;
-        }
     }
 }

@@ -15,20 +15,31 @@ namespace WkyFast.Service
 {
     public class WkyApiManager
     {
-        public static WkyApi WkyApi { set; get; } 
+        private static WkyApiManager instance = new WkyApiManager();
 
-        public static ObservableCollection<WkyApiSharp.Service.Model.ListPeer.ResultClass> PeerList { set; get; } = new();
+        public static WkyApiManager Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
 
-        public static WkyApiSharp.Service.Model.ListPeer.Device NowDevice { set; get; }
 
-        public static ObservableCollection<WkyApiSharp.Service.Model.ListPeer.Device> DeviceList { set; get; } = new();
+        public WkyApi WkyApi { set; get; } 
 
-        public static WkyApiGetUsbInfoResultModel NowUsbInfo { set; get; }
+        public ObservableCollection<WkyApiSharp.Service.Model.ListPeer.ResultClass> PeerList { set; get; } = new();
+
+        public WkyApiSharp.Service.Model.ListPeer.Device NowDevice { set; get; }
+
+        public ObservableCollection<WkyApiSharp.Service.Model.ListPeer.Device> DeviceList { set; get; } = new();
+
+        public WkyApiGetUsbInfoResultModel NowUsbInfo { set; get; }
 
         /// <summary>
         /// 玩客云登录成功后的信息处理
         /// </summary>
-        public static async Task<int> UpdateDevice()
+        public async Task<int> UpdateDevice()
         {
             var wkyApi = WkyApi;
             //获取设备信息
@@ -56,7 +67,7 @@ namespace WkyFast.Service
         /// <summary>
         /// 选中设备，优先从上次选择中选中
         /// </summary>
-        public static async Task<WkyApiSharp.Service.Model.ListPeer.Device?> SelectDevice()
+        public async Task<WkyApiSharp.Service.Model.ListPeer.Device?> SelectDevice()
         {
             if (PeerList != null && PeerList.Count > 0)
             {
@@ -99,7 +110,7 @@ namespace WkyFast.Service
             return null;
         }
 
-        public static string GetUsbInfoDefPath()
+        public string GetUsbInfoDefPath()
         {
             var savePath = string.Empty;
             if (NowUsbInfo != null && NowUsbInfo.Rtn == 0)

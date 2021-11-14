@@ -101,7 +101,7 @@ namespace WkyFast
                 }
                 runCount++;
             }
-            while (WkyApiManager.NowDevice == null);
+            while (WkyApiManager.Instance.NowDevice == null);
 
             //多次获取失败，重新开始登录
             if (runCount == 3)
@@ -119,18 +119,18 @@ namespace WkyFast
         /// <returns></returns>
         private async Task SelectDevice()
         {
-            await WkyApiManager.UpdateDevice(); //获取peer
+            await WkyApiManager.Instance.UpdateDevice(); //获取peer
 
-            DeviceComboBox.ItemsSource = WkyApiManager.DeviceList;
+            DeviceComboBox.ItemsSource = WkyApiManager.Instance.DeviceList;
 
-            var device = await WkyApiManager.SelectDevice();
+            var device = await WkyApiManager.Instance.SelectDevice();
 
             DeviceComboBox.SelectedItem = device;
 
             if (!string.IsNullOrWhiteSpace(device?.Peerid))
             {
-                await WkyApiManager.WkyApi.RemoteDownloadLogin(device?.Peerid);
-                var remoteDownloadListResult = await WkyApiManager.WkyApi.RemoteDownloadList(device?.Peerid);
+                await WkyApiManager.Instance.WkyApi.RemoteDownloadLogin(device?.Peerid);
+                var remoteDownloadListResult = await WkyApiManager.Instance.WkyApi.RemoteDownloadList(device?.Peerid);
                 var obList = new ObservableCollection<WkyApiSharp.Service.Model.RemoteDownloadList.Task>(remoteDownloadListResult.Tasks.ToList());
                 WkyTaskListView.ViewModel = obList;
             }
@@ -140,7 +140,7 @@ namespace WkyFast
         private async Task LoginFunc()
         {
             //登录过程
-            WkyUserManager.LoadPasswrod(out var mail, out var password, out var autoLogin);
+            WkyUserManager.Instance.LoadPasswrod(out var mail, out var password, out var autoLogin);
             //先使用seesion
             if (autoLogin && !string.IsNullOrWhiteSpace(mail) && !string.IsNullOrWhiteSpace(password))
             {
@@ -159,7 +159,7 @@ namespace WkyFast
                         {
                             Debug.WriteLine("Session可用");
                             useSession = true;
-                            WkyApiManager.WkyApi = api;
+                            WkyApiManager.Instance.WkyApi = api;
                             Debug.WriteLine("session登录完成");
                             await OnLoginSuccess();
                         }
@@ -184,7 +184,7 @@ namespace WkyFast
 
         private async Task ShowLoginAccount()
         {
-            WkyUserManager.LoadPasswrod(out var mail, out var password, out var autoLogin);
+            WkyUserManager.Instance.LoadPasswrod(out var mail, out var password, out var autoLogin);
 
             LoginDialogDelegate loginDialogDelegate = async delegate (WkyFast.Window.LoginDialog loginDialog,
                 LoginDialogTapType type,
@@ -216,24 +216,24 @@ namespace WkyFast
                 controller.SetIndeterminate();
                 await Task.Delay(1000);
 
-                WkyApiManager.WkyApi = new WkyApiSharp.Service.WkyApi(email, password);
+                WkyApiManager.Instance.WkyApi = new WkyApiSharp.Service.WkyApi(email, password);
 
-                var loginResult = await WkyApiManager.WkyApi.Login();
+                var loginResult = await WkyApiManager.Instance.WkyApi.Login();
 
                 if (loginResult)
                 {
                     await HideVisibleDialogs(this);
                     Debug.WriteLine("登录成功");
 
-                    var sessionContent = WkyApiManager.WkyApi.GetSessionContent();
+                    var sessionContent = WkyApiManager.Instance.WkyApi.GetSessionContent();
                     File.WriteAllText("Session.json", sessionContent);
                     if (savePassword)
                     {
-                        WkyUserManager.SavePassword(email, password, autoLogin);
+                        WkyUserManager.Instance.SavePassword(email, password, autoLogin);
                     }
                     else
                     {
-                        WkyUserManager.SavePassword(email, "", autoLogin);
+                        WkyUserManager.Instance.SavePassword(email, "", autoLogin);
                     }
 
                     await OnLoginSuccess();
