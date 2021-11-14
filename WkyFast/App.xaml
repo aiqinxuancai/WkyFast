@@ -13,6 +13,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/Style/MetroFont.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Style/AQScrollBar.xaml" />
+                
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -68,9 +68,9 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <Grid.Width>
+                                    <!--<Grid.Width>
                                         <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
-                                    </Grid.Width>
+                                    </Grid.Width>-->
                                     <StackPanel Margin="5,5" >
                                             <TextBlock Text="{Binding Name}"></TextBlock>
                                     </StackPanel>
