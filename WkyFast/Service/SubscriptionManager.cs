@@ -6,6 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using WkyFast.Service.Model;
 using Newtonsoft.Json;
+using System.Xml;
+using System.ServiceModel.Syndication;
+using System.Xml.Linq;
+using System.Diagnostics;
 
 namespace WkyFast.Service
 {
@@ -41,7 +45,7 @@ namespace WkyFast.Service
         }
 
         public List<SubscriptionModel> SubscriptionModel { get; set; } = new List<SubscriptionModel>();
-        
+
 
 
         public void Start()
@@ -51,6 +55,37 @@ namespace WkyFast.Service
                 //停止任务
             }
             Load();
+        }
+
+
+        public void TimerFunc()
+        {
+
+            string url = "https://mikanani.me/RSS/Bangumi?bangumiId=2545&subgroupid=552";
+            XmlReader reader = XmlReader.Create(url);
+            SyndicationFeed feed = SyndicationFeed.Load(reader);
+            reader.Close();
+
+            //feed.Title
+            foreach (SyndicationItem item in feed.Items)
+            {
+                String subject = item.Title.Text;
+                String summary = item.Summary.Text;
+                foreach (SyndicationElementExtension extension in item.ElementExtensions)
+                {
+                    XElement ele = extension.GetObject<XElement>();
+                    foreach (XElement node in ele.Nodes())
+                    {
+                        Debug.WriteLine(node.Name.LocalName + " " + node.Value);
+                        if (node.Name.LocalName == "link")
+                        {
+                            //下载链接
+                        }
+                    }
+                    
+                }
+
+            }
         }
 
         public void Load()

@@ -109,6 +109,11 @@ namespace WkyFast
                 await this.ShowMessageAsync("登录失败", "无法获取到玩客云设备");
                 await ShowLoginAccount();
             }
+            else
+            {
+                //test
+                SubscriptionManager.Instance.TimerFunc();
+            }
 
             
         }
