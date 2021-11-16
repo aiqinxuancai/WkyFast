@@ -38,33 +38,15 @@ namespace WkyFast.Window
             dialog.ShowDialog();
         }
 
-        private async Task<bool> RunUrlDownload(string url)
-        {
-            var urlResoleResult = await WkyApiManager.Instance.WkyApi.UrlResolve(WkyApiManager.Instance.NowDevice.Peerid, url);
-            if (urlResoleResult.Rtn == 0)
-            {
-                var createResult = await WkyApiManager.Instance.WkyApi.CreateTaskWithUrlResolve(WkyApiManager.Instance.NowDevice.Peerid, WkyApiManager.Instance.GetUsbInfoDefPath(), urlResoleResult);
-                if (createResult.Rtn == 0)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+
 
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
             ConfirmButton.IsEnabled = false;
             //TODO 支持选择设备和磁盘？？
-            //WkyAccountManager.WkyApi.CreateTaskWithUrlResolve();
-
             try
             {
-                var result = await RunUrlDownload(UrlTextBox.Text);
-                if (result)
-                {
-                    this.Close();
-                }
+                SubscriptionManager.Instance.Add(UrlTextBox.Text);
             }
             catch (Exception ex)
             {

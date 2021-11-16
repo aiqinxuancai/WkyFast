@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WkyFast.Window"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
-        Title="添加任务" Height="180" Width="360" WindowStartupLocation="CenterOwner" ShowMinButton="False" ShowMaxRestoreButton="False"  AllowDrop="True">
+        Title="添加任务" Height="180" Width="400" WindowStartupLocation="CenterOwner" ShowMinButton="False" ShowMaxRestoreButton="False"  AllowDrop="True">
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

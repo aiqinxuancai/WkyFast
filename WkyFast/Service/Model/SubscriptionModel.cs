@@ -24,6 +24,16 @@ namespace WkyFast.Service.Model
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
+        /// 过滤条件
+        /// </summary>
+        public string Filter { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 过滤条件是否是正则
+        /// </summary>
+        public bool IsFilterRegex { get; set; } = false;
+
+        /// <summary>
         /// 已经添加下载的URL
         /// </summary>
         public List<string> AlreadyAddedDownloadURL { get; set; } = new List<string>();

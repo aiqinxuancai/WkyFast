@@ -113,6 +113,7 @@ namespace WkyFast
             {
                 //test
                 SubscriptionManager.Instance.TimerFunc();
+                SubscriptionManager.Instance.User = WkyApiManager.Instance.WkyApi.UserInfo.UserId;
             }
 
             
