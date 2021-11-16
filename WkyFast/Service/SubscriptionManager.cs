@@ -51,9 +51,9 @@ namespace WkyFast.Service
 
         public void Start()
         {
-            if (_task != null)
+            if (_task != null) //TODO 停止任务
             {
-                //停止任务
+                //TODO 停止任务
             }
             Load();
         }
