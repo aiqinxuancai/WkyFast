@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using WkyApiSharp.Service;
 using WkyApiSharp.Service.Model.GetUsbInfo;
 using WkyFast.Utils;
+using Flurl.Http;
 
 namespace WkyFast.Service
 {
@@ -129,5 +130,71 @@ namespace WkyFast.Service
             }
             return savePath;
         }
+
+        /// <summary>
+        /// 从一个BT的URL添加到下载中
+        /// </summary>
+        /// <param name="url"></param>
+        public async Task<bool> DownloadBtFileUrl(string url, string path)
+        {
+            try
+            {
+                var data = await url.GetBytesAsync();
+                var bcCheck = await WkyApi.BtCheck(NowDevice.Peerid, data);
+                if (bcCheck.Rtn == 0)
+                {
+                    var result = await WkyApi.CreateTaskWithBtCheck(NowDevice.Peerid, path, bcCheck);
+                    if (result.Rtn == 0)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            return false;
+        }
+
+        public async Task<bool> DownloadUrl(string url, string savePath = "")
+        {
+            if (string.IsNullOrWhiteSpace( savePath))
+            {
+                savePath = GetUsbInfoDefPath();
+            }
+            var urlResoleResult = await WkyApi.UrlResolve(NowDevice.Peerid, url);
+            if (urlResoleResult.Rtn == 0)
+            {
+                var createResult = await WkyApi.CreateTaskWithUrlResolve(NowDevice.Peerid, savePath, urlResoleResult);
+                if (createResult.Rtn == 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public async Task<bool> DownloadBtFile(string filePath, string savePath = "")
+        {
+            if (string.IsNullOrWhiteSpace(savePath))
+            {
+                savePath = GetUsbInfoDefPath();
+            }
+            var btResoleResult = await WkyApi.BtCheck(NowDevice.Peerid, filePath);
+            if (btResoleResult.Rtn == 0)
+            {
+                var createResult = await WkyApi.CreateTaskWithBtCheck(NowDevice.Peerid, savePath, btResoleResult);
+                if (createResult.Rtn == 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
     }
 }

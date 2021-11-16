@@ -10,6 +10,7 @@ using System.Xml;
 using System.ServiceModel.Syndication;
 using System.Xml.Linq;
 using System.Diagnostics;
+using Flurl.Http;
 
 namespace WkyFast.Service
 {
@@ -60,33 +61,50 @@ namespace WkyFast.Service
 
         public void TimerFunc()
         {
-
-            string url = "https://mikanani.me/RSS/Bangumi?bangumiId=2545&subgroupid=552";
-            XmlReader reader = XmlReader.Create(url);
-            SyndicationFeed feed = SyndicationFeed.Load(reader);
-            reader.Close();
-
-            //feed.Title
-            foreach (SyndicationItem item in feed.Items)
+            foreach (var subscription in SubscriptionModel)
             {
-                String subject = item.Title.Text;
-                String summary = item.Summary.Text;
-                foreach (SyndicationElementExtension extension in item.ElementExtensions)
-                {
-                    XElement ele = extension.GetObject<XElement>();
-                    foreach (XElement node in ele.Nodes())
-                    {
-                        Debug.WriteLine(node.Name.LocalName + " " + node.Value);
-                        if (node.Name.LocalName == "link")
-                        {
-                            //下载链接
-                        }
-                    }
-                    
-                }
+                string url = subscription.Url;
+                XmlReader reader = XmlReader.Create(url);
+                SyndicationFeed feed = SyndicationFeed.Load(reader);
+                reader.Close();
 
+                subscription.Name = feed.Title.Text;
+                foreach (SyndicationItem item in feed.Items)
+                {
+                    string subject = item.Title.Text;
+                    string summary = item.Summary.Text;
+                    foreach (SyndicationElementExtension extension in item.ElementExtensions)
+                    {
+                        XElement ele = extension.GetObject<XElement>();
+                        foreach (XElement node in ele.Nodes())
+                        {
+                            Debug.WriteLine(node.Name.LocalName + " " + node.Value);
+                            if (node.Name.LocalName == "link")
+                            {
+                                string downloadUrl = node.Value;
+                                //如果没有下载过
+                                if (!subscription.AlreadyAddedDownloadURL.Any(a => a.Contains(downloadUrl)))
+                                {
+                                    //TODO 开始下载
+                                    if (WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, subscription.Path).Result)
+                                    {
+                                        subscription.AlreadyAddedDownloadURL.Add(downloadUrl);
+                                    }
+                                    else
+                                    {
+                                        //下载失败
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                }
             }
         }
+
+
 
         public void Load()
         {

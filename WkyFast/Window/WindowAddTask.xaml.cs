@@ -38,33 +38,6 @@ namespace WkyFast.Window
             dialog.ShowDialog();
         }
 
-        private async Task<bool> RunUrlDownload(string url)
-        {
-            var urlResoleResult = await WkyApiManager.Instance.WkyApi.UrlResolve(WkyApiManager.Instance.NowDevice.Peerid, url);
-            if (urlResoleResult.Rtn == 0)
-            {
-                var createResult = await WkyApiManager.Instance.WkyApi.CreateTaskWithUrlResolve(WkyApiManager.Instance.NowDevice.Peerid, WkyApiManager.Instance.GetUsbInfoDefPath(), urlResoleResult);
-                if (createResult.Rtn == 0)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private async Task<bool> RunBtFileDownload(string filePath)
-        {
-            var btResoleResult = await WkyApiManager.Instance.WkyApi.BtCheck(WkyApiManager.Instance.NowDevice.Peerid, filePath);
-            if (btResoleResult.Rtn == 0)
-            {
-                var createResult = await WkyApiManager.Instance.WkyApi.CreateTaskWithBtCheck(WkyApiManager.Instance.NowDevice.Peerid, WkyApiManager.Instance.GetUsbInfoDefPath(), btResoleResult);
-                if (createResult.Rtn == 0)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
 
 
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
@@ -75,7 +48,7 @@ namespace WkyFast.Window
 
             try
             {
-                var result = await RunUrlDownload(UrlTextBox.Text);
+                var result = await WkyApiManager.Instance.DownloadUrl(UrlTextBox.Text);
                 if (result)
                 {
                     this.Close();
@@ -113,7 +86,7 @@ namespace WkyFast.Window
 
                 try
                 {
-                    var result = await RunBtFileDownload(file);
+                    var result = await WkyApiManager.Instance.DownloadBtFile(file);
                 }
                 catch (Exception ex)
                 {
