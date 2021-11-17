@@ -139,8 +139,10 @@ namespace WkyFast.Service
         {
             try
             {
-                var data = await url.GetBytesAsync();
+                var data = await url.WithTimeout(15).GetBytesAsync();
+
                 var bcCheck = await WkyApi.BtCheck(NowDevice.Peerid, data);
+                Debug.WriteLine(bcCheck.ToString());
                 if (bcCheck.Rtn == 0)
                 {
                     var result = await WkyApi.CreateTaskWithBtCheck(NowDevice.Peerid, path, bcCheck);

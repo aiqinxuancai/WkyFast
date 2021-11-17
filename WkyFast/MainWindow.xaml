@@ -48,7 +48,7 @@
                     </ComboBox>
                 </Border>
                 <Button x:Name="AddTaskButton" Style="{StaticResource AQButtonGreen}" Margin="10,0,0,0" Content="添加任务" Width="80" Click="AddTaskButton_Click"></Button>
-                <Button Style="{StaticResource AQButtonBlue}" Content="添加订阅" Width="80" Margin="10,0,0,0"></Button>
+                <Button x:Name="SubscriptionButton" Style="{StaticResource AQButtonBlue}" Content="添加订阅" Width="80" Margin="10,0,0,0" Click="SubscriptionButton_Click"></Button>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1">

@@ -112,7 +112,7 @@ namespace WkyFast
             else
             {
                 //test
-                SubscriptionManager.Instance.TimerFunc();
+                //SubscriptionManager.Instance.CheckSubscription();
                 SubscriptionManager.Instance.User = WkyApiManager.Instance.WkyApi.UserInfo.UserId;
             }
 
@@ -169,10 +169,16 @@ namespace WkyFast
                             Debug.WriteLine("session登录完成");
                             await OnLoginSuccess();
                         }
+                        else
+                        {
+                            Debug.WriteLine($"session登录失败：{listPeer.Msg}");
+                            //验证失败，尝试走自动登录流程
+                            await AutoLoginWithAccount(mail, password, autoLogin, autoLogin);
+                        }
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("Session登录错误 " + ex.Message);
+                        Debug.WriteLine("Session登录错误：" + ex.Message);
                         await ShowLoginAccount();
                         throw;
                     }
@@ -290,6 +296,11 @@ namespace WkyFast
             {
                 AppConfig.ConfigData.LastDeviceId = device.DeviceId;
             }
+        }
+
+        private void SubscriptionButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowAddSubscription.Show(this);
         }
     }
 }

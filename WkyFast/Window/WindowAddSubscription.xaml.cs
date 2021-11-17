@@ -33,7 +33,7 @@ namespace WkyFast.Window
 
         public static void Show(MetroWindow owner)
         {
-            WindowAddTask dialog = new WindowAddTask();
+            WindowAddSubscription dialog = new WindowAddSubscription();
             dialog.Owner = owner;
             dialog.ShowDialog();
         }
@@ -46,7 +46,22 @@ namespace WkyFast.Window
             //TODO 支持选择设备和磁盘？？
             try
             {
-                SubscriptionManager.Instance.Add(UrlTextBox.Text);
+                await Task.Run(() => {
+                    string url = string.Empty;
+                    string regex = string.Empty;
+                    bool regexEnable = false;
+
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        url = UrlTextBox.Text;
+                        regex = RegexTextBox.Text;
+                        regexEnable = RegexCheckBox.IsChecked == true ? true : false;
+                    });
+
+                    SubscriptionManager.Instance.Add(url, regex, regexEnable);
+                });
+               
+                this.Close();
             }
             catch (Exception ex)
             {

@@ -40,7 +40,7 @@
                      AllowDrop="True" 
                      BorderBrush="#00CCCCCC" mah:TextBoxHelper.Watermark="订阅过滤关键字"  HorizontalAlignment="Left" Width="340" Margin="0,0,0,0" VerticalAlignment="Center"  />
 
-                <CheckBox HorizontalAlignment="Right" VerticalAlignment="Center" Content="正则" Margin="0,0,5,0" ></CheckBox>
+                <CheckBox  x:Name="RegexCheckBox"  HorizontalAlignment="Right" VerticalAlignment="Center" Content="正则" Margin="0,0,5,0" ></CheckBox>
             </Grid>
 
         </Border>

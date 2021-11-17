@@ -11,6 +11,7 @@ using System.ServiceModel.Syndication;
 using System.Xml.Linq;
 using System.Diagnostics;
 using Flurl.Http;
+using System.Threading;
 
 namespace WkyFast.Service
 {
@@ -28,7 +29,9 @@ namespace WkyFast.Service
         }
 
         private string _user;
-        private Task _task;
+
+        private CancellationTokenSource _tokenSource = new CancellationTokenSource();
+
 
         /// <summary>
         /// 来自账户，根据不同账户订阅不同？
@@ -41,6 +44,7 @@ namespace WkyFast.Service
             set
             {
                 _user = value;
+                Load();
                 Start();
             }
         }
@@ -48,19 +52,39 @@ namespace WkyFast.Service
         public List<SubscriptionModel> SubscriptionModel { get; set; } = new List<SubscriptionModel>();
 
 
-
         public void Start()
         {
-            if (_task != null) //TODO 停止任务
+            if (_tokenSource != null) //TODO 停止任务
             {
-                //TODO 停止任务
+                _tokenSource.Cancel();
             }
-            Load();
+
+            _tokenSource = new CancellationTokenSource();
+            Task.Run(() => TimerFunc(_tokenSource.Token), _tokenSource.Token);
+            
+        }
+
+        private void TimerFunc(CancellationToken cancellationToken)
+        {
+            while (true)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                CheckSubscription();
+                Thread.Sleep(1000 * 60 * 5);
+            }
+
         }
 
 
-        public void TimerFunc()
+        /// <summary>
+        /// 检查一次订阅
+        /// </summary>
+        private void CheckSubscription()
         {
+            Debug.WriteLine("CheckSubscription");
             foreach (var subscription in SubscriptionModel)
             {
                 string url = subscription.Url;
@@ -73,34 +97,61 @@ namespace WkyFast.Service
                 {
                     string subject = item.Title.Text;
                     string summary = item.Summary.Text;
-                    foreach (SyndicationElementExtension extension in item.ElementExtensions)
+                    
+
+                    foreach (var link in item.Links)
                     {
-                        XElement ele = extension.GetObject<XElement>();
-                        foreach (XElement node in ele.Nodes())
+                        if (link.RelationshipType == "enclosure" || 
+                            (!string.IsNullOrWhiteSpace(link.MediaType) && link.MediaType.Contains("bittorrent")))
                         {
-                            Debug.WriteLine(node.Name.LocalName + " " + node.Value);
-                            if (node.Name.LocalName == "link")
+                            //"application/x-bittorrent"
+                            string downloadUrl = link.Uri.ToString();
+                            //如果没有下载过
+                            if (!subscription.AlreadyAddedDownloadURL.Any(a => a.Contains(downloadUrl)))
                             {
-                                string downloadUrl = node.Value;
-                                //如果没有下载过
-                                if (!subscription.AlreadyAddedDownloadURL.Any(a => a.Contains(downloadUrl)))
+                                try
                                 {
                                     //TODO 开始下载
+                                    Debug.WriteLine($"添加下载{subject} {link}");
                                     if (WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, subscription.Path).Result)
                                     {
                                         subscription.AlreadyAddedDownloadURL.Add(downloadUrl);
+                                        Debug.WriteLine($"添加成功");
                                     }
                                     else
                                     {
+                                        Debug.WriteLine($"添加失败");
                                         //下载失败
                                     }
                                 }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine(ex);
+                                }
+
                             }
                         }
-
                     }
 
+                    //foreach (SyndicationElementExtension extension in item.ElementExtensions)
+                    //{
+                    //    XElement ele = extension.GetObject<XElement>();
+
+                    //    Debug.WriteLine("节点名称:" + ele.Name);
+                        
+                    //    foreach (XElement node in ele.Nodes())
+                    //    {
+                    //        Debug.WriteLine(node.Name.LocalName + " " + node.Value);
+                    //        if (node.Name.LocalName == "link")
+                    //        {
+                                
+                    //        }
+                    //    }
+
+                    //}
+
                 }
+                Save();
             }
         }
 
@@ -109,6 +160,7 @@ namespace WkyFast.Service
         public void Load()
         {
             string fileName = @$"Subscription_{_user}.json";
+            Debug.WriteLine($"准备载入{fileName}");
             if (File.Exists(fileName))
             {
                 SubscriptionModel.Clear();
@@ -127,7 +179,7 @@ namespace WkyFast.Service
 
         //存储订阅，读取加载订阅
 
-        public bool Add(string url)
+        public bool Add(string url, string keyword = "", bool keywordIsRegex = false)
         {
             if (SubscriptionModel.Find( a => { return a.Url == url; }) != null)
             {
@@ -139,6 +191,7 @@ namespace WkyFast.Service
             model.Url = url;
             SubscriptionModel.Add(model);
             Save();
+            CheckSubscription();
             return true;
         }
 
