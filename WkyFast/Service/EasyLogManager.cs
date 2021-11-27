@@ -6,133 +6,52 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.IO;
 using System.Diagnostics;
-
+using WkyFast.Utils;
 
 namespace WkyFast.Service
 {
-    public enum LogLevel { Trace, Debug, Info, Warn, Error }
-
-    static class EasyLogManager
+    public class EasyLogManager
     {
-        private static object flag = new object();
+        private static string _logFilename = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".log";
 
-        private static string baseLogPath = @".\log\run.log";
+        public static SimpleLogger Logger { set; get; }
 
         /// <summary>
         /// 如果日志大于10M则清除
         /// </summary>
         static EasyLogManager ()
         {
-            if (Directory.Exists(Directory.GetCurrentDirectory() + @"\log") == false)
+            if (File.Exists(_logFilename))
             {
-                Directory.CreateDirectory(Directory.GetCurrentDirectory() + @"\log");
-            }
-            
-
-            FileInfo finfo = new FileInfo(baseLogPath);
-            if (!finfo.Exists)
-            {
-                FileStream fs = File.Create(baseLogPath);
-                fs.Close();
-            }
-            else
-            {
-                try
+                FileInfo finfo = new FileInfo(_logFilename);
+                if (!finfo.Exists)
                 {
-                    if (finfo.Length > 1024 * 1024 * 20)
+                    FileStream fs = File.Create(_logFilename);
+                    fs.Close();
+                }
+                else
+                {
+                    try
                     {
-                        File.Delete(baseLogPath);
-                        FileStream fs = File.Create(baseLogPath);
-                        fs.Close();
+                        if (finfo.Length > 1024 * 1024 * 20)
+                        {
+                            File.Delete(_logFilename);
+                            FileStream fs = File.Create(_logFilename);
+                            fs.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }
             }
+
+            Logger = new SimpleLogger();
+
+
         }
 
-
-        public static void Write(object obj, LogLevel type = LogLevel.Info)
-        {
-            ThreadPool.QueueUserWorkItem(h =>
-            {
-                lock (flag)
-                {
-                    var file = baseLogPath; //AppDomain.CurrentDomain.BaseDirectory + DateTime.Now.ToString("yyyy_MM_dd") + ".log";
-                    string head = string.Format(">>>{0}[{1}]", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), type.ToString());
-                    Debug.WriteLine(head + obj.ToString());
-                    File.AppendAllText(file, head + obj.ToString() + "\r\n");
-
-                    if (type == LogLevel.Info)
-                    {
-                        // 仅仅展示info型
-                        //GlobalNotification.Default.Post(GlobalNotificationType.NotificationOutputLogInfo, string.Format("{0}", obj));
-                    }
-                    
-                }
-            });
-        }
-
-
-        public static void WriteInfo(object obj, params object[] args)
-        {
-            ThreadPool.QueueUserWorkItem(h =>
-            {
-                lock (flag)
-                {
-                    LogLevel type = LogLevel.Info;
-                    var file = baseLogPath; //AppDomain.CurrentDomain.BaseDirectory + DateTime.Now.ToString("yyyy_MM_dd") + ".log";
-
-                    string head = string.Format(">>>{0}[{1}]", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),  type.ToString());
-
-                    Debug.WriteLine(head + string.Format(obj.ToString(), args));
-                    File.AppendAllText(file, head + string.Format(obj.ToString(), args) + "\r\n");
-
-                    if (type == LogLevel.Info)
-                    {
-                        // 仅仅展示info型
-                        //GlobalNotification.Default.Post(GlobalNotificationType.NotificationOutputLogInfo, string.Format(obj.ToString(), args));
-                    }
-
-                }
-            });
-        }
-
-        public static void WriteDebug(object obj, params object[] args)
-        {
-            ThreadPool.QueueUserWorkItem(h =>
-            {
-                lock (flag)
-                {
-                    LogLevel type = LogLevel.Debug;
-                    var file = baseLogPath; //AppDomain.CurrentDomain.BaseDirectory + DateTime.Now.ToString("yyyy_MM_dd") + ".log";
-
-                    string head = string.Format(">>>{0}[{1}]", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), type.ToString());
-
-                    Debug.WriteLine(head + string.Format(obj.ToString(), args));
-                    File.AppendAllText(file, head + string.Format(obj.ToString(), args) + "\r\n");
-                }
-            });
-        }
-
-        public static void WriteError(object obj, params object[] args)
-        {
-            ThreadPool.QueueUserWorkItem(h =>
-            {
-                lock (flag)
-                {
-                    LogLevel type = LogLevel.Error;
-                    var file = baseLogPath; //AppDomain.CurrentDomain.BaseDirectory + DateTime.Now.ToString("yyyy_MM_dd") + ".log";
-
-                    string head = string.Format(">>>{0}[{1}]", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), type.ToString());
-
-                    Debug.WriteLine(head + string.Format(obj.ToString(), args));
-                    File.AppendAllText(file, head + string.Format(obj.ToString(), args) + "\r\n");
-                }
-            });
-        }
 
     }
 }

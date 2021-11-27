@@ -91,7 +91,7 @@ namespace WkyFast.Window
                     var result = await WkyApiManager.Instance.DownloadBtFile(file);
                     if (result)
                     {
-
+                        Debug.WriteLine("任务已添加");
                     }
                 }
                 catch (Exception ex)
