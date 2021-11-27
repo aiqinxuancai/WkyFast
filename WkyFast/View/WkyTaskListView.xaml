@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WkyFast.View" xmlns:converter="clr-namespace:WkyFast.View.Contver"
+             xmlns:local="clr-namespace:WkyFast.View" 
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" 
+             xmlns:converter="clr-namespace:WkyFast.View.Contver"
              mc:Ignorable="d" 
              x:Name="Self"
              d:DesignHeight="450" d:DesignWidth="500">
@@ -22,23 +24,41 @@
                   HeadersVisibility="None" 
                   GridLinesVisibility="Horizontal"
                   CanUserAddRows="False"
-                  
                   Background="Transparent" 
-                  
-                  HorizontalScrollBarVisibility="Disabled">
-                <DataGrid.Resources>
-                    <!--<SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.MouseOver" Color="#CC9DD3FA" />-->
-                    <!--<SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background" Color="#20000000" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.Inactive" Color="Transparent" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.MouseOver" Color="Blue" />-->
-                    <!--<Style TargetType="DataGridRow">
+
+                  HorizontalScrollBarVisibility="Disabled" Foreground="#BF000000">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow"  BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="Red" />
+                                    <Setter Property="Foreground" Value="#CC000000" />
+                                    <Setter Property="Background" Value="#10000000" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="#CC000000" />
+                                    <Setter Property="Background" Value="#10000000" />
                                 </Trigger>
                             </Style.Triggers>
-                        </Style>-->
-                </DataGrid.Resources>
+                        </Style>
+                    </DataGrid.RowStyle>
+                <DataGrid.Resources>
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text" Color="#CC000000" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="#CC000000" />
+                        <!--<SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background"  Color="{StaticResource MahApps.Colors.Accent}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.Disabled"  Color="{StaticResource MahApps.Colors.Gray7}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.Inactive"  Color="{StaticResource MahApps.Colors.Accent3}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.MouseOver"  Color="{StaticResource MahApps.Colors.Accent2}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.BorderBrush"  Color="{StaticResource MahApps.Colors.Accent}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.BorderBrush.Disabled"  Color="{StaticResource MahApps.Colors.Gray7}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.BorderBrush.Focus"  Color="{StaticResource MahApps.Colors.Accent}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.BorderBrush.Inactive"  Color="{StaticResource MahApps.Colors.Accent3}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.BorderBrush.MouseOver"  Color="{StaticResource MahApps.Colors.Accent2}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text"  Color="{StaticResource MahApps.Colors.IdealForeground}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.Disabled" Color="{StaticResource MahApps.Colors.Gray1}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.Inactive" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="{StaticResource MahApps.Colors.IdealForeground}" />-->
+
+                    </DataGrid.Resources>
                 <DataGrid.HorizontalGridLinesBrush>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                         <GradientStop Color="#00000000" Offset="0"/>
@@ -81,13 +101,13 @@
                                         </Grid.ColumnDefinitions>
 
                                     
-                                    <StackPanel Margin="5,5"  Grid.Column="0">
+                                    <StackPanel Margin="2,2"  Grid.Column="0">
                                         <TextBlock Text="{Binding Name}"></TextBlock>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="{Binding Size, Converter={StaticResource DownloadSizeContver}}"></TextBlock>
                                         </StackPanel>
                                     </StackPanel>
-                                        <StackPanel Margin="5,5"  Grid.Column="1">
+                                        <StackPanel Margin="2,2"  Grid.Column="1">
                                             <Button Content="TTTT"></Button>
                                         </StackPanel>
                                     </Grid>
