@@ -89,6 +89,10 @@ namespace WkyFast.Window
                 try
                 {
                     var result = await WkyApiManager.Instance.DownloadBtFile(file);
+                    if (result)
+                    {
+
+                    }
                 }
                 catch (Exception ex)
                 {
