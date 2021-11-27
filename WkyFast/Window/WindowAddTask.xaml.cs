@@ -2,6 +2,7 @@
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,6 +57,7 @@ namespace WkyFast.Window
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex);
                 await this.ShowMessageAsync("添加异常，请重试", ex.ToString());
             }
             ConfirmButton.IsEnabled = true;
@@ -90,6 +92,7 @@ namespace WkyFast.Window
                 }
                 catch (Exception ex)
                 {
+                    Debug.WriteLine(ex);
                     await this.ShowMessageAsync("添加异常，请重试", ex.ToString());
                 }
                 
