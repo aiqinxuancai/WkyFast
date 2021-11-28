@@ -10,7 +10,7 @@
 
 
     <Grid>
-        <Border  CornerRadius="15">
+        <Border  CornerRadius="10">
             <Border.Style>
                 <Style TargetType="Border" >
                     <Setter Property="Background" Value="Transparent" />

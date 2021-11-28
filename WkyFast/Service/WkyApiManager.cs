@@ -170,7 +170,7 @@ namespace WkyFast.Service
             var urlResoleResult = await WkyApi.UrlResolve(NowDevice.Peerid, url);
             if (urlResoleResult.Rtn == 0)
             {
-                var createResult = await WkyApi.CreateTaskWithUrlResolve(NowDevice.Peerid, savePath, urlResoleResult);
+                var createResult = await WkyApi.CreateBatchTaskWithUrlResolve(NowDevice.Peerid, savePath, urlResoleResult, null);
                 if (createResult.Rtn == 0)
                 {
                     return true;
@@ -188,9 +188,18 @@ namespace WkyFast.Service
             var btResoleResult = await WkyApi.BtCheck(NowDevice.Peerid, filePath);
             if (btResoleResult.Rtn == 0)
             {
-                var createResult = await WkyApi.CreateTaskWithBtCheck(NowDevice.Peerid, savePath, btResoleResult);
+                var createResult = await WkyApi.CreateBatchTaskWithBtCheck(NowDevice.Peerid, savePath, btResoleResult, null);
                 if (createResult.Rtn == 0)
                 {
+                    foreach (var item in createResult.Tasks)
+                    {
+                        if (item.Result == 202)
+                        {
+                            Debug.WriteLine($"重复添加任务：{item.Name}");
+                            return false;
+                        }
+                    }
+
                     return true;
                 }
             }

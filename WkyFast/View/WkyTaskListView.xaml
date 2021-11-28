@@ -5,12 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WkyFast.View" 
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" 
-             xmlns:converter="clr-namespace:WkyFast.View.Contver"
+             xmlns:converter="clr-namespace:WkyFast.View.Contver" xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              x:Name="Self"
              d:DesignHeight="450" d:DesignWidth="500">
     <UserControl.Resources>
         <converter:DownloadSizeContver x:Key="DownloadSizeContver"/>
+        <converter:DownloadStatusContver x:Key="DownloadStatusContver"/>
+        <converter:DownloadProgressContver x:Key="DownloadProgressContver"/>
+        <converter:DownloadProgressVisibilityConverter x:Key="DownloadProgressVisibilityConverter"/>
+        
     </UserControl.Resources>
     <Grid>
         <ScrollViewer>
@@ -91,24 +95,40 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Left">
-                                        <Grid.Width>
-                                            <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
-                                        </Grid.Width>
+                                    <Grid.Width>
+                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
+                                    </Grid.Width>
 
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                            <ColumnDefinition Width="50"></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="50"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
 
-                                    
-                                    <StackPanel Margin="2,2"  Grid.Column="0">
+                                    <Grid >
+                                            <mah:MetroProgressBar Visibility="{Binding Progress, Converter={StaticResource DownloadProgressVisibilityConverter}}"  Value="{Binding Progress}" Maximum="10000" Foreground="#3357C3F1" ></mah:MetroProgressBar>
+                                    </Grid>
+
+                                     <StackPanel Margin="2,2"  Grid.Column="0">
                                         <TextBlock Text="{Binding Name}"></TextBlock>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Size, Converter={StaticResource DownloadSizeContver}}"></TextBlock>
+                                                <TextBlock Text="{Binding State, Converter={StaticResource DownloadStatusContver}}"></TextBlock>
+                                                <TextBlock Margin="5,0,0,0">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource DownloadProgressContver}">
+                                                            <Binding Path="Progress"/>
+                                                            <Binding Path="Size"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                                <TextBlock Text="/"></TextBlock>
+                                                <TextBlock Text="{Binding Size, Converter={StaticResource DownloadSizeContver}}"></TextBlock>
                                         </StackPanel>
                                     </StackPanel>
                                         <StackPanel Margin="2,2"  Grid.Column="1">
-                                            <Button Content="TTTT"></Button>
+                                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                                <iconPacks:PackIconMaterialLight Kind="Pause" Width="16" />
+                                            </Grid>
+                                           
                                         </StackPanel>
                                     </Grid>
                             </DataTemplate>
