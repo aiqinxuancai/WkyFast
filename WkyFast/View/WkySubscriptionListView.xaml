@@ -109,7 +109,10 @@
                                                                Value="{Binding Progress}" 
                                                                Maximum="10000" 
                                                                Foreground="#3357C3F1" 
-Height="2" VerticalAlignment="Bottom" ></mah:MetroProgressBar>
+                                                                Height="2" 
+                                                                  VerticalAlignment="Bottom" >
+                                                
+                                            </mah:MetroProgressBar>
                                         </Grid>
 
                                         <StackPanel Margin="2,2"  Grid.Column="0">
