@@ -27,6 +27,7 @@ using WkyFast.View.Model;
 using WkyFast.Window;
 using WkyApiSharp.Service.Model;
 using WkyApiSharp.Service;
+using System.Threading;
 
 namespace WkyFast
 {
@@ -44,6 +45,9 @@ namespace WkyFast
                 return instance;
             }
         }
+
+        private CancellationTokenSource _tokenTaskListSource = new CancellationTokenSource();
+
 
         public MainWindow()
         {
@@ -166,12 +170,34 @@ namespace WkyFast
             if (!string.IsNullOrWhiteSpace(device?.Peerid))
             {
                 await WkyApiManager.Instance.WkyApi.RemoteDownloadLogin(device?.Peerid);
-                var remoteDownloadListResult = await WkyApiManager.Instance.WkyApi.RemoteDownloadList(device?.Peerid);
-                var obList = new ObservableCollection<WkyApiSharp.Service.Model.RemoteDownloadList.Task>(remoteDownloadListResult.Tasks.ToList());
-                WkyTaskListView.ViewModel = obList;
+
+                WkyTaskListView.ViewModel = WkyApiManager.Instance.TaskList;
+
+                _tokenTaskListSource = new CancellationTokenSource();
+                Task.Run(async () =>
+                {
+                    await UpdateTaskFunc(_tokenTaskListSource.Token);
+                }, _tokenTaskListSource.Token);
             }
             //刷新下载列表
         }
+
+
+        private async Task UpdateTaskFunc(CancellationToken cancellationToken)
+        {
+            while (true) {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    Debug.WriteLine("退出Task刷新");
+                    break;
+                }
+                Debug.WriteLine("刷新Task列表");
+                await WkyApiManager.Instance.UpdateTask();
+
+                TaskHelper.Sleep(5 * 1000, 100, cancellationToken);
+            }
+        }
+
 
         private async Task LoginFunc()
         {
@@ -331,6 +357,14 @@ namespace WkyFast
         private void SubscriptionButton_Click(object sender, RoutedEventArgs e)
         {
             WindowAddSubscription.Show(this);
+        }
+
+        private void MetroWindow_Unloaded(object sender, RoutedEventArgs e)
+        {
+            //退出
+            SubscriptionManager.Instance.Stop();
+            _tokenTaskListSource.Cancel();
+            System.Environment.Exit(System.Environment.ExitCode);
         }
     }
 }

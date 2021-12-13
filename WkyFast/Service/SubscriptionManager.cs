@@ -13,6 +13,7 @@ using System.Diagnostics;
 using Flurl.Http;
 using System.Threading;
 using System.Collections.ObjectModel;
+using WkyFast.Utils;
 
 namespace WkyFast.Service
 {
@@ -53,6 +54,21 @@ namespace WkyFast.Service
         public ObservableCollection<SubscriptionModel> SubscriptionModel { get; set; } = new ObservableCollection<SubscriptionModel>();
 
 
+        public SubscriptionManager()
+        {
+            SubscriptionModel = new ObservableCollection<SubscriptionModel>();
+            //SubscriptionModel.CollectionChanged += SubscriptionModel_CollectionChanged;
+        }
+
+        ~SubscriptionManager()
+        {
+            _tokenSource.Cancel();
+        }
+        //private void SubscriptionModel_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        //{
+        //    Save();
+        //}
+
         public void Start()
         {
             if (_tokenSource != null) //TODO 停止任务
@@ -64,6 +80,14 @@ namespace WkyFast.Service
             Task.Run(() => TimerFunc(_tokenSource.Token), _tokenSource.Token);
         }
 
+        public void Stop()
+        {
+            if (_tokenSource != null) //TODO 停止任务
+            {
+                _tokenSource.Cancel();
+            }
+        }
+
         private void TimerFunc(CancellationToken cancellationToken)
         {
             while (true)
@@ -73,7 +97,8 @@ namespace WkyFast.Service
                     return;
                 }
                 CheckSubscription();
-                Thread.Sleep(1000 * 60 * 5);
+
+                TaskHelper.Sleep(1000 * 60 * 5, 100, cancellationToken);
             }
         }
 
@@ -174,6 +199,7 @@ namespace WkyFast.Service
 
         public void Save()
         {
+            Debug.WriteLine("保存订阅");
             string fileName = @$"Subscription_{_user}.json";
             var content = JsonConvert.SerializeObject(SubscriptionModel);
             File.WriteAllText(fileName, content);

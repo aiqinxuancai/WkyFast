@@ -19,5 +19,10 @@ namespace WkyFast
         {
 
         }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+        }
     }
 }

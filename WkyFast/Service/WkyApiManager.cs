@@ -37,6 +37,26 @@ namespace WkyFast.Service
 
         public WkyApiGetUsbInfoResultModel NowUsbInfo { set; get; }
 
+        public ObservableCollection<WkyApiSharp.Service.Model.RemoteDownloadList.Task> TaskList { set; get; } = new ObservableCollection<WkyApiSharp.Service.Model.RemoteDownloadList.Task>();
+
+
+        public async Task UpdateTask()
+        {
+            var remoteDownloadListResult = await WkyApiManager.Instance.WkyApi.RemoteDownloadList(WkyApiManager.Instance.NowDevice.Peerid);
+            var obList = remoteDownloadListResult.Tasks.ToList();
+
+
+            MainWindow.Instance.Dispatcher.Invoke(() => {
+                //TODO 更顺滑的更新任务
+                TaskList.Clear();
+                foreach (var task in obList)
+                {
+                    TaskList.Add(task);
+                }
+            });
+
+        }
+
         /// <summary>
         /// 玩客云登录成功后的信息处理
         /// </summary>
