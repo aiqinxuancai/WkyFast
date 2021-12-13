@@ -16,6 +16,7 @@
         <converter:DownloadProgressVisibilityConverter x:Key="DownloadProgressVisibilityConverter"/>
 
     </UserControl.Resources>
+
     <Grid>
         <ScrollViewer>
             <StackPanel CanVerticallyScroll="True">
@@ -30,8 +31,11 @@
                   CanUserAddRows="False"
                   Background="Transparent" 
 
-                  HorizontalScrollBarVisibility="Disabled" Foreground="#BF000000">
-                    <DataGrid.RowStyle>
+                  HorizontalScrollBarVisibility="Disabled" Foreground="#BF000000" LoadingRow="MainDataGrid_LoadingRow"
+                          >
+
+
+                        <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow"  BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">

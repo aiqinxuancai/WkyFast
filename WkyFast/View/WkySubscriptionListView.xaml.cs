@@ -1,8 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using WkyFast.Service.Model;
 
 namespace WkyFast.View
@@ -53,6 +55,28 @@ namespace WkyFast.View
                 var parent = ((Control)sender).Parent as UIElement;
                 parent?.RaiseEvent(eventArg);
             }
+        }
+
+
+
+        private void MainDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            ContextMenu menu = new ContextMenu();
+
+            e.Row.MouseRightButtonDown += (s, a) => {
+                a.Handled = true; 
+                menu.Items.Clear();
+                MenuItem menuDelete = new MenuItem() {  Header = "删除"};
+                menuDelete.Click += MenuDelete_Click;
+                menu.Items.Add(menuDelete);
+                DataGrid row = sender as DataGrid; 
+                row.ContextMenu = menu;
+            };
+        }
+
+        private void MenuDelete_Click(object sender, RoutedEventArgs e)
+        {
+            //删除直接调用API
         }
     }
 }
