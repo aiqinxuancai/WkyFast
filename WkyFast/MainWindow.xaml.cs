@@ -34,7 +34,16 @@ namespace WkyFast
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : MetroWindow
-    {    
+    {
+        private static MainWindow instance = new MainWindow();
+
+        public static MainWindow Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
 
         public MainWindow()
         {
@@ -57,8 +66,8 @@ namespace WkyFast
         public void LoadMainTabView()
         {
             ObservableCollection<MainTabItemModel> model = new ObservableCollection<MainTabItemModel>();
-            model.Add(new MainTabItemModel() { Title = "下载列表" });
-            model.Add(new MainTabItemModel() { Title = "订阅列表" });
+            model.Add(new MainTabItemModel() { Title = "下载列表", Type = MainTabItemModelType.DownloadList });
+            model.Add(new MainTabItemModel() { Title = "订阅列表", Type = MainTabItemModelType.SubscriptionList });
             WkyMainTabView.ViewModel = model;
             WkyMainTabView.OnConfigSelected += WkyMainTabView_OnConfigSelected;
         }
@@ -66,7 +75,26 @@ namespace WkyFast
 
         private void WkyMainTabView_OnConfigSelected(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+
+
+            if (sender is WkyFast.View.WkyMainTabView)
+            {
+                MainTabItemModel model = ((WkyFast.View.WkyMainTabView)sender).LastSelectedConfig;
+
+
+                if (model.Type == MainTabItemModelType.DownloadList)
+                {
+                    WkyTaskListView.Visibility = Visibility.Visible;
+                    WkySubscriptionListView.Visibility = Visibility.Hidden;
+                }
+                else if (model.Type == MainTabItemModelType.SubscriptionList)
+                {
+                    WkyTaskListView.Visibility = Visibility.Hidden;
+                    WkySubscriptionListView.Visibility = Visibility.Visible;
+                }
+
+            }
+
         }
 
         private void AddTaskButton_Click(object sender, RoutedEventArgs e)
@@ -114,6 +142,8 @@ namespace WkyFast
                 //test
                 //SubscriptionManager.Instance.CheckSubscription();
                 SubscriptionManager.Instance.User = WkyApiManager.Instance.WkyApi.UserInfo.UserId;
+
+                WkySubscriptionListView.ViewModel = SubscriptionManager.Instance.SubscriptionModel;
             }
 
             

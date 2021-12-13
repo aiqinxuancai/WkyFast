@@ -12,6 +12,7 @@ using System.Xml.Linq;
 using System.Diagnostics;
 using Flurl.Http;
 using System.Threading;
+using System.Collections.ObjectModel;
 
 namespace WkyFast.Service
 {
@@ -49,7 +50,7 @@ namespace WkyFast.Service
             }
         }
 
-        public List<SubscriptionModel> SubscriptionModel { get; set; } = new List<SubscriptionModel>();
+        public ObservableCollection<SubscriptionModel> SubscriptionModel { get; set; } = new ObservableCollection<SubscriptionModel>();
 
 
         public void Start()
@@ -61,7 +62,6 @@ namespace WkyFast.Service
 
             _tokenSource = new CancellationTokenSource();
             Task.Run(() => TimerFunc(_tokenSource.Token), _tokenSource.Token);
-            
         }
 
         private void TimerFunc(CancellationToken cancellationToken)
@@ -75,7 +75,6 @@ namespace WkyFast.Service
                 CheckSubscription();
                 Thread.Sleep(1000 * 60 * 5);
             }
-
         }
 
 
@@ -98,7 +97,6 @@ namespace WkyFast.Service
                     string subject = item.Title.Text;
                     string summary = item.Summary.Text;
                     
-
                     foreach (var link in item.Links)
                     {
                         if (link.RelationshipType == "enclosure" || 
@@ -107,7 +105,7 @@ namespace WkyFast.Service
                             //"application/x-bittorrent"
                             string downloadUrl = link.Uri.ToString();
                             //如果没有下载过
-                            if (!subscription.AlreadyAddedDownloadURL.Any(a => a.Contains(downloadUrl)))
+                            if (!subscription.AlreadyAddedDownloadModel.Any(a => a.Url.Contains(downloadUrl)))
                             {
                                 try
                                 {
@@ -115,7 +113,7 @@ namespace WkyFast.Service
                                     Debug.WriteLine($"添加下载{subject} {link}");
                                     if (WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, subscription.Path).Result)
                                     {
-                                        subscription.AlreadyAddedDownloadURL.Add(downloadUrl);
+                                        subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl} );
                                         Debug.WriteLine($"添加成功");
                                     }
                                     else
@@ -165,7 +163,11 @@ namespace WkyFast.Service
             {
                 SubscriptionModel.Clear();
                 List<SubscriptionModel> subscriptionModel = JsonConvert.DeserializeObject<List<SubscriptionModel>>(File.ReadAllText(fileName));
-                SubscriptionModel.AddRange(subscriptionModel);
+
+                foreach (SubscriptionModel item in subscriptionModel)
+                {
+                    SubscriptionModel.Add(item);
+                }
             }
         }
 
@@ -181,7 +183,7 @@ namespace WkyFast.Service
 
         public bool Add(string url, string keyword = "", bool keywordIsRegex = false)
         {
-            if (SubscriptionModel.Find( a => { return a.Url == url; }) != null)
+            if (SubscriptionModel.ToList().Find( a => { return a.Url == url; }) != null)
             {
                 //找到了存在相同
                 return false;
@@ -189,15 +191,30 @@ namespace WkyFast.Service
 
             SubscriptionModel model = new SubscriptionModel();
             model.Url = url;
+
             SubscriptionModel.Add(model);
+
+
             Save();
-            CheckSubscription();
+
+
+            Task.Run(() => {
+                CheckSubscription();
+            });
+            
             return true;
         }
 
         public void Remove(string url)
         {
-            SubscriptionModel.RemoveAll(a =>  a.Url == url);
+            for (int i = 0; i < SubscriptionModel.Count; i++)
+            {
+                if (SubscriptionModel[i].Url == url)
+                {
+                    SubscriptionModel.RemoveAt(i);
+                    break; //只删除一个
+                }
+            }
         }
 
     }

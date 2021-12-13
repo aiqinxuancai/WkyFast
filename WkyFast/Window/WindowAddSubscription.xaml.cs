@@ -56,9 +56,10 @@ namespace WkyFast.Window
                         url = UrlTextBox.Text;
                         regex = RegexTextBox.Text;
                         regexEnable = RegexCheckBox.IsChecked == true ? true : false;
+                        SubscriptionManager.Instance.Add(url, regex, regexEnable);
                     });
 
-                    SubscriptionManager.Instance.Add(url, regex, regexEnable);
+                    
                 });
                
                 this.Close();

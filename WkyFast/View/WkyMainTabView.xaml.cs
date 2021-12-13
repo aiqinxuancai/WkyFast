@@ -24,7 +24,7 @@ namespace WkyFast.View
     {
         MainTabItemModel? _lastSelectedConfig = null;
 
-        MainTabItemModel LastSelectedConfig
+        public MainTabItemModel LastSelectedConfig
         {
             set
             {

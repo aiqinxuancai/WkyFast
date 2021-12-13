@@ -17,16 +17,7 @@ namespace WkyFast
     {
         App()
         {
-            //try
-            //{
-            //    JObject root = new JObject();
-            //    string aaa = root["aaa"].ToString();
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.WriteLine(ex.Message);
-            //}
         }
     }
 }

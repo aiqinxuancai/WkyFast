@@ -75,12 +75,18 @@ namespace WkyFast.View.Contver
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             long fullSize = 0;
-
+            double progress = 0;
             if (values.Length == 2)
             {
-                double progress = (long)values[0] / 10000d;
-                
-                
+
+                if (values[0] is string)
+                {
+                    progress = long.Parse((string)values[0]) / 10000d;
+                }
+                else if (values[0] is long)
+                {
+                    progress = (long)values[0] / 10000d;
+                }
 
                 if (values[1] is string)
                 {
