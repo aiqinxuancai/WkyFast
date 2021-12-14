@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace WkyFast.Utils
 {
+   
     public class TaskHelper
     {
 
@@ -39,6 +40,7 @@ namespace WkyFast.Utils
             }
         }
 
+        
         public static void Sleep(int millisecondsToWait, int millisecondsTocycle, CancellationToken cancellationToken)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
