@@ -35,19 +35,19 @@
                         <Style TargetType="DataGridRow"  BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="#CC000000" />
-                                    <Setter Property="Background" Value="#10000000" />
+                                    
+                                    <Setter Property="Background" Value="Transparent" />
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Foreground" Value="#CC000000" />
-                                    <Setter Property="Background" Value="#10000000" />
+                                    <Setter Property="Background" Value="Transparent" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
                     </DataGrid.RowStyle>
                 <DataGrid.Resources>
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text" Color="#CC000000" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="#CC000000" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="#CC57C3F1" />
                         <!--<SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background"  Color="{StaticResource MahApps.Colors.Accent}" />
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.Disabled"  Color="{StaticResource MahApps.Colors.Gray7}" />
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.Inactive"  Color="{StaticResource MahApps.Colors.Accent3}" />
@@ -73,8 +73,10 @@
                 <DataGrid.Style>
                     <Style BasedOn="{StaticResource MahApps.Styles.DataGrid}" TargetType="{x:Type DataGrid}">
                         <Setter Property="AlternatingRowBackground" Value="{DynamicResource GrayBrush10}" />
-                    </Style>
+
+                        </Style>
                 </DataGrid.Style>
+                
                 <!--<DataGrid.RowStyle>
                     <Style TargetType="{x:Type DataGridRow}">
                         <Setter Property="Background" Value="#00FF8B8B" />

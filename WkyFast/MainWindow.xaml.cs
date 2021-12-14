@@ -192,7 +192,15 @@ namespace WkyFast
                     break;
                 }
                 Debug.WriteLine("刷新Task列表");
-                await WkyApiManager.Instance.UpdateTask();
+                try
+                {
+                    await WkyApiManager.Instance.UpdateTask();
+                }
+                catch (Exception ex)
+                {
+                    EasyLogManager.Logger.Error(ex.ToString());
+                }
+                
 
                 TaskHelper.Sleep(5 * 1000, 100, cancellationToken);
             }

@@ -43,17 +43,36 @@ namespace WkyFast.Service
         public async Task UpdateTask()
         {
             var remoteDownloadListResult = await WkyApiManager.Instance.WkyApi.RemoteDownloadList(WkyApiManager.Instance.NowDevice.Peerid);
-            var obList = remoteDownloadListResult.Tasks.ToList();
 
+            if (remoteDownloadListResult.Rtn == 0)
+            {
+                var obList = remoteDownloadListResult.Tasks.ToList();
+                MainWindow.Instance.Dispatcher.Invoke(() => {
+                    //TODO 更顺滑的更新任务
+                    List<WkyApiSharp.Service.Model.RemoteDownloadList.Task> newTask = new List<WkyApiSharp.Service.Model.RemoteDownloadList.Task>();
 
-            MainWindow.Instance.Dispatcher.Invoke(() => {
-                //TODO 更顺滑的更新任务
-                TaskList.Clear();
-                foreach (var task in obList)
-                {
-                    TaskList.Add(task);
-                }
-            });
+                    for (int i = 0; i < obList.Count; i++)
+                    {
+                        var index = TaskList.ToList().FindIndex(a => a.Id == obList[i].Id);
+
+                        if (index != -1)
+                        {
+                            TaskList[index] = obList[i];
+                        }
+                        else
+                        {
+                            newTask.Add(obList[i]);
+                        }
+                    }
+                    newTask.Reverse();
+                    foreach (var task in newTask)
+                    {
+                        TaskList.Insert(0, task);
+                    }
+                });
+            }
+
+           
 
         }
 

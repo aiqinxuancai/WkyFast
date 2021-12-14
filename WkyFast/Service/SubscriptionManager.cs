@@ -14,6 +14,7 @@ using Flurl.Http;
 using System.Threading;
 using System.Collections.ObjectModel;
 using WkyFast.Utils;
+using WkyFast.Service.Model.SubscriptionModel;
 
 namespace WkyFast.Service
 {

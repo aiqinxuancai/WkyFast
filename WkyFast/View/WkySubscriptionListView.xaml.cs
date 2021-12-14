@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using WkyFast.Service;
 using WkyFast.Service.Model;
+using WkyFast.Service.Model.SubscriptionModel;
 
 namespace WkyFast.View
 {
