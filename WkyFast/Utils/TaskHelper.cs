@@ -17,12 +17,11 @@ namespace WkyFast.Utils
             Stopwatch stopwatch = Stopwatch.StartNew();
             while (true)
             {
-                //some other processing to do STILL POSSIBLE
                 if (stopwatch.ElapsedMilliseconds >= millisecondsToWait)
                 {
                     break;
                 }
-                Thread.Sleep(1); //so processor can rest for a while
+                Thread.Sleep(1);
             }
         }
 
@@ -31,12 +30,11 @@ namespace WkyFast.Utils
             Stopwatch stopwatch = Stopwatch.StartNew();
             while (true)
             {
-                //some other processing to do STILL POSSIBLE
                 if (stopwatch.ElapsedMilliseconds >= millisecondsToWait)
                 {
                     break;
                 }
-                Thread.Sleep(millisecondsTocycle); //so processor can rest for a while
+                Thread.Sleep(millisecondsTocycle); 
             }
         }
 
@@ -50,13 +48,13 @@ namespace WkyFast.Utils
                 {
                     break;
                 }
-                //some other processing to do STILL POSSIBLE
+   
                 if (stopwatch.ElapsedMilliseconds >= millisecondsToWait)
                 {
                     break;
                 }
 
-                Thread.Sleep(millisecondsTocycle); //so processor can rest for a while
+                Thread.Sleep(millisecondsTocycle); 
 
             }
         }
