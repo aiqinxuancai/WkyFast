@@ -10,18 +10,20 @@
              x:Name="Self"
              d:DesignHeight="450" d:DesignWidth="500">
     <UserControl.Resources>
+
         <converter:DownloadSizeContver x:Key="DownloadSizeContver"/>
         <converter:DownloadStatusContver x:Key="DownloadStatusContver"/>
         <converter:DownloadProgressContver x:Key="DownloadProgressContver"/>
         <converter:DownloadProgressVisibilityConverter x:Key="DownloadProgressVisibilityConverter"/>
-        
+
     </UserControl.Resources>
+
     <Grid>
         <ScrollViewer>
-        <StackPanel CanVerticallyScroll="True">
-            <!--<TextBox Text="{Binding ViewModel.Text, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" />
+            <StackPanel CanVerticallyScroll="True">
+                <!--<TextBox Text="{Binding ViewModel.Text, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" />
                 <Slider Minimum="0" Maximum="100" Value="{Binding ViewModel.Number, ElementName=Self}" />-->
-            <DataGrid x:Name="MainDataGrid"  
+                <DataGrid x:Name="MainDataGrid"  
                           PreviewMouseWheel="UIElement_OnPreviewMouseWheel" ScrollViewer.CanContentScroll="True"
                   ItemsSource="{Binding ViewModel, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" 
                   AutoGenerateColumns="False" 
@@ -30,12 +32,12 @@
                   CanUserAddRows="False"
                   Background="Transparent" 
 
-                  HorizontalScrollBarVisibility="Disabled" Foreground="#BF000000">
+                  HorizontalScrollBarVisibility="Disabled" Foreground="#BF000000" LoadingRow="MainDataGrid_LoadingRow">
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow"  BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    
+
                                     <Setter Property="Background" Value="Transparent" />
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
@@ -45,7 +47,7 @@
                             </Style.Triggers>
                         </Style>
                     </DataGrid.RowStyle>
-                <DataGrid.Resources>
+                    <DataGrid.Resources>
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text" Color="#CC000000" />
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="#CC57C3F1" />
                         <!--<SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background"  Color="{StaticResource MahApps.Colors.Accent}" />
@@ -63,21 +65,21 @@
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="{StaticResource MahApps.Colors.IdealForeground}" />-->
 
                     </DataGrid.Resources>
-                <DataGrid.HorizontalGridLinesBrush>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#00000000" Offset="0"/>
-                        <GradientStop Color="#00000000" Offset=".5"/>
-                        <GradientStop Color="#00000000" Offset="1"/>
-                    </LinearGradientBrush>
-                </DataGrid.HorizontalGridLinesBrush>
-                <DataGrid.Style>
-                    <Style BasedOn="{StaticResource MahApps.Styles.DataGrid}" TargetType="{x:Type DataGrid}">
-                        <Setter Property="AlternatingRowBackground" Value="{DynamicResource GrayBrush10}" />
+                    <DataGrid.HorizontalGridLinesBrush>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#00000000" Offset="0"/>
+                            <GradientStop Color="#00000000" Offset=".5"/>
+                            <GradientStop Color="#00000000" Offset="1"/>
+                        </LinearGradientBrush>
+                    </DataGrid.HorizontalGridLinesBrush>
+                    <DataGrid.Style>
+                        <Style BasedOn="{StaticResource MahApps.Styles.DataGrid}" TargetType="{x:Type DataGrid}">
+                            <Setter Property="AlternatingRowBackground" Value="{DynamicResource GrayBrush10}" />
 
                         </Style>
-                </DataGrid.Style>
-                
-                <!--<DataGrid.RowStyle>
+                    </DataGrid.Style>
+
+                    <!--<DataGrid.RowStyle>
                     <Style TargetType="{x:Type DataGridRow}">
                         <Setter Property="Background" Value="#00FF8B8B" />
                         <Style.Triggers>
@@ -92,63 +94,71 @@
                         </Style.Triggers>
                     </Style>
                 </DataGrid.RowStyle>-->
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Grid HorizontalAlignment="Left">
-                                    <Grid.Width>
-                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
-                                    </Grid.Width>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Left">
+                                        <Grid.Width>
+                                            <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
+                                        </Grid.Width>
 
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"></ColumnDefinition>
-                                        <ColumnDefinition Width="50"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
 
-                                    <Grid >
-                                         <mah:MetroProgressBar Visibility="{Binding Progress, Converter={StaticResource DownloadProgressVisibilityConverter}}"  
-                                                               Value="{Binding Progress}" 
+                                        <Grid >
+                                            <Grid.Resources>
+                                                <ResourceDictionary>
+                                                    <ResourceDictionary.MergedDictionaries>
+                                                        <ResourceDictionary Source="/Style/AQButton.xaml" />
+                                                        <ResourceDictionary Source="/Style/CustomProgressBar.xaml" />
+                                                    </ResourceDictionary.MergedDictionaries>
+                                                </ResourceDictionary>
+                                            </Grid.Resources>
+                                            <ProgressBar Style="{StaticResource FlatProgressBarNoBorder}" Visibility="{Binding Data.Progress, Converter={StaticResource DownloadProgressVisibilityConverter}}"  
+                                                               Value="{Binding Data.Progress}" 
                                                                Maximum="10000" 
                                                                Foreground="#CC57C3F1" Height="2" VerticalAlignment="Bottom" >
-                                             
-                                         </mah:MetroProgressBar>
-                                    </Grid>
 
-                                     <StackPanel Margin="2,2"  Grid.Column="0">
-                                        <TextBlock Text="{Binding Name}"></TextBlock>
-                                        <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding State, Converter={StaticResource DownloadStatusContver}}"></TextBlock>
+                                            </ProgressBar>
+                                            <!--<CustomProgressBar></CustomProgressBar>-->
+                                        </Grid>
+
+                                        <StackPanel Margin="2,2"  Grid.Column="0">
+                                            <TextBlock Text="{Binding Data.Name}"></TextBlock>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Data.State, Converter={StaticResource DownloadStatusContver}}"></TextBlock>
                                                 <TextBlock Margin="5,0,0,0">
                                                     <TextBlock.Text>
                                                         <MultiBinding Converter="{StaticResource DownloadProgressContver}">
-                                                            <Binding Path="Progress"/>
-                                                            <Binding Path="Size"/>
+                                                            <Binding Path="Data.Progress"/>
+                                                            <Binding Path="Data.Size"/>
                                                         </MultiBinding>
                                                     </TextBlock.Text>
                                                 </TextBlock>
                                                 <TextBlock Text="/"></TextBlock>
-                                                <TextBlock Text="{Binding Size, Converter={StaticResource DownloadSizeContver}}"></TextBlock>
+                                                <TextBlock Text="{Binding Data.Size, Converter={StaticResource DownloadSizeContver}}"></TextBlock>
                                                 <TextBlock Text="  "></TextBlock>
-                                                <TextBlock Text="{Binding Speed, Converter={StaticResource DownloadSizeContver}}"></TextBlock>
+                                                <TextBlock Text="{Binding Data.Speed, Converter={StaticResource DownloadSizeContver}}"></TextBlock>
                                                 <TextBlock Text="/S"></TextBlock>
                                             </StackPanel>
-                                    </StackPanel>
-                                        <StackPanel Margin="2,2"  Grid.Column="1">
+                                        </StackPanel>
+                                        <!--<StackPanel Margin="2,2"  Grid.Column="1">
                                             <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
                                                 <iconPacks:PackIconMaterialLight Kind="Pause" Width="16" />
                                             </Grid>
                                            
-                                        </StackPanel>
+                                        </StackPanel>-->
                                     </Grid>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-            </DataGrid>
-        </StackPanel>
+                </DataGrid>
+            </StackPanel>
 
         </ScrollViewer>
     </Grid>

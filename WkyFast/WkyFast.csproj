@@ -29,14 +29,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Images\github.png" />
+    <None Remove="Assets\Images\github30.png" />
+    <None Remove="Assets\Images\heart.png" />
+    <None Remove="Assets\Images\heart26.png" />
+    <None Remove="Assets\Images\star.png" />
     <None Remove="icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Images\github.png" />
+    <Resource Include="Assets\Images\github30.png" />
+    <Resource Include="Assets\Images\heart.png" />
+    <Resource Include="Assets\Images\heart26.png" />
+    <Resource Include="Assets\Images\star.png" />
     <Resource Include="icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="MahApps.Metro.IconPacks.MaterialLight" Version="4.11.0" />

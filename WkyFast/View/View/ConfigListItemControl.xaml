@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WkyFast.View.View" xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="260" Height="44"
+             d:DesignHeight="50" d:DesignWidth="300" Height="44"
              >
 
 
@@ -22,49 +22,22 @@
                 </Style>
             </Border.Style>
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="30"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Border CornerRadius="6" Grid.Column="1" Background="#2d8cf0" Height="18" Margin="2,12,0,12" HorizontalAlignment="Left" Width="18" Visibility="Collapsed" >
-                    <TextBlock Text="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"></TextBlock>
-                </Border>
-                <StackPanel Orientation="Horizontal" Grid.Column="0">
-                    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" >
-                        <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterialLight Kind="Download" Margin="10,0,0,0" >
-                                <iconPacks:PackIconMaterialLight.Style>
-                                    <Style TargetType="iconPacks:PackIconMaterialLight">
-                                        <Setter Property="Foreground" Value="#808695" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
-                                                <Setter Property="Foreground" Value="#2d8cf0" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
-                                                <Setter Property="Foreground" Value="#2d8cf0" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </iconPacks:PackIconMaterialLight.Style>
-                            </iconPacks:PackIconMaterialLight>
-                            <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Margin="15,0,0,0">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="#808695" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
-                                                <Setter Property="Foreground" Value="#2d8cf0" />
-                                            </DataTrigger>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,10,0">
+                    <Image Source="/Assets/Images/heart26.png" Width="16" ></Image>
+                    <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="#808695" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                        <Setter Property="Foreground" Value="#2d8cf0" />
+                                    </DataTrigger>
 
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                            <!-- two way -->
-                        </StackPanel>
-
-
-                    </StackPanel>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <!-- two way -->
                 </StackPanel>
             </Grid>
 

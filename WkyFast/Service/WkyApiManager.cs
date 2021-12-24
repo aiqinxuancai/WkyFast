@@ -11,6 +11,8 @@ using WkyApiSharp.Service;
 using WkyApiSharp.Service.Model.GetUsbInfo;
 using WkyFast.Utils;
 using Flurl.Http;
+using Newtonsoft.Json;
+using WkyFast.Service.Model;
 
 namespace WkyFast.Service
 {
@@ -37,7 +39,7 @@ namespace WkyFast.Service
 
         public WkyApiGetUsbInfoResultModel NowUsbInfo { set; get; }
 
-        public ObservableCollection<WkyApiSharp.Service.Model.RemoteDownloadList.Task> TaskList { set; get; } = new ObservableCollection<WkyApiSharp.Service.Model.RemoteDownloadList.Task>();
+        public ObservableCollection<TaskModel> TaskList { set; get; } = new ObservableCollection<TaskModel>();
 
 
         public async Task UpdateTask()
@@ -49,19 +51,19 @@ namespace WkyFast.Service
                 var obList = remoteDownloadListResult.Tasks.ToList();
                 MainWindow.Instance.Dispatcher.Invoke(() => {
                     //TODO 更顺滑的更新任务
-                    List<WkyApiSharp.Service.Model.RemoteDownloadList.Task> newTask = new List<WkyApiSharp.Service.Model.RemoteDownloadList.Task>();
+                    List<TaskModel> newTask = new List<TaskModel>();
 
                     for (int i = 0; i < obList.Count; i++)
                     {
-                        var index = TaskList.ToList().FindIndex(a => a.Id == obList[i].Id);
+                        var index = TaskList.ToList().FindIndex(a => a.Data.Id == obList[i].Id);
 
                         if (index != -1)
                         {
-                            TaskList[index] = obList[i];
+                            TaskList[index].Data = obList[i];
                         }
                         else
                         {
-                            newTask.Add(obList[i]);
+                            newTask.Add(new TaskModel() { Data = obList[i] } );
                         }
                     }
                     newTask.Reverse();
