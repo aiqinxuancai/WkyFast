@@ -41,14 +41,14 @@
                                     <Setter Property="Background" Value="Transparent" />
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="#CC000000" />
-                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Foreground" Value="#2D8CF0" />
+                                    <Setter Property="Background" Value="#F0FAFF" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Resources>
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text" Color="#CC000000" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text" Color="#2D8CF0" />
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="#CC57C3F1" />
                         <!--<SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background"  Color="{StaticResource MahApps.Colors.Accent}" />
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.Disabled"  Color="{StaticResource MahApps.Colors.Gray7}" />

@@ -46,6 +46,7 @@ namespace WkyFast.View.Contver
             {
                 0 => "添加中",
                 8 => "等待中",
+                9 => "已暂停",
                 1 => "下载中",
                 11 => "已完成",
                 _ => value,
