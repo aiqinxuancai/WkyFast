@@ -129,4 +129,24 @@ namespace WkyFast.View.Contver
         }
     }
 
+
+    [ValueConversion(typeof(uint), typeof(Visibility))]
+    public class DownloadSpeedVisibilityConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (long)value switch
+            {
+                1 => Visibility.Visible,
+                _ => Visibility.Hidden
+            };
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

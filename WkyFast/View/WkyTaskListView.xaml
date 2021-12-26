@@ -15,6 +15,8 @@
         <converter:DownloadStatusContver x:Key="DownloadStatusContver"/>
         <converter:DownloadProgressContver x:Key="DownloadProgressContver"/>
         <converter:DownloadProgressVisibilityConverter x:Key="DownloadProgressVisibilityConverter"/>
+        <converter:DownloadSpeedVisibilityConverter x:Key="DownloadSpeedVisibilityConverter"/>
+        
 
     </UserControl.Resources>
 
@@ -35,21 +37,24 @@
                   HorizontalScrollBarVisibility="Disabled" Foreground="#BF000000" LoadingRow="MainDataGrid_LoadingRow">
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow"  BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
+                            
                             <Style.Triggers>
+                                
                                 <Trigger Property="IsMouseOver" Value="True">
-
                                     <Setter Property="Background" Value="Transparent" />
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Foreground" Value="#2D8CF0" />
-                                    <Setter Property="Background" Value="#F0FAFF" />
+                                    <Setter Property="Background" Value="Transparent" />
+                                    
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
                     </DataGrid.RowStyle>
                     <DataGrid.Resources>
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text" Color="#2D8CF0" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="#CC57C3F1" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="#2D8CF0" />
+                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.Inactive" Color="#2D8CF0" />
                         <!--<SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background"  Color="{StaticResource MahApps.Colors.Accent}" />
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.Disabled"  Color="{StaticResource MahApps.Colors.Gray7}" />
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.Inactive"  Color="{StaticResource MahApps.Colors.Accent3}" />
@@ -98,6 +103,8 @@
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
+
+                                    
                                     <Grid HorizontalAlignment="Left">
                                         <Grid.Width>
                                             <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
@@ -107,6 +114,9 @@
                                             <ColumnDefinition Width="*"></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
 
+                                        <Border Name="BBBB" Background="Transparent" CornerRadius="5" >
+
+                                        </Border>
                                         <Grid >
                                             <Grid.Resources>
                                                 <ResourceDictionary>
@@ -140,8 +150,10 @@
                                                 <TextBlock Text="/"></TextBlock>
                                                 <TextBlock Text="{Binding Data.Size, Converter={StaticResource DownloadSizeContver}}"></TextBlock>
                                                 <TextBlock Text="  "></TextBlock>
-                                                <TextBlock Text="{Binding Data.Speed, Converter={StaticResource DownloadSizeContver}}"></TextBlock>
-                                                <TextBlock Text="/S"></TextBlock>
+
+
+                                                <TextBlock Visibility="{Binding Data.State, Converter={StaticResource DownloadSpeedVisibilityConverter}}" Text="{Binding Data.Speed, Converter={StaticResource DownloadSizeContver}}"></TextBlock>
+                                                <TextBlock Visibility="{Binding Data.State, Converter={StaticResource DownloadSpeedVisibilityConverter}}" Text="/S"></TextBlock>
                                             </StackPanel>
                                         </StackPanel>
                                         <!--<StackPanel Margin="2,2"  Grid.Column="1">
@@ -151,6 +163,11 @@
                                            
                                         </StackPanel>-->
                                     </Grid>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow }}}" Value="True">
+                                            <Setter TargetName="BBBB" Property="Background" Value="#F0FAFF" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
