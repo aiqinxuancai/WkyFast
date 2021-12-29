@@ -18,6 +18,8 @@ namespace WkyFast.Service
 {
     public class WkyApiManager
     {
+        private static int kMaxTaskListCount = 100;
+
         private static WkyApiManager instance = new WkyApiManager();
 
         public static WkyApiManager Instance
@@ -50,27 +52,58 @@ namespace WkyFast.Service
             {
                 var obList = remoteDownloadListResult.Tasks.ToList();
                 MainWindow.Instance.Dispatcher.Invoke(() => {
-                    //TODO 更顺滑的更新任务
-                    List<TaskModel> newTask = new List<TaskModel>();
+                    //更顺滑的更新任务
+                    //List<TaskModel> newTask = new List<TaskModel>();
 
-                    for (int i = 0; i < obList.Count; i++)
+                    //for (int i = 0; i < obList.Count; i++)
+                    //{
+                    //    //在当前列表中筛选？
+                    //    var index = TaskList.ToList().FindIndex(a => a.Data.Id == obList[i].Id);
+
+                    //    if (index != -1)
+                    //    {
+                    //        TaskList[index].Data = obList[i];
+                    //    }
+                    //    else
+                    //    {
+                    //        newTask.Add(new TaskModel() { Data = obList[i] } );
+                    //    }
+                    //}
+                    //newTask.Reverse();
+                    //foreach (var task in newTask)
+                    //{
+                    //    TaskList.Insert(0, task);
+                    //}
+
+                    ////保持等于kMaxTaskListCount的数量
+                    //while (TaskList.Count > kMaxTaskListCount)
+                    //{
+                    //    TaskList.RemoveAt(TaskList.Count - 1);
+                    //}
+                    
+                    if (obList.Count - TaskList.Count > 0)
                     {
-                        var index = TaskList.ToList().FindIndex(a => a.Data.Id == obList[i].Id);
-
-                        if (index != -1)
+                        while (obList.Count - TaskList.Count > 0)
                         {
-                            TaskList[index].Data = obList[i];
-                        }
-                        else
-                        {
-                            newTask.Add(new TaskModel() { Data = obList[i] } );
+                            TaskList.Add(new TaskModel());
                         }
                     }
-                    newTask.Reverse();
-                    foreach (var task in newTask)
+                    else if (obList.Count - TaskList.Count < 0)
                     {
-                        TaskList.Insert(0, task);
+                        while (obList.Count - TaskList.Count < 0)
+                        {
+                            TaskList.RemoveAt(TaskList.Count - 1);
+                        }
                     }
+
+
+
+                    for (int i = 0;i < obList.Count; i++)
+                    {
+                        TaskList[i].Data = obList[i];
+                    }
+
+
                 });
             }
 

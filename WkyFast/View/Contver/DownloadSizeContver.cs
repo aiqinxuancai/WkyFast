@@ -49,6 +49,7 @@ namespace WkyFast.View.Contver
                 9 => "已暂停",
                 1 => "下载中",
                 11 => "已完成",
+                14 => "准备添加中",
                 _ => value,
             };
         }
@@ -138,6 +139,7 @@ namespace WkyFast.View.Contver
         {
             return (long)value switch
             {
+                0 => Visibility.Visible,
                 1 => Visibility.Visible,
                 _ => Visibility.Hidden
             };
