@@ -96,19 +96,12 @@ namespace WkyFast.Service
                         }
                     }
 
-
-
                     for (int i = 0;i < obList.Count; i++)
                     {
                         TaskList[i].Data = obList[i];
                     }
-
-
                 });
             }
-
-           
-
         }
 
         /// <summary>
