@@ -215,6 +215,7 @@ namespace WkyFast
             if (autoLogin && !string.IsNullOrWhiteSpace(mail) && !string.IsNullOrWhiteSpace(password))
             {
                 bool useSession = false;
+                bool autoLoginSuccess = false;
                 if (File.Exists("Session.json"))
                 {
                     //检查日期
@@ -237,7 +238,7 @@ namespace WkyFast
                         {
                             Debug.WriteLine($"session登录失败：{listPeer.Msg}");
                             //验证失败，尝试走自动登录流程
-                            await AutoLoginWithAccount(mail, password, autoLogin, autoLogin);
+                            autoLoginSuccess = await AutoLoginWithAccount(mail, password, autoLogin, autoLogin);
                         }
                     }
                     catch (Exception ex)
@@ -247,7 +248,7 @@ namespace WkyFast
                         throw;
                     }
                 }
-                if (!useSession) //没有使用
+                if (!useSession && !autoLoginSuccess) //判断自动登录是否成功
                 {
                     await ShowLoginAccount();
                 }
@@ -284,10 +285,11 @@ namespace WkyFast
             await this.ShowMetroDialogAsync(loginDialog);
         }
 
-        private async Task AutoLoginWithAccount(string email, string password, bool savePassword, bool autoLogin)
+        private async Task<bool> AutoLoginWithAccount(string email, string password, bool savePassword, bool autoLogin)
         {
             try
             {
+                Debug.WriteLine("正在登录...");
                 var controller = await this.ShowProgressAsync("正在登录", "...");
                 controller.SetIndeterminate();
                 await Task.Delay(1000);
@@ -313,15 +315,17 @@ namespace WkyFast
                     }
 
                     await OnLoginSuccess();
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("登录错误 " + ex.Message);
                 await ShowLoginAccount();
+                return false;
                 throw;
             }
-            
+            return false;
 
         }
 
