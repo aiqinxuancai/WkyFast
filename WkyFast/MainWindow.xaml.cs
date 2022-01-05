@@ -224,7 +224,7 @@ namespace WkyFast
                     try
                     {
                         WkyApiLoginResultModel loginResultModel = JsonConvert.DeserializeObject<WkyApiLoginResultModel>(sessionContent);
-                        var api = new WkyApiSharp.Service.WkyApi(sessionContent);
+                        var api = new WkyApiSharp.Service.WkyApi(sessionContent, "", "");
                         var listPeer = await api.ListPeer(); //检查session是否可用
                         if (listPeer.Rtn == 0)
                         {
