@@ -224,7 +224,7 @@ namespace WkyFast
                     try
                     {
                         WkyApiLoginResultModel loginResultModel = JsonConvert.DeserializeObject<WkyApiLoginResultModel>(sessionContent);
-                        var api = new WkyApiSharp.Service.WkyApi(sessionContent, "", "");
+                        var api = new WkyApiSharp.Service.WkyApi(sessionContent, "", "", WkyLoginDeviceType.PC);
                         var listPeer = await api.ListPeer(); //检查session是否可用
                         if (listPeer.Rtn == 0)
                         {
@@ -294,7 +294,7 @@ namespace WkyFast
                 controller.SetIndeterminate();
                 await Task.Delay(1000);
 
-                WkyApiManager.Instance.WkyApi = new WkyApiSharp.Service.WkyApi(email, password);
+                WkyApiManager.Instance.WkyApi = new WkyApiSharp.Service.WkyApi(email, password, WkyLoginDeviceType.PC);
 
                 var loginResult = await WkyApiManager.Instance.WkyApi.Login();
 
