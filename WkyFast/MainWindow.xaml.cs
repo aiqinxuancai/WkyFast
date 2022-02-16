@@ -378,5 +378,10 @@ namespace WkyFast
             _tokenTaskListSource.Cancel();
             System.Environment.Exit(System.Environment.ExitCode);
         }
+
+        private void ButtonGithub_Click(object sender, RoutedEventArgs e)
+        {
+            BrowserHelper.OpenUrlBrowser("https://github.com/aiqinxuancai/WkyFast");
+        }
     }
 }

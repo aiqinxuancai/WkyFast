@@ -12,11 +12,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="60"></RowDefinition>
+
         </Grid.RowDefinitions>
-        <Grid Grid.Row="1">
-            <Image Source="/Assets/Images/github30.png" Height="20"></Image>
-        </Grid>
+
             <ScrollViewer Grid.Row="0">
             <DataGrid x:Name="mainConfigViewDataGrid"  
                           PreviewMouseWheel="UIElement_OnPreviewMouseWheel" ScrollViewer.CanContentScroll="True"
