@@ -46,20 +46,40 @@ namespace WkyFast.Window
             ConfirmButton.IsEnabled = false;
             //TODO 支持选择设备和磁盘？？
             //WkyAccountManager.WkyApi.CreateTaskWithUrlResolve();
-
-            try
+            var files = UrlTextBox.Text.Split("\r\n");
+            files = files.Where(a => !string.IsNullOrWhiteSpace(a)).ToArray();
+            int count = 0;
+            foreach (var file in files)
             {
-                var result = await WkyApiManager.Instance.DownloadUrl(UrlTextBox.Text);
-                if (result)
+                try
                 {
-                    this.Close();
+                    var result = await WkyApiManager.Instance.DownloadUrl(file);
+                    if (result)
+                    {
+                        count++;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    await this.ShowMessageAsync("添加异常，请重试", ex.ToString());
                 }
             }
-            catch (Exception ex)
+
+
+            if (count == 0)
             {
-                Debug.WriteLine(ex);
-                await this.ShowMessageAsync("添加异常，请重试", ex.ToString());
+                await this.ShowMessageAsync("添加失败", $"任务添加失败");
             }
+            else if (files.Length != count)
+            {
+                await this.ShowMessageAsync("部分添加失败", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
+            }
+            else
+            {
+                this.Close();
+            }
+
             ConfirmButton.IsEnabled = true;
         }
 
@@ -77,29 +97,43 @@ namespace WkyFast.Window
             {
                 // Note that you can have more than one file.
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                var file = files[0];
-                //HandleFile(file);
 
-                //判断是不是BT
-                if (!file.EndsWith(".torrent"))
-                {
-                    return;
-                }
 
-                try
+                int count = 0;
+                foreach (var file in files)
                 {
-                    var result = await WkyApiManager.Instance.DownloadBtFile(file);
-                    if (result)
+                    //判断是不是BT
+                    if (!file.EndsWith(".torrent"))
                     {
-                        Debug.WriteLine("任务已添加");
+                        continue;
                     }
+
+                    try
+                    {
+                        var result = await WkyApiManager.Instance.DownloadBtFile(file);
+                        if (result)
+                        {
+                            Debug.WriteLine("任务已添加");
+                            count++;
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex);
+                        //
+                    }
+
                 }
-                catch (Exception ex)
+
+                if (count == 0)
                 {
-                    Debug.WriteLine(ex);
-                    await this.ShowMessageAsync("添加异常，请重试", ex.ToString());
+                    await this.ShowMessageAsync("添加失败", $"任务添加失败");
                 }
-                
+                else if (files.Length != count)
+                {
+                    await this.ShowMessageAsync("部分添加失败", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
+                }
             }
             else if (e.Data.GetDataPresent(DataFormats.Text))
             {
