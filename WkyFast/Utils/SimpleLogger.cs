@@ -39,6 +39,11 @@ namespace WkyFast.Utils
             WriteFormattedLog(LogLevel.DEBUG, text);
         }
 
+        public void Debug(object text)
+        {
+            WriteFormattedLog(LogLevel.DEBUG, text == null ? "null" : text.ToString());
+        }
+
         /// <summary>
         /// Log an ERROR message
         /// </summary>
@@ -46,6 +51,11 @@ namespace WkyFast.Utils
         public void Error(string text)
         {
             WriteFormattedLog(LogLevel.ERROR, text);
+        }
+
+        public void Error(object text)
+        {
+            WriteFormattedLog(LogLevel.ERROR, text == null ? "null" : text.ToString());
         }
 
         /// <summary>
@@ -66,10 +76,16 @@ namespace WkyFast.Utils
             WriteFormattedLog(LogLevel.INFO, text);
         }
 
+        public void Info(object text)
+        {
+            WriteFormattedLog(LogLevel.INFO, text == null ? "null" : text.ToString());
+        }
+
         public void Info(string text, params object[] args)
         {
             WriteFormattedLog(LogLevel.INFO, string.Format(text, args));
         }
+
 
         /// <summary>
         /// Log a TRACE message

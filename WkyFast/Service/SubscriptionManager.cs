@@ -15,6 +15,7 @@ using System.Threading;
 using System.Collections.ObjectModel;
 using WkyFast.Utils;
 using WkyFast.Service.Model.SubscriptionModel;
+using System.Text.RegularExpressions;
 
 namespace WkyFast.Service
 {
@@ -97,10 +98,70 @@ namespace WkyFast.Service
                 {
                     return;
                 }
-                CheckSubscription();
+                try
+                {
+                    CheckSubscription();
+                }
+                catch (Exception ex)
+                {
+                    EasyLogManager.Logger.Error(ex.ToString());
+                }
+                
 
                 TaskHelper.Sleep(1000 * 60 * 5, 100, cancellationToken);
             }
+        }
+
+
+        /// <summary>
+        /// 是否可以下载
+        /// </summary>
+        /// <param name="subscription"></param>
+        /// <returns></returns>
+        private bool CheckTitle(SubscriptionModel subscription, string title)
+        {
+            //检查是否符合过滤方法
+
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(subscription.Filter))
+                {
+                    if (subscription.IsFilterRegex)
+                    {
+                        Regex regex = new Regex(subscription.Filter);
+                        if (!regex.IsMatch(title))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        //检查是否包含文本
+                        var strList = subscription.Filter.Split("|");
+                        var count = 0;
+                        foreach (var str in strList)
+                        {
+                            if (title.Contains(str))
+                            {
+                                count++;
+                            }
+                        }
+                        if (count == 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+            } 
+            catch (Exception ex)
+            {
+                EasyLogManager.Logger.Error(ex.ToString());
+                return true;
+            }
+
+            
+            return true;
         }
 
 
@@ -109,10 +170,12 @@ namespace WkyFast.Service
         /// </summary>
         private void CheckSubscription()
         {
-            Debug.WriteLine("CheckSubscription");
+            EasyLogManager.Logger.Info("检查订阅...");
             foreach (var subscription in SubscriptionModel)
             {
                 string url = subscription.Url;
+
+                EasyLogManager.Logger.Info($"读取订阅地址：{url}");
                 XmlReader reader = XmlReader.Create(url);
                 SyndicationFeed feed = SyndicationFeed.Load(reader);
                 reader.Close();
@@ -122,6 +185,17 @@ namespace WkyFast.Service
                 {
                     string subject = item.Title.Text;
                     string summary = item.Summary.Text;
+
+
+                    if (CheckTitle(subscription, subject))
+                    {
+                        EasyLogManager.Logger.Info($"标题验证 {subject} 通过，准备下载");
+                    }
+                    else
+                    {
+                        EasyLogManager.Logger.Info($"标题验证 {subject} 未通过");
+                        continue;
+                    }
                     
                     foreach (var link in item.Links)
                     {
@@ -136,21 +210,21 @@ namespace WkyFast.Service
                                 try
                                 {
                                     //TODO 开始下载
-                                    Debug.WriteLine($"添加下载{subject} {link}");
+                                    EasyLogManager.Logger.Info($"添加下载{subject} {link}");
                                     if (WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, subscription.Path).Result)
                                     {
                                         subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl} );
-                                        Debug.WriteLine($"添加成功");
+                                        EasyLogManager.Logger.Info($"添加成功");
                                     }
                                     else
                                     {
-                                        Debug.WriteLine($"添加失败");
+                                        EasyLogManager.Logger.Error($"添加失败");
                                         //下载失败
                                     }
                                 }
                                 catch (Exception ex)
                                 {
-                                    Debug.WriteLine(ex);
+                                    EasyLogManager.Logger.Error(ex.ToString());
                                 }
 
                             }

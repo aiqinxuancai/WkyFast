@@ -56,23 +56,27 @@ namespace WkyFast.Window
                     var result = await WkyApiManager.Instance.DownloadUrl(file);
                     if (result)
                     {
+                        EasyLogManager.Logger.Info($"任务已添加：{file}");
                         count++;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex);
-                    await this.ShowMessageAsync("添加异常，请重试", ex.ToString());
+                    //Debug.WriteLine(ex);
+                    EasyLogManager.Logger.Error(ex);
+                    //await this.ShowMessageAsync("添加异常，请重试", ex.ToString());
                 }
             }
 
 
             if (count == 0)
             {
+                EasyLogManager.Logger.Info($"任务添加失败");
                 await this.ShowMessageAsync("添加失败", $"任务添加失败");
             }
             else if (files.Length != count)
             {
+                EasyLogManager.Logger.Info($"成功添加{count}个任务，有{files.Length - count}个添加失败");
                 await this.ShowMessageAsync("部分添加失败", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
             }
             else
@@ -105,6 +109,7 @@ namespace WkyFast.Window
                     //判断是不是BT
                     if (!file.EndsWith(".torrent"))
                     {
+                        EasyLogManager.Logger.Error($"任务不是torrent文件：{file}");
                         continue;
                     }
 
@@ -113,25 +118,26 @@ namespace WkyFast.Window
                         var result = await WkyApiManager.Instance.DownloadBtFile(file);
                         if (result)
                         {
-                            Debug.WriteLine("任务已添加");
+                            EasyLogManager.Logger.Info($"任务已添加：{file}");
                             count++;
                         }
 
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex);
-                        //
+                        EasyLogManager.Logger.Error(ex);
                     }
 
                 }
 
                 if (count == 0)
                 {
+                    EasyLogManager.Logger.Info($"任务添加失败");
                     await this.ShowMessageAsync("添加失败", $"任务添加失败");
                 }
                 else if (files.Length != count)
                 {
+                    EasyLogManager.Logger.Info($"成功添加{count}个任务，有{files.Length - count}个添加失败");
                     await this.ShowMessageAsync("部分添加失败", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
                 }
             }
