@@ -15,14 +15,6 @@ namespace WkyFast
     /// </summary>
     public partial class App : Application
     {
-        App()
-        {
 
-        }
-
-        protected override void OnExit(ExitEventArgs e)
-        {
-            base.OnExit(e);
-        }
     }
 }

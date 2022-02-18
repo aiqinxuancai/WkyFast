@@ -36,15 +36,7 @@ namespace WkyFast
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private static MainWindow instance = new MainWindow();
-
-        public static MainWindow Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        public static MainWindow Instance { get; set; }
 
         private CancellationTokenSource _tokenTaskListSource = new CancellationTokenSource();
 
@@ -53,13 +45,22 @@ namespace WkyFast
         {
             InitializeComponent();
 
+            Instance = this;
+
             IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
             Win11Style.LoadWin11Style(hWnd);
 
             LoadMainTabView();
 
+            EasyLogManager.Logger.Info("主界面初始化");
+
             //支持选中？
             //默认加载第一个？的面板？
+        }
+
+        ~MainWindow()
+        {
+            //MainNotifyIcon.Visibility = Visibility.Hidden;
         }
 
         private async void MetroWindow_Loaded(object sender, RoutedEventArgs e)

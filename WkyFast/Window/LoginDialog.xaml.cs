@@ -70,5 +70,11 @@ namespace WkyFast.Window
                 (bool)SavePasswordCheckBox.IsChecked,
                 (bool)AutoLoginCheckBox.IsChecked);
         }
+
+        private void ExitLabel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            //退出
+            Application.Current.Shutdown();
+        }
     }
 }

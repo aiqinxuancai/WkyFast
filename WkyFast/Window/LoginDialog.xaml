@@ -18,7 +18,7 @@
     </dialogs:CustomDialog.Resources>
     <Grid>
         <Grid Width="300"  >
-            <StackPanel Margin="0,0,0,30">
+            <StackPanel Margin="0,0,0,0">
                 <TextBlock Text="登录" FontSize="24" HorizontalAlignment="Center"></TextBlock>
 
                 <Border Margin="10,10,10,0" CornerRadius="4" Background="#0C000000" Grid.RowSpan="1" Grid.Row="0" Height="32" >
@@ -43,7 +43,9 @@
                     <CheckBox x:Name="AutoLoginCheckBox" Foreground="#FF4B96CB" FontSize="13" HorizontalAlignment="Right" Content="自动登录" Margin="10,0,0,0" ></CheckBox>
                 </StackPanel>
 
-                <Button x:Name="LoginButton"  Style="{StaticResource AQButtonBlueCornerRadius}" Controls:ControlsHelper.ContentCharacterCasing="Normal" HorizontalAlignment="Center" Click="LoginButton_Click" Content="Login" Margin="0,10,0,0" Height="40" Width="280"/>
+                <Button x:Name="LoginButton"  Style="{StaticResource AQButtonBlueCornerRadius}" Controls:ControlsHelper.ContentCharacterCasing="Normal" HorizontalAlignment="Center" Click="LoginButton_Click" Content="登录" Margin="0,10,0,0" Height="40" Width="280"/>
+
+                <Label x:Name="ExitLabel" Content="退出" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#CC000000" Margin="0,5,0,0" MouseLeftButtonUp="ExitLabel_MouseLeftButtonUp"></Label>
             </StackPanel>
         </Grid>
             

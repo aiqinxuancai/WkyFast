@@ -112,23 +112,33 @@ namespace WkyFast.Service
             var wkyApi = WkyApi;
             //获取设备信息
             var listPeerResult = await wkyApi.ListPeer();
-            PeerList.Clear();
-            foreach (var item in listPeerResult.Result)
+
+            if (listPeerResult.Rtn == 0)
             {
-                if (item.ResultClass != null)
+                PeerList.Clear();
+                foreach (var item in listPeerResult.Result)
                 {
-                    PeerList.Add(item.ResultClass);
+                    if (item.ResultClass != null)
+                    {
+                        PeerList.Add(item.ResultClass);
+                    }
                 }
+
+                DeviceList.Clear();
+                foreach (var peer in PeerList)
+                {
+                    foreach (var device in peer.Devices)
+                    {
+                        DeviceList.Add(device);
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("获取Peer失败");
             }
 
-            DeviceList.Clear();
-            foreach (var peer in PeerList)
-            {
-                foreach (var device in peer.Devices)
-                {
-                    DeviceList.Add(device);
-                }
-            }
+
             return DeviceList.Count;
         }
 

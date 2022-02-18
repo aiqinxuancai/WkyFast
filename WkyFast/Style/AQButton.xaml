@@ -96,7 +96,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="1"
                             SnapsToDevicePixels="True"
-                            CornerRadius="20">
+                            CornerRadius="6">
                         <Grid>
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Grid>

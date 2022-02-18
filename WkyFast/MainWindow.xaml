@@ -47,8 +47,9 @@
            
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
-    
+
     <Grid>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="77*"/>
@@ -57,12 +58,15 @@
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
         <tb:TaskbarIcon x:Name="MainNotifyIcon"
                     Visibility="Visible"
                     ToolTipText="WkyFast"
                     MenuActivation="LeftOrRightClick"
-                    PopupActivation="DoubleClick" IconSource="/icon.ico" Grid.RowSpan="2" Grid.ColumnSpan="2"
-      />
+                    PopupActivation="DoubleClick" 
+                    IconSource="/icon.ico">
+        </tb:TaskbarIcon>
+      
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal" Margin="10">
                 <Border ClipToBounds="True" CornerRadius="4" Background="#10000000">
