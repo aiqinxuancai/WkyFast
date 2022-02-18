@@ -16,5 +16,13 @@ namespace WkyFast
     public partial class App : Application
     {
 
+        public static void ExitWkyFast()
+        {
+            if (WkyFast.MainWindow.Instance != null)
+            {
+                WkyFast.MainWindow.Instance.Close();
+            }
+            App.Current.Shutdown();
+        }
     }
 }

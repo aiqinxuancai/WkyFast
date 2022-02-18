@@ -73,8 +73,10 @@ namespace WkyFast.Window
 
         private void ExitLabel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            //通知退出
+
             //退出
-            Application.Current.Shutdown();
+            App.ExitWkyFast();
         }
     }
 }
