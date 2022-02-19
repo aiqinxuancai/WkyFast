@@ -93,14 +93,14 @@ namespace WkyFast.View
                         14 => "准备添加中",
                      */
 
-                    if (_lastMenuTaskData.State == 9)
+                    if (_lastMenuTaskData.State == (int)TaskState.Pause)
                     {
                         MenuItem menuRestart = new MenuItem() { Header = "继续下载" };
                         menuRestart.Click += MenuRestart_Click;
                         menu.Items.Add(menuRestart);
                         menu.Items.Add(new Separator());
                     }
-                    else if (_lastMenuTaskData.State == 11)
+                    else if (_lastMenuTaskData.State == (int)TaskState.Completed)
                     {
                         //已完成 不处理
                     }
