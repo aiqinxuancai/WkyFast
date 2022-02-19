@@ -30,6 +30,9 @@ namespace WkyFast.View
             this.ViewModel = viewModel;
         }
 
+
+        private SubscriptionModel _lastSubscriptionModel;
+
         public static readonly DependencyProperty ViewModelProperty =
             DependencyProperty.Register("ViewModel", typeof(ObservableCollection<SubscriptionModel>), typeof(WkySubscriptionListView));
 
@@ -66,35 +69,29 @@ namespace WkyFast.View
             ContextMenu menu = new ContextMenu();
 
             e.Row.MouseRightButtonDown += (s, a) => {
-                a.Handled = true; 
+                a.Handled = true;
+
+                SubscriptionModel model = (SubscriptionModel)((DataGridRow)s).DataContext;
+                _lastSubscriptionModel = model;
+
                 menu.Items.Clear();
-                MenuItem menuDelete = new MenuItem() {  Header = "删除"};
-                menuDelete.Click += MenuDelete_Click;
-                menu.Items.Add(menuDelete);
-                DataGrid row = sender as DataGrid; 
-                row.ContextMenu = menu;
+                if (_lastSubscriptionModel != null)
+                {
+                    MenuItem menuDelete = new MenuItem() { Header = "删除" };
+                    menuDelete.Click += MenuDelete_Click;
+                    menu.Items.Add(menuDelete);
+                    DataGrid row = sender as DataGrid;
+                    row.ContextMenu = menu;
+                }
+
+                
+
             };
         }
 
         private void MenuDelete_Click(object sender, RoutedEventArgs e)
         {
-            //删除直接调用API
-            //Get the clicked MenuItem
-            var menuItem = (MenuItem)sender;
-
-            //Get the ContextMenu to which the menuItem belongs
-            var contextMenu = (ContextMenu)menuItem.Parent;
-
-            //Find the placementTarget
-            var item = (DataGrid)contextMenu.PlacementTarget;
-
-            //Get the underlying item, that you cast to your object that is bound
-            //to the DataGrid (and has subject and state as property)
-            var toDeleteFromBindedList = (SubscriptionModel)item.SelectedCells[0].Item;
-
-            //Remove the toDeleteFromBindedList object from your ObservableCollection
-            //yourObservableCollection.Remove(toDeleteFromBindedList);
-            SubscriptionManager.Instance.SubscriptionModel.Remove(toDeleteFromBindedList);
+            SubscriptionManager.Instance.SubscriptionModel.Remove(_lastSubscriptionModel);
             SubscriptionManager.Instance.Save();
         }
     }

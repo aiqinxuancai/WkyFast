@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WkyFast.Service;
 using WkyFast.Service.Model;
 
 namespace WkyFast.View
@@ -36,6 +37,9 @@ namespace WkyFast.View
 
             this.ViewModel = viewModel;
         }
+
+        private WkyApiSharp.Service.Model.RemoteDownloadList.Task _lastMenuTaskData;
+
 
         public static readonly DependencyProperty ViewModelProperty =
             DependencyProperty.Register("ViewModel", typeof(ObservableCollection<TaskModel>), typeof(WkyTaskListView));
@@ -73,35 +77,115 @@ namespace WkyFast.View
 
             e.Row.MouseRightButtonDown += (s, a) => {
                 a.Handled = true;
-                menu.Items.Clear();
-                MenuItem menuDelete = new MenuItem() { Header = "删除" };
-                menuDelete.Click += MenuDelete_Click;
-                menu.Items.Add(menuDelete);
-                DataGrid row = sender as DataGrid;
-                row.ContextMenu = menu;
+                TaskModel model = (TaskModel)((DataGridRow)s).DataContext;
+                _lastMenuTaskData = model.Data;
+
+                if (_lastMenuTaskData != null)
+                {
+                    menu.Items.Clear();
+
+                    /*
+                        0 => "添加中",
+                        8 => "等待中",
+                        9 => "已暂停",
+                        1 => "下载中",
+                        11 => "已完成",
+                        14 => "准备添加中",
+                     */
+
+                    if (_lastMenuTaskData.State == 9)
+                    {
+                        MenuItem menuRestart = new MenuItem() { Header = "继续下载" };
+                        menuRestart.Click += MenuRestart_Click;
+                        menu.Items.Add(menuRestart);
+                        menu.Items.Add(new Separator());
+                    }
+                    else if (_lastMenuTaskData.State == 11)
+                    {
+                        //已完成 不处理
+                    }
+                    else
+                    {
+                        MenuItem menuStop = new MenuItem() { Header = "暂停" };
+                        menuStop.Click += MenuStop_Click;
+                        menu.Items.Add(menuStop);
+                        menu.Items.Add(new Separator());
+                    }
+
+                    
+
+                    MenuItem menuDelete = new MenuItem() { Header = "删除任务" };
+                    menuDelete.Click += MenuDelete_Click;
+                    menu.Items.Add(menuDelete);
+
+                    MenuItem menuDeleteFile = new MenuItem() { Header = "删除任务及文件" };
+                    menuDeleteFile.Click += MenuDeleteFile_Click;
+                    menu.Items.Add(menuDeleteFile);
+
+ 
+
+                    DataGrid row = sender as DataGrid;
+                    row.ContextMenu = menu;
+                }
+
+
             };
         }
 
-        private void MenuDelete_Click(object sender, RoutedEventArgs e)
+        private async void MenuRestart_Click(object sender, RoutedEventArgs e)
         {
-            //删除直接调用API
-            //Get the clicked MenuItem
-            var menuItem = (MenuItem)sender;
+            try
+            {
+                await WkyApiManager.Instance.WkyApi.StartTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+            }
+            catch (Exception ex)
+            {
+                EasyLogManager.Logger.Error(ex);
+            }
+        }
 
-            //Get the ContextMenu to which the menuItem belongs
-            var contextMenu = (ContextMenu)menuItem.Parent;
+        private async void MenuStop_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await WkyApiManager.Instance.WkyApi.PauseTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+            }
+            catch (Exception ex)
+            {
+                EasyLogManager.Logger.Error(ex);
+            }
+        }
 
-            //Find the placementTarget
-            var item = (DataGrid)contextMenu.PlacementTarget;
+        private async void MenuDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show($"是否确认删除任务：\r\n{_lastMenuTaskData.Name}？", "确认", MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.OK)
+            {
+                try
+                {
+                    await WkyApiManager.Instance.WkyApi.DeleteTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+                }
+                catch (Exception ex)
+                {
+                    EasyLogManager.Logger.Error(ex);
+                }
+            }
+        }
 
-            //Get the underlying item, that you cast to your object that is bound
-            //to the DataGrid (and has subject and state as property)
-            var selectedModel = (TaskModel)item.SelectedCells[0].Item;
-
-            //Remove the toDeleteFromBindedList object from your ObservableCollection
-            //yourObservableCollection.Remove(toDeleteFromBindedList);
-
-            Debug.WriteLine("111");
+        private async void MenuDeleteFile_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show($"是否确认删除任务及文件：\r\n{_lastMenuTaskData.Name}？", "确认", MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.OK)
+            {
+                try
+                {
+                    await WkyApiManager.Instance.WkyApi.DeleteTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString(), true);
+                }
+                catch (Exception ex)
+                {
+                    EasyLogManager.Logger.Error(ex);
+                }
+            }
         }
     }
 }
