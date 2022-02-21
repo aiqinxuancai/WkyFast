@@ -30,7 +30,7 @@ jobs:
         run: dotnet test --no-build --verbosity normal
       - name: Publish
         run:  dotnet publish -c Release -r win-x64
-      - run: powershell curl https://github.com/aiqinxuancai/DotNetDllPathPatcherWPF/releases/download/v0.0.14/DotNetDllPathPatcherCMD.zip -o DotNetDllPathPatcherCMD.zip
+      - run: powershell curl https://github.com/aiqinxuancai/DotNetDllPathPatcherWPF/releases/download/v0.0.15/DotNetDllPathPatcherCMD.zip -o DotNetDllPathPatcherCMD.zip
       - run: powershell Expand-Archive -Path .\DotNetDllPathPatcherCMD.zip -DestinationPath .\DotNetDllPathPatcherCMD
       - run: powershell .\DotNetDllPathPatcherCMD\publish\DotNetDllPathPatcherCMD.exe $env:GITHUB_WORKSPACE\WkyFast\bin\Release\net6.0-windows\win-x64\publish\WkyFast.exe --MyLibraryShrink
       - name: Compress
