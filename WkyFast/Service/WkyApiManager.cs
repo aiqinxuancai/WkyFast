@@ -250,6 +250,14 @@ namespace WkyFast.Service
                 var createResult = await WkyApi.CreateBatchTaskWithUrlResolve(NowDevice.Peerid, savePath, urlResoleResult, null);
                 if (createResult.Rtn == 0)
                 {
+                    foreach (var item in createResult.Tasks)
+                    {
+                        if (item.Result == 202)
+                        {
+                            Debug.WriteLine($"重复添加任务：{item.Name}");
+                            return false;
+                        }
+                    }
                     return true;
                 }
             }
