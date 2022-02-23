@@ -38,7 +38,19 @@ namespace WkyFast.Window
             dialog.ShowDialog();
         }
 
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
 
+            if (string.IsNullOrWhiteSpace(AppConfig.ConfigData.LastAddSubscriptionPath))
+            {
+                PathTextBox.Text = "/onecloud/tddownload";
+            }
+            else
+            {
+                PathTextBox.Text = AppConfig.ConfigData.LastAddSubscriptionPath;
+            }
+            
+        }
 
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
@@ -50,13 +62,17 @@ namespace WkyFast.Window
                     string url = string.Empty;
                     string regex = string.Empty;
                     bool regexEnable = false;
-
+                    string path = string.Empty;
                     this.Dispatcher.Invoke(() =>
                     {
                         url = UrlTextBox.Text;
                         regex = RegexTextBox.Text;
                         regexEnable = RegexCheckBox.IsChecked == true ? true : false;
-                        SubscriptionManager.Instance.Add(url, regex, regexEnable);
+                        path = PathTextBox.Text;
+                        SubscriptionManager.Instance.Add(url, regex, path, regexEnable);
+
+                        AppConfig.ConfigData.LastAddSubscriptionPath = path;
+
                     });
 
                     
@@ -75,6 +91,7 @@ namespace WkyFast.Window
         {
             this.Close();
         }
+
 
     }
 }

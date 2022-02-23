@@ -282,7 +282,7 @@ namespace WkyFast.Service
 
         //存储订阅，读取加载订阅
 
-        public bool Add(string url, string keyword = "", bool keywordIsRegex = false)
+        public bool Add(string url, string path, string keyword = "", bool keywordIsRegex = false)
         {
             if (SubscriptionModel.ToList().Find( a => { return a.Url == url; }) != null)
             {
@@ -292,6 +292,9 @@ namespace WkyFast.Service
 
             SubscriptionModel model = new SubscriptionModel();
             model.Url = url;
+            model.Filter = keyword;
+            model.IsFilterRegex = keywordIsRegex;
+            model.Path = path;
 
             SubscriptionModel.Add(model);
 
