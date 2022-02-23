@@ -225,6 +225,14 @@ namespace WkyFast.Service
                     var result = await WkyApi.CreateTaskWithBtCheck(NowDevice.Peerid, path, bcCheck);
                     if (result.Rtn == 0)
                     {
+                        foreach (var item in createResult.Tasks)
+                        {
+                            if (item.Result == 202)
+                            {
+                                Debug.WriteLine($"重复添加任务：{item.Name}");
+                                return false;
+                            }
+                        }
                         return true;
                     }
                 }
