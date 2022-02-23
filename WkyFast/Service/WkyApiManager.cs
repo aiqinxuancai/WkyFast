@@ -225,7 +225,7 @@ namespace WkyFast.Service
                     var result = await WkyApi.CreateTaskWithBtCheck(NowDevice.Peerid, path, bcCheck);
                     if (result.Rtn == 0)
                     {
-                        foreach (var item in createResult.Tasks)
+                        foreach (var item in result.Tasks)
                         {
                             if (item.Result == 202)
                             {
