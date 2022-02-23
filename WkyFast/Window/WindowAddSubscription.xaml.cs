@@ -47,6 +47,7 @@ namespace WkyFast.Window
             }
             else
             {
+                //TODO
                 PathTextBox.Text = AppConfig.ConfigData.LastAddSubscriptionPath;
             }
             
