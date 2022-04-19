@@ -17,10 +17,16 @@ namespace WkyFast.Service.Model.SubscriptionModel
 
     public partial class SubscriptionModel : BaseNotificationModel
     {
+        /// <summary>
+        /// 订阅地址
+        /// </summary>
         [JsonProperty("Url")]
         public string Url { get; set; }
 
-        [JsonProperty("Path")]
+        /// <summary>
+        /// 存储路径
+        /// </summary>
+        [JsonProperty("Path")] 
         public string Path { get; set; }
 
         [JsonProperty("Name")]
@@ -32,6 +38,22 @@ namespace WkyFast.Service.Model.SubscriptionModel
         [JsonProperty("IsFilterRegex")]
         public bool IsFilterRegex { get; set; }
 
+
+        /// <summary>
+        /// 任务总数
+        /// </summary>
+        [JsonProperty("TaskFullCount")]
+        public int TaskFullCount { get; set; }
+
+        /// <summary>
+        /// 匹配任务总数
+        /// </summary>
+        [JsonProperty("TaskMatchCount")]
+        public int TaskMatchCount { get; set; }
+
+        /// <summary>
+        /// 已经添加了下载的任务
+        /// </summary>
         [JsonProperty("AlreadyAddedDownloadModel")]
         public ObservableCollection<SubscriptionSubTaskModel> AlreadyAddedDownloadModel { get; set; } = new ObservableCollection<SubscriptionSubTaskModel> { };
     }

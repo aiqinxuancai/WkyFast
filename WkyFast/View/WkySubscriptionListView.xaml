@@ -122,7 +122,13 @@
                                         <StackPanel Margin="2,2"  Grid.Column="0">
                                             <TextBlock Text="{Binding Name}"></TextBlock>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="子任务数量 "></TextBlock>
+                                                <TextBlock Text="总任务数："></TextBlock>
+                                                <TextBlock Text="{Binding TaskFullCount}"></TextBlock>
+                                                
+                                                <TextBlock Text="匹配任务数：" Margin="10,0,0,0"></TextBlock>
+                                                <TextBlock Text="{Binding TaskMatchCount}"></TextBlock>
+                                                
+                                                <TextBlock Text="已添加任务：" Margin="10,0,0,0"></TextBlock>
                                                 <TextBlock Text="{Binding AlreadyAddedDownloadModel.Count}"></TextBlock>
                                             </StackPanel>
                                         </StackPanel>

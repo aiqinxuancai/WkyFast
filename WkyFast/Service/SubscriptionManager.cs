@@ -164,6 +164,22 @@ namespace WkyFast.Service
             return true;
         }
 
+        private int GetMatchTaskCount(IEnumerable<SyndicationItem> Items, SubscriptionModel model)
+        {
+            int count = 0;
+            foreach (SyndicationItem item in Items)
+            {
+                string subject = item.Title.Text;
+                string summary = item.Summary.Text;
+                if (CheckTitle(model, subject))
+                {
+                    count++;
+                }
+
+            }
+            return count;
+
+        }
 
         /// <summary>
         /// 检查一次订阅
@@ -174,13 +190,18 @@ namespace WkyFast.Service
             foreach (var subscription in SubscriptionModel)
             {
                 string url = subscription.Url;
-
-                EasyLogManager.Logger.Info($"读取订阅地址：{url}");
+                
+                EasyLogManager.Logger.Info($"订阅地址：{url}");
                 XmlReader reader = XmlReader.Create(url);
                 SyndicationFeed feed = SyndicationFeed.Load(reader);
                 reader.Close();
 
+                subscription.TaskFullCount = feed.Items.Count();
                 subscription.Name = feed.Title.Text;
+                subscription.TaskMatchCount = GetMatchTaskCount(feed.Items, subscription);
+
+                EasyLogManager.Logger.Info($"订阅标题：{subscription.Name} 订阅总任务数：{subscription.TaskFullCount} 符合任务数：{subscription.TaskMatchCount}");
+
                 foreach (SyndicationItem item in feed.Items)
                 {
                     string subject = item.Title.Text;
