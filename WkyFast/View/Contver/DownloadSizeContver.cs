@@ -50,6 +50,7 @@ namespace WkyFast.View.Contver
                 1 => "下载中",
                 11 => "已完成",
                 14 => "准备添加中",
+                38 => "磁盘写入异常",
                 _ => value,
             };
         }

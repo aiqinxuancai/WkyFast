@@ -70,7 +70,7 @@ namespace WkyFast.Window
                         regex = RegexTextBox.Text;
                         regexEnable = RegexCheckBox.IsChecked == true ? true : false;
                         path = PathTextBox.Text;
-                        SubscriptionManager.Instance.Add(url, regex, path, regexEnable);
+                        SubscriptionManager.Instance.Add(url, path, regex, regexEnable);
 
                         AppConfig.ConfigData.LastAddSubscriptionPath = path;
 

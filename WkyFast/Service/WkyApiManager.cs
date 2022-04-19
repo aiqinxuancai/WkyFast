@@ -188,7 +188,7 @@ namespace WkyFast.Service
             return null;
         }
 
-        public string GetUsbInfoDefPath()
+        public string GetUsbInfoDefDownloadPath()
         {
             var savePath = string.Empty;
             if (NowUsbInfo != null && NowUsbInfo.Rtn == 0)
@@ -206,6 +206,32 @@ namespace WkyFast.Service
                 }
             }
             return savePath;
+        }
+
+        /// <summary>
+        /// 获取默认默认存储设备的路径
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetUsbInfoDefPath()
+        {
+            List<string> path = new List<string>();
+            var savePath = string.Empty;
+            if (NowUsbInfo != null && NowUsbInfo.Rtn == 0)
+            {
+                foreach (var disk in NowUsbInfo.Result)
+                {
+                    if (disk.ResultClass != null)
+                    {
+                        foreach (var partition in disk.ResultClass.Partitions)
+                        {
+                            //savePath = partition.Path;
+                            path.Add(partition.Path);
+                        }
+                    }
+
+                }
+            }
+            return path;
         }
 
         /// <summary>
@@ -250,7 +276,7 @@ namespace WkyFast.Service
         {
             if (string.IsNullOrWhiteSpace( savePath))
             {
-                savePath = GetUsbInfoDefPath();
+                savePath = GetUsbInfoDefDownloadPath();
             }
             var urlResoleResult = await WkyApi.UrlResolve(NowDevice.Peerid, url);
             if (urlResoleResult.Rtn == 0)
@@ -276,7 +302,7 @@ namespace WkyFast.Service
         {
             if (string.IsNullOrWhiteSpace(savePath))
             {
-                savePath = GetUsbInfoDefPath();
+                savePath = GetUsbInfoDefDownloadPath();
             }
             var btResoleResult = await WkyApi.BtCheck(NowDevice.Peerid, filePath);
             if (btResoleResult.Rtn == 0)

@@ -204,14 +204,33 @@ namespace WkyFast.Service
                         {
                             //"application/x-bittorrent"
                             string downloadUrl = link.Uri.ToString();
+
+                            if (subscription.AlreadyAddedDownloadModel == null)
+                            {
+                                subscription.AlreadyAddedDownloadModel = new ObservableCollection<SubscriptionSubTaskModel> { };
+                            }
+
+
                             //如果没有下载过
                             if (!subscription.AlreadyAddedDownloadModel.Any(a => a.Url.Contains(downloadUrl)))
                             {
                                 try
                                 {
                                     //TODO 开始下载
-                                    EasyLogManager.Logger.Info($"添加下载{subject} {link}");
-                                    if (WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, subscription.Path).Result)
+
+                                    var basePaths = WkyApiManager.Instance.GetUsbInfoDefPath();
+
+                                    if (basePaths.Count == 0)
+                                    {
+                                        EasyLogManager.Logger.Error($"添加失败，没有获取到存储设备");
+                                        return;
+                                    }
+
+                                    var savePath = basePaths[0] + (subscription.Path.StartsWith("/") ? "" : "/")  + subscription.Path; //Path.Combine(basePaths[0], subscription.Path);
+                                    
+
+                                    EasyLogManager.Logger.Info($"添加下载{subject} {link} {savePath}");
+                                    if (WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, savePath).Result)
                                     {
                                         subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl} );
                                         EasyLogManager.Logger.Info($"添加成功");

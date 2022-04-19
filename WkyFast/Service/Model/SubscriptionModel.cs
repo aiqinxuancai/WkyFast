@@ -33,7 +33,7 @@ namespace WkyFast.Service.Model.SubscriptionModel
         public bool IsFilterRegex { get; set; }
 
         [JsonProperty("AlreadyAddedDownloadModel")]
-        public ObservableCollection<SubscriptionSubTaskModel> AlreadyAddedDownloadModel { get; set; }
+        public ObservableCollection<SubscriptionSubTaskModel> AlreadyAddedDownloadModel { get; set; } = new ObservableCollection<SubscriptionSubTaskModel> { };
     }
 
     public partial class SubscriptionSubTaskModel : BaseNotificationModel
