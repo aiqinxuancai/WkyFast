@@ -235,11 +235,13 @@ namespace WkyFast.Service
         }
 
         /// <summary>
-        /// 从一个BT的URL添加到下载中
+        /// 从一个BT的URL添加到下载中（用于订阅的下载）
         /// </summary>
         /// <param name="url"></param>
-        public async Task<bool> DownloadBtFileUrl(string url, string path)
+        public async Task<DownloadResult> DownloadBtFileUrl(string url, string path)
         {
+            DownloadResult downloadResult = new DownloadResult();
+            //Duplicate addition
             try
             {
                 var data = await url.WithTimeout(15).GetBytesAsync();
@@ -256,20 +258,22 @@ namespace WkyFast.Service
                             if (item.Result == 202)
                             {
                                 Debug.WriteLine($"重复添加任务：{item.Name}");
-                                return false;
+                                downloadResult.isDuplicateAddTask = true;
+                                downloadResult.Result = false;
                             }
                         }
-                        return true;
+                        downloadResult.Result = true;
                     }
                 }
 
-                return false;
+                downloadResult.Result = false;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
             }
-            return false;
+            downloadResult.Result = false;
+            return downloadResult;
         }
 
         public async Task<bool> DownloadUrl(string url, string savePath = "")

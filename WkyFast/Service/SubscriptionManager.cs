@@ -251,10 +251,18 @@ namespace WkyFast.Service
                                     
 
                                     EasyLogManager.Logger.Info($"添加下载{subject} {link} {savePath}");
-                                    if (WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, savePath).Result)
+
+                                    var addResult = WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, savePath).Result;
+
+                                    if (addResult.Result)
                                     {
                                         subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl} );
                                         EasyLogManager.Logger.Info($"添加成功");
+                                    }
+                                    else if (addResult.isDuplicateAddTask)
+                                    {
+                                        subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl });
+                                        EasyLogManager.Logger.Info($"成功，任务已经存在，不再重复添加");
                                     }
                                     else
                                     {
