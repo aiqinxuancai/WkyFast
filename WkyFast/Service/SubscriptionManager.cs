@@ -182,6 +182,27 @@ namespace WkyFast.Service
         }
 
         /// <summary>
+        /// 通过网络获取订阅地址的Title
+        /// </summary>
+        /// <param name="url"></param>
+        public string GetSubscriptionTitle(string url)
+        {
+            try
+            {
+                XmlReader reader = XmlReader.Create(url);
+                SyndicationFeed feed = SyndicationFeed.Load(reader);
+                reader.Close();
+                EasyLogManager.Logger.Info($"获取订阅标题：{feed.Title.Text}");
+                return feed.Title.Text;
+            }
+            catch (Exception e)
+            {
+                EasyLogManager.Logger.Error($"获取订阅标题失败");
+                return "";
+            }
+        }
+
+        /// <summary>
         /// 检查一次订阅
         /// </summary>
         private void CheckSubscription()
@@ -192,9 +213,23 @@ namespace WkyFast.Service
                 string url = subscription.Url;
                 
                 EasyLogManager.Logger.Info($"订阅地址：{url}");
-                XmlReader reader = XmlReader.Create(url);
-                SyndicationFeed feed = SyndicationFeed.Load(reader);
-                reader.Close();
+
+
+                XmlReader reader ;
+                SyndicationFeed feed ;
+
+                try
+                {
+                    reader = XmlReader.Create(url);
+                    feed = SyndicationFeed.Load(reader);
+                    reader.Close();
+                }
+                catch (Exception e)
+                {
+                    EasyLogManager.Logger.Info($"无法访问订阅：{url}");
+                    continue;
+                }
+
 
                 subscription.TaskFullCount = feed.Items.Count();
                 subscription.Name = feed.Title.Text;

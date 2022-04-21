@@ -253,6 +253,7 @@ namespace WkyFast.Service
                     var result = await WkyApi.CreateTaskWithBtCheck(NowDevice.Peerid, path, bcCheck);
                     if (result.Rtn == 0)
                     {
+                        downloadResult.Result = true;
                         foreach (var item in result.Tasks)
                         {
                             if (item.Result == 202)
@@ -262,17 +263,22 @@ namespace WkyFast.Service
                                 downloadResult.Result = false;
                             }
                         }
-                        downloadResult.Result = true;
+                        
                     }
+                } 
+                else
+                {
+                    downloadResult.Result = false;
                 }
 
-                downloadResult.Result = false;
+                
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+                downloadResult.Result = false;
             }
-            downloadResult.Result = false;
+            
             return downloadResult;
         }
 

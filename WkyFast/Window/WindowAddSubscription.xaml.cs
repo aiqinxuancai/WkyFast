@@ -59,26 +59,54 @@ namespace WkyFast.Window
             //TODO 支持选择设备和磁盘？？
             try
             {
+                var progressView = await this.ShowProgressAsync("请稍后", "正在检查订阅...");
+
                 await Task.Run(() => {
                     string url = string.Empty;
                     string regex = string.Empty;
                     bool regexEnable = false;
                     string path = string.Empty;
+
                     this.Dispatcher.Invoke(() =>
                     {
                         url = UrlTextBox.Text;
                         regex = RegexTextBox.Text;
                         regexEnable = RegexCheckBox.IsChecked == true ? true : false;
                         path = PathTextBox.Text;
-                        SubscriptionManager.Instance.Add(url, path, regex, regexEnable);
-
-                        AppConfig.ConfigData.LastAddSubscriptionPath = path;
-
                     });
 
+                    try
+                    {
+                        Uri uri = new Uri(url);
+                    } 
+                    catch (Exception ex)
+                    {
+                        progressView.CloseAsync();
+                        this.ShowMessageAsync("Url不合法", ex.ToString());
+                        //return;
+                    }
                     
+                    string title = SubscriptionManager.Instance.GetSubscriptionTitle(url);
+
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        if (string.IsNullOrEmpty(title))
+                        {
+                            path = PathTextBox.Text;
+                        }
+                        else
+                        {
+                            path = PathTextBox.Text + (PathTextBox.Text.EndsWith("/") ? "" : "/") + title;
+                        }
+
+                        SubscriptionManager.Instance.Add(url, path, regex, regexEnable);
+                        AppConfig.ConfigData.LastAddSubscriptionPath = path;
+                    });
+
                 });
-               
+
+                await progressView.CloseAsync();
+
                 this.Close();
             }
             catch (Exception ex)
