@@ -241,7 +241,8 @@ namespace WkyFast.Service
         public async Task<DownloadResult> DownloadBtFileUrl(string url, string path)
         {
             DownloadResult downloadResult = new DownloadResult();
-            //Duplicate addition
+            downloadResult.Result = false;
+
             try
             {
                 var data = await url.WithTimeout(15).GetBytesAsync();
@@ -266,17 +267,12 @@ namespace WkyFast.Service
                         
                     }
                 } 
-                else
-                {
-                    downloadResult.Result = false;
-                }
-
                 
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-                downloadResult.Result = false;
+ 
             }
             
             return downloadResult;
