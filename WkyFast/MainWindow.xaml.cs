@@ -384,5 +384,18 @@ namespace WkyFast
         {
             BrowserHelper.OpenUrlBrowser("https://github.com/aiqinxuancai/WkyFast");
         }
+
+        private void MainNotifyIcon_TrayLeftMouseDown(object sender, RoutedEventArgs e)
+        {
+            if (this.Visibility == Visibility.Hidden)
+            {
+                this.Visibility = Visibility.Visible;
+                this.Focus();
+            }
+            else
+            {
+                this.Visibility = Visibility.Hidden;
+            }
+        }
     }
 }

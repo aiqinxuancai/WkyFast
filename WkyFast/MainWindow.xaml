@@ -64,7 +64,8 @@
                     ToolTipText="WkyFast"
                     MenuActivation="LeftOrRightClick"
                     PopupActivation="DoubleClick" 
-                    IconSource="/icon.ico">
+                        LeftClickCommand=""
+                    IconSource="/icon.ico" TrayLeftMouseDown="MainNotifyIcon_TrayLeftMouseDown">
         </tb:TaskbarIcon>
       
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
