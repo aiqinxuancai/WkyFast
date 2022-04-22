@@ -100,7 +100,8 @@ namespace WkyFast.Window
                         }
 
                         SubscriptionManager.Instance.Add(url, path, regex, regexEnable);
-                        AppConfig.ConfigData.LastAddSubscriptionPath = path;
+
+                        AppConfig.ConfigData.LastAddSubscriptionPath = PathTextBox.Text;
                     });
 
                 });

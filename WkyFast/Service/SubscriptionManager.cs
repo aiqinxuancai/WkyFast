@@ -370,6 +370,7 @@ namespace WkyFast.Service
             if (SubscriptionModel.ToList().Find( a => { return a.Url == url; }) != null)
             {
                 //找到了存在相同
+                EasyLogManager.Logger.Error($"添加失败，重复的订阅");
                 return false;
             }
 
@@ -378,6 +379,8 @@ namespace WkyFast.Service
             model.Filter = keyword;
             model.IsFilterRegex = keywordIsRegex;
             model.Path = path;
+
+            EasyLogManager.Logger.Error($"添加订阅：{model.Url}");
 
             SubscriptionModel.Add(model);
 
