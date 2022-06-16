@@ -33,7 +33,7 @@ namespace WkyFast.Service
 
         public WkyApi WkyApi { set; get; } 
 
-        public ObservableCollection<WkyApiSharp.Service.Model.ListPeer.ResultClass> PeerList { set; get; } = new();
+        //public ObservableCollection<WkyApiSharp.Service.Model.ListPeer.ResultClass> PeerList { set; get; } = new();
 
         public WkyApiSharp.Service.Model.ListPeer.Device NowDevice { set; get; }
 
@@ -104,87 +104,54 @@ namespace WkyFast.Service
             }
         }
 
-        /// <summary>
-        /// 玩客云登录成功后的信息处理
-        /// </summary>
-        public async Task<int> UpdateDevice()
-        {
-            var wkyApi = WkyApi;
-            //获取设备信息
-            var listPeerResult = await wkyApi.ListPeer();
+        ///// <summary>
+        ///// 玩客云登录成功后的信息处理
+        ///// </summary>
+        //public async Task<int> UpdateDevice()
+        //{
+        //    var wkyApi = WkyApi;
+        //    //获取设备信息
+        //    var listPeerResult = await wkyApi.ListPeer();
 
-            if (listPeerResult.Rtn == 0)
-            {
-                PeerList.Clear();
-                foreach (var item in listPeerResult.Result)
-                {
-                    if (item.ResultClass != null)
-                    {
-                        PeerList.Add(item.ResultClass);
-                    }
-                }
+        //    if (listPeerResult.Rtn == 0)
+        //    {
+        //        PeerList.Clear();
+        //        foreach (var item in listPeerResult.Result)
+        //        {
+        //            if (item.ResultClass != null)
+        //            {
+        //                PeerList.Add(item.ResultClass);
+        //            }
+        //        }
+        //        DeviceList.Clear();
+        //        foreach (var peer in PeerList)
+        //        {
+        //            foreach (var device in peer.Devices)
+        //            {
+        //                DeviceList.Add(device);
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        throw new Exception("获取Peer失败");
+        //    }
 
-                DeviceList.Clear();
-                foreach (var peer in PeerList)
-                {
-                    foreach (var device in peer.Devices)
-                    {
-                        DeviceList.Add(device);
-                    }
-                }
-            }
-            else
-            {
-                throw new Exception("获取Peer失败");
-            }
 
-
-            return DeviceList.Count;
-        }
+        //    return DeviceList.Count;
+        //}
 
         /// <summary>
         /// 选中设备，优先从上次选择中选中
         /// </summary>
         public async Task<WkyApiSharp.Service.Model.ListPeer.Device?> SelectDevice()
         {
-            if (PeerList != null && PeerList.Count > 0)
+            var device = WkyApi.GetDeviceWithId(AppConfig.ConfigData.LastDeviceId);
+            if (device != null)
             {
-                WkyApiSharp.Service.Model.ListPeer.Device? selectDevice = null;
-
-                foreach (var peer in PeerList)
-                {
-                    foreach (var device in peer.Devices)
-                    {
-                        if (!string.IsNullOrWhiteSpace(AppConfig.ConfigData.LastDeviceId))
-                        {
-                            if (device.DeviceId == AppConfig.ConfigData.LastDeviceId)
-                            {
-                                selectDevice = device;
-                            }
-                        }
-                    }
-                }
-
-
-                if (selectDevice != null)
-                {
-                    //更新USB信息
-                    NowUsbInfo = await WkyApi.GetUsbInfo(selectDevice.DeviceId);
-                    NowDevice = selectDevice;
-                    return selectDevice;
-                }
-
-                //到这里说明没有配置AppConfig.ConfigData.LastDeviceId 或者 peer.Devices为空
-
-                selectDevice = PeerList?.First()?.Devices?.First();
-                if (selectDevice != null)
-                {
-                    NowUsbInfo = await WkyApi.GetUsbInfo(selectDevice.DeviceId);
-                    NowDevice = selectDevice;
-                }
-                
-                return selectDevice;
+                return device.Device;
             }
+            
             return null;
         }
 
