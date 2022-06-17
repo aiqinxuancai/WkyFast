@@ -136,7 +136,7 @@ namespace WkyFast.View
         {
             try
             {
-                await WkyApiManager.Instance.WkyApi.StartTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+                await WkyApiManager.Instance.API.StartTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.Id.ToString());
             }
             catch (Exception ex)
             {
@@ -148,7 +148,7 @@ namespace WkyFast.View
         {
             try
             {
-                await WkyApiManager.Instance.WkyApi.PauseTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+                await WkyApiManager.Instance.API.PauseTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.Id.ToString());
             }
             catch (Exception ex)
             {
@@ -163,7 +163,7 @@ namespace WkyFast.View
             {
                 try
                 {
-                    await WkyApiManager.Instance.WkyApi.DeleteTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+                    await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.Id.ToString());
                 }
                 catch (Exception ex)
                 {
@@ -179,7 +179,7 @@ namespace WkyFast.View
             {
                 try
                 {
-                    await WkyApiManager.Instance.WkyApi.DeleteTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString(), true);
+                    await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.Id.ToString(), true);
                 }
                 catch (Exception ex)
                 {

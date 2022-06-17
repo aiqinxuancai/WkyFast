@@ -77,7 +77,7 @@
                               mah:ControlsHelper.MouseOverBorderBrush="Transparent" 
                               BorderBrush="Transparent" 
                               Width="180"
-                              DisplayMemberPath="DeviceName" 
+                              DisplayMemberPath="Device.DeviceName" 
                               SelectionChanged="DeviceComboBox_SelectionChanged">
                         
                     </ComboBox>
