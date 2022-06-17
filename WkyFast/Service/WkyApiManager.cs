@@ -111,80 +111,8 @@ namespace WkyFast.Service
 
 
                 });
-
-
-
         }
 
-        public async Task UpdateTask()
-        {
-            var remoteDownloadListResult = await API.RemoteDownloadList(NowDevice.PeerId);
-
-            if (remoteDownloadListResult.Rtn == 0)
-            {
-                var obList = remoteDownloadListResult.Tasks.ToList();
-                MainWindow.Instance.Dispatcher.Invoke(() => {
-                    //TODO 更顺滑的更新任务
-                    
-                    //if (obList.Count - TaskList.Count > 0)
-                    //{
-                    //    while (obList.Count - TaskList.Count > 0)
-                    //    {
-                    //        TaskList.Add(new TaskModel());
-                    //    }
-                    //}
-                    //else if (obList.Count - TaskList.Count < 0)
-                    //{
-                    //    while (obList.Count - TaskList.Count < 0)
-                    //    {
-                    //        TaskList.RemoveAt(TaskList.Count - 1);
-                    //    }
-                    //}
-
-                    //for (int i = 0;i < obList.Count; i++)
-                    //{
-                    //    TaskList[i].Data = obList[i];
-                    //}
-                });
-            }
-        }
-
-        ///// <summary>
-        ///// 玩客云登录成功后的信息处理
-        ///// </summary>
-        //public async Task<int> UpdateDevice()
-        //{
-        //    var wkyApi = WkyApi;
-        //    //获取设备信息
-        //    var listPeerResult = await wkyApi.ListPeer();
-
-        //    if (listPeerResult.Rtn == 0)
-        //    {
-        //        PeerList.Clear();
-        //        foreach (var item in listPeerResult.Result)
-        //        {
-        //            if (item.ResultClass != null)
-        //            {
-        //                PeerList.Add(item.ResultClass);
-        //            }
-        //        }
-        //        DeviceList.Clear();
-        //        foreach (var peer in PeerList)
-        //        {
-        //            foreach (var device in peer.Devices)
-        //            {
-        //                DeviceList.Add(device);
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        throw new Exception("获取Peer失败");
-        //    }
-
-
-        //    return DeviceList.Count;
-        //}
 
         /// <summary>
         /// 选中设备，优先从上次选择中选中
