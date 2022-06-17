@@ -118,7 +118,7 @@ namespace WkyFast
             int runCount = 0;
 
             //注册通知获取数据
-            WkyApiManager.Instance.API.EventReceived
+            WkyApiManager.Instance.API?.EventReceived
                 .OfType<UpdateDeviceResultEvent>()
                 .Subscribe(async r =>
                 {

@@ -119,10 +119,10 @@ namespace WkyFast.Service
         /// </summary>
         public async Task<WkyDevice> SelectDevice()
         {
-            var device = API.GetDeviceWithId(AppConfig.ConfigData.LastDeviceId);
+            var device = _api?.GetDeviceWithId(AppConfig.ConfigData.LastDeviceId);
             if (device != null)
             {
-                NowDevice = device;
+                _nowDevice = device;
                 return device;
             }
             
@@ -132,7 +132,7 @@ namespace WkyFast.Service
         public string GetUsbInfoDefDownloadPath()
         {
             var savePath = string.Empty;
-            foreach (var partition in NowDevice.Partitions)
+            foreach (var partition in _nowDevice.Partitions)
             {
                 savePath = partition.Path + "/onecloud/tddownload";
             }
@@ -146,7 +146,7 @@ namespace WkyFast.Service
         public List<string> GetUsbInfoDefPath()
         {
             List<string> path = new List<string>();
-            foreach (var partition in NowDevice.Partitions)
+            foreach (var partition in _nowDevice.Partitions)
             {
                 path.Add(partition.Path);
             }
@@ -166,11 +166,11 @@ namespace WkyFast.Service
             {
                 var data = await url.WithTimeout(15).GetBytesAsync();
 
-                var bcCheck = await API.BtCheck(NowDevice.Device.Peerid, data);
+                var bcCheck = await _api?.BtCheck(_nowDevice?.Device.Peerid, data);
                 Debug.WriteLine(bcCheck.ToString());
                 if (bcCheck.Rtn == 0)
                 {
-                    var result = await API.CreateTaskWithBtCheck(NowDevice.Device.Peerid, path, bcCheck);
+                    var result = await _api?.CreateTaskWithBtCheck(_nowDevice.Device.Peerid, path, bcCheck);
                     if (result.Rtn == 0)
                     {
                         downloadResult.Result = true;
@@ -203,10 +203,10 @@ namespace WkyFast.Service
             {
                 savePath = GetUsbInfoDefDownloadPath();
             }
-            var urlResoleResult = await API.UrlResolve(NowDevice.Device.Peerid, url);
+            var urlResoleResult = await _api?.UrlResolve(_nowDevice?.Device.Peerid, url);
             if (urlResoleResult.Rtn == 0)
             {
-                var createResult = await API.CreateBatchTaskWithUrlResolve(NowDevice.Device.Peerid, savePath, urlResoleResult, null);
+                var createResult = await _api?.CreateBatchTaskWithUrlResolve(_nowDevice.Device.Peerid, savePath, urlResoleResult, null);
                 if (createResult.Rtn == 0)
                 {
                     foreach (var item in createResult.Tasks)
@@ -229,10 +229,10 @@ namespace WkyFast.Service
             {
                 savePath = GetUsbInfoDefDownloadPath();
             }
-            var btResoleResult = await API.BtCheck(NowDevice.Device.Peerid, filePath);
+            var btResoleResult = await _api?.BtCheck(NowDevice?.Device.Peerid, filePath);
             if (btResoleResult.Rtn == 0)
             {
-                var createResult = await API.CreateBatchTaskWithBtCheck(NowDevice.Device.Peerid, savePath, btResoleResult, null);
+                var createResult = await _api?.CreateBatchTaskWithBtCheck(NowDevice.Device.Peerid, savePath, btResoleResult, null);
                 if (createResult.Rtn == 0)
                 {
                     foreach (var item in createResult.Tasks)
