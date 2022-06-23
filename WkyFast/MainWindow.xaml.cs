@@ -1,5 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
+﻿
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System;
@@ -24,7 +23,7 @@ using System.Windows.Shapes;
 using WkyFast.Service;
 using WkyFast.Utils;
 using WkyFast.View.Model;
-using WkyFast.Window;
+using WkyFast.Dialogs;
 using WkyApiSharp.Service.Model;
 using WkyApiSharp.Service;
 using System.Threading;
@@ -36,7 +35,7 @@ namespace WkyFast
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : Window
     {
         public static MainWindow Instance { get; set; }
 
@@ -142,7 +141,7 @@ namespace WkyFast
                     {
                         Debug.WriteLine("设备更新失败");
                         await this.Dispatcher.Invoke(async () => {
-                            await this.ShowMessageAsync("登录失败", "无法获取到玩客云设备");
+                            //await this.ShowMessageAsync("登录失败", "无法获取到玩客云设备");
                             await ShowLoginAccount();
                         });
                     }
@@ -161,8 +160,8 @@ namespace WkyFast
 
 
                 Debug.WriteLine("正在登录...");
-                var controller = await this.ShowProgressAsync("正在登录", "...");
-                controller.SetIndeterminate();
+                //var controller = await this.ShowProgressAsync("正在登录", "...");
+                //controller.SetIndeterminate();
                 await Task.Delay(1000);
 
                 bool loginResult = await api.StartLogin();
@@ -190,7 +189,7 @@ namespace WkyFast
         {
             WkyUserManager.Instance.LoadPasswrod(out var mail, out var password, out var autoLogin);
 
-            LoginDialogDelegate loginDialogDelegate = async delegate (WkyFast.Window.LoginDialog loginDialog,
+            LoginDialogDelegate loginDialogDelegate = async delegate (WkyFast.Dialogs.LoginDialog loginDialog,
                 LoginDialogTapType type,
                 string email,
                 string password,
@@ -203,13 +202,13 @@ namespace WkyFast
                 };
 
             //打开登录弹窗
-            WkyFast.Window.LoginDialog loginDialog = new WkyFast.Window.LoginDialog(loginDialogDelegate,
+            WkyFast.Dialogs.LoginDialog loginDialog = new WkyFast.Dialogs.LoginDialog(loginDialogDelegate,
                 mail,
                 password,
                 !string.IsNullOrWhiteSpace(password),
                 autoLogin);
 
-            await this.ShowMetroDialogAsync(loginDialog);
+            //await this.ShowMetroDialogAsync(loginDialog);
         }
 
         /// <summary>
@@ -225,8 +224,8 @@ namespace WkyFast
             try
             {
                 Debug.WriteLine("正在登录...");
-                var controller = await this.ShowProgressAsync("正在登录", "...");
-                controller.SetIndeterminate();
+                //var controller = await this.ShowProgressAsync("正在登录", "...");
+                //controller.SetIndeterminate();
                 await Task.Delay(1000);
 
                 WkyApiManager.Instance.API = new WkyApiSharp.Service.WkyApi(email, password, WkyLoginDeviceType.PC);
@@ -267,29 +266,19 @@ namespace WkyFast
 
         }
 
-
-        private async Task CloseCustomDialog(DependencyObject obj)
-        {
-            var dialog = ((DependencyObject)obj).TryFindParent<BaseMetroDialog>()!;
-            if (dialog != null)
-            {
-                await this.HideMetroDialogAsync(dialog);
-            }
-        }
-
-        public static Task HideVisibleDialogs(MetroWindow parent)
+        public static Task HideVisibleDialogs(Window parent)
         {
             return Task.Run(async () =>
             {
                 await parent.Dispatcher.Invoke(async () =>
                 {
-                    BaseMetroDialog dialogBeingShow = await parent.GetCurrentDialogAsync<BaseMetroDialog>();
+                    //BaseMetroDialog dialogBeingShow = await parent.GetCurrentDialogAsync<BaseMetroDialog>();
 
-                    while (dialogBeingShow != null)
-                    {
-                        await parent.HideMetroDialogAsync(dialogBeingShow);
-                        dialogBeingShow = await parent.GetCurrentDialogAsync<BaseMetroDialog>();
-                    }
+                    //while (dialogBeingShow != null)
+                    //{
+                    //    await parent.HideMetroDialogAsync(dialogBeingShow);
+                    //    dialogBeingShow = await parent.GetCurrentDialogAsync<BaseMetroDialog>();
+                    //}
                 });
             });
         }

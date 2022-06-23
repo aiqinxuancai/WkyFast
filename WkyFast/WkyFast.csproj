@@ -48,11 +48,12 @@
 
   <ItemGroup>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
-    <PackageReference Include="MahApps.Metro" Version="2.4.9" />
+    <!--<PackageReference Include="MahApps.Metro" Version="2.4.9" />-->
     <PackageReference Include="MahApps.Metro.IconPacks.MaterialLight" Version="4.11.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.4.0" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
+    <PackageReference Include="WPF-UI" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,11 +67,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="View\View\TaskListCellControl.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="View\WkySubscriptionListView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Window\WindowAddSubscription.xaml">
+    <Page Update="Dialogs\WindowAddSubscription.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>

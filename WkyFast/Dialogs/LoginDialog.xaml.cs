@@ -1,4 +1,4 @@
-﻿using MahApps.Metro.Controls;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace WkyFast.Window
+namespace WkyFast.Dialogs
 {
 
     public enum LoginDialogTapType
@@ -28,7 +28,7 @@ namespace WkyFast.Window
     /// <summary>
     /// StartWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class LoginDialog : MahApps.Metro.Controls.Dialogs.CustomDialog 
+    public partial class LoginDialog : Window
     {
         private LoginDialogDelegate _loginDialogDelegate;
 

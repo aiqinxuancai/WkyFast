@@ -1,5 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +16,12 @@ using System.Windows.Shapes;
 using WkyFast.Service;
 using WkyFast.Utils;
 
-namespace WkyFast.Window
+namespace WkyFast.Dialogs
 {
     /// <summary>
     /// WindowAddTask.xaml 的交互逻辑
     /// </summary>
-    public partial class WindowAddSubscription : MetroWindow
+    public partial class WindowAddSubscription : Window
     {
         public WindowAddSubscription()
         {
@@ -31,7 +30,7 @@ namespace WkyFast.Window
             Win11Style.LoadWin11Style(hWnd);
         }
 
-        public static void Show(MetroWindow owner)
+        public static void Show(Window owner)
         {
             WindowAddSubscription dialog = new WindowAddSubscription();
             dialog.Owner = owner;
@@ -59,7 +58,7 @@ namespace WkyFast.Window
             //TODO 支持选择设备和磁盘？？
             try
             {
-                var progressView = await this.ShowProgressAsync("请稍后", "正在检查订阅...");
+                //var progressView = await this.ShowProgressAsync("请稍后", "正在检查订阅...");
 
                 await Task.Run(() => {
                     string url = string.Empty;
@@ -81,8 +80,8 @@ namespace WkyFast.Window
                     } 
                     catch (Exception ex)
                     {
-                        progressView.CloseAsync();
-                        this.ShowMessageAsync("Url不合法", ex.ToString());
+                        //progressView.CloseAsync();
+                        //this.ShowMessageAsync("Url不合法", ex.ToString());
                         //return;
                     }
                     
@@ -106,13 +105,13 @@ namespace WkyFast.Window
 
                 });
 
-                await progressView.CloseAsync();
+                //await progressView.CloseAsync();
 
                 this.Close();
             }
             catch (Exception ex)
             {
-                await this.ShowMessageAsync("添加异常，请重试", ex.ToString());
+                //await this.ShowMessageAsync("添加异常，请重试", ex.ToString());
             }
             ConfirmButton.IsEnabled = true;
         }

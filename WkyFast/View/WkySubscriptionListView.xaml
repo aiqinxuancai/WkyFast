@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WkyFast.View" 
-             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" 
+             
              xmlns:converter="clr-namespace:WkyFast.View.Contver" xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              x:Name="Self"
@@ -29,13 +29,13 @@
                   HeadersVisibility="None" 
                   GridLinesVisibility="Horizontal"
                   CanUserAddRows="False"
-                  Background="Transparent" 
+                  BorderBrush="Transparent"
 
-                  HorizontalScrollBarVisibility="Disabled" Foreground="#BF000000" LoadingRow="MainDataGrid_LoadingRow"
+                  HorizontalScrollBarVisibility="Disabled" LoadingRow="MainDataGrid_LoadingRow"
                           >
 
 
-                        <DataGrid.RowStyle>
+                    <!--<DataGrid.RowStyle>
                         <Style TargetType="DataGridRow"  BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -48,7 +48,7 @@
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
-                    </DataGrid.RowStyle>
+                    </DataGrid.RowStyle>-->
                     <DataGrid.Resources>
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text" Color="#CC000000" />
                         <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="#CC000000" />
@@ -74,11 +74,11 @@
                             <GradientStop Color="#00000000" Offset="1"/>
                         </LinearGradientBrush>
                     </DataGrid.HorizontalGridLinesBrush>
-                    <DataGrid.Style>
+                    <!--<DataGrid.Style>
                         <Style BasedOn="{StaticResource MahApps.Styles.DataGrid}" TargetType="{x:Type DataGrid}">
                             <Setter Property="AlternatingRowBackground" Value="{DynamicResource GrayBrush10}" />
                         </Style>
-                    </DataGrid.Style>
+                    </DataGrid.Style>-->
                     <!--<DataGrid.RowStyle>
                     <Style TargetType="{x:Type DataGridRow}">
                         <Setter Property="Background" Value="#00FF8B8B" />
@@ -109,14 +109,14 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Grid >
-                                            <mah:MetroProgressBar Visibility="{Binding Progress, Converter={StaticResource DownloadProgressVisibilityConverter}}"  
+                                            <!--<mah:MetroProgressBar Visibility="{Binding Progress, Converter={StaticResource DownloadProgressVisibilityConverter}}"  
                                                                Value="{Binding Progress}" 
                                                                Maximum="10000" 
                                                                Foreground="#3357C3F1" 
                                                                 Height="2" 
                                                                   VerticalAlignment="Bottom" >
                                                 
-                                            </mah:MetroProgressBar>
+                                            </mah:MetroProgressBar>-->
                                         </Grid>
 
                                         <StackPanel Margin="2,2"  Grid.Column="0">
