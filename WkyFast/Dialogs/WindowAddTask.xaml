@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WkyFast.Dialogs"
-        
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Style="{StaticResource UiWindow}"
         mc:Ignorable="d"
         Title="添加任务" Height="280" Width="500" WindowStartupLocation="CenterOwner"  AllowDrop="True">
     <Window.Resources>
@@ -12,7 +13,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Style/AQButton.xaml" />
                 <ResourceDictionary Source="/Style/CustomProgressBar.xaml" />
-                
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -22,12 +23,19 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <Border Margin="10,10,10,10" CornerRadius="4" Background="#0C000000" Grid.RowSpan="1" Grid.Row="0" >
-            <TextBox Text=""  Grid.Row="1" x:Name="UrlTextBox"  
-
+        <Border Margin="10,10,10,10" CornerRadius="4"  Grid.RowSpan="1" Grid.Row="0" >
+            <ui:TextBox Text=""  Grid.Row="1" x:Name="UrlTextBox"  
                      Background="Transparent" 
-                     AllowDrop="True" Drop="UrlTextBox_Drop" 
-                     BorderBrush="#00CCCCCC" TextWrapping="Wrap" PreviewDragOver="UrlTextBox_PreviewDragOver"  ></TextBox >
+                     MinLines="3"
+                     AcceptsReturn="True" 
+                     TextWrapping="Wrap"
+                     PlaceholderText="测试" 
+                     AllowDrop="True" 
+                     Drop="UrlTextBox_Drop" 
+                     BorderBrush="#00CCCCCC" 
+                     PreviewDragOver="UrlTextBox_PreviewDragOver" 
+                     Margin="0,0,0,0" 
+                     VerticalAlignment="Stretch"  />
         </Border>
 
         <Border Margin="10,0,10,10"  Grid.RowSpan="1" Grid.Row="1" >

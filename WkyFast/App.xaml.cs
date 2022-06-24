@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace WkyFast
 {
@@ -15,7 +16,11 @@ namespace WkyFast
     /// </summary>
     public partial class App : Application
     {
-
+        static App()
+        {
+            TextOptions.TextFormattingModeProperty.OverrideMetadata(typeof(Window),
+                new FrameworkPropertyMetadata(TextFormattingMode.Display, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.Inherits));
+        }
         public static void ExitWkyFast()
         {
             if (WkyFast.MainWindow.Instance != null)
