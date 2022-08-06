@@ -36,39 +36,6 @@
                   HorizontalScrollBarVisibility="Disabled" LoadingRow="MainDataGrid_LoadingRow"
                           >
 
-
-                    <!--<DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow"  BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="#CC000000" />
-                                    <Setter Property="Background" Value="#10000000" />
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="#CC000000" />
-                                    <Setter Property="Background" Value="#10000000" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>-->
-                    <DataGrid.Resources>
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text" Color="#CC000000" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="#CC000000" />
-                        <!--<SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background"  Color="{StaticResource MahApps.Colors.Accent}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.Disabled"  Color="{StaticResource MahApps.Colors.Gray7}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.Inactive"  Color="{StaticResource MahApps.Colors.Accent3}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.MouseOver"  Color="{StaticResource MahApps.Colors.Accent2}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.BorderBrush"  Color="{StaticResource MahApps.Colors.Accent}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.BorderBrush.Disabled"  Color="{StaticResource MahApps.Colors.Gray7}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.BorderBrush.Focus"  Color="{StaticResource MahApps.Colors.Accent}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.BorderBrush.Inactive"  Color="{StaticResource MahApps.Colors.Accent3}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.BorderBrush.MouseOver"  Color="{StaticResource MahApps.Colors.Accent2}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text"  Color="{StaticResource MahApps.Colors.IdealForeground}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.Disabled" Color="{StaticResource MahApps.Colors.Gray1}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.Inactive" Color="{StaticResource MahApps.Colors.ThemeForeground}" />
-                        <SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Text.MouseOver" Color="{StaticResource MahApps.Colors.IdealForeground}" />-->
-
-                    </DataGrid.Resources>
                     <DataGrid.HorizontalGridLinesBrush>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                             <GradientStop Color="#00000000" Offset="0"/>
@@ -76,65 +43,48 @@
                             <GradientStop Color="#00000000" Offset="1"/>
                         </LinearGradientBrush>
                     </DataGrid.HorizontalGridLinesBrush>
-                    <!--<DataGrid.Style>
-                        <Style BasedOn="{StaticResource MahApps.Styles.DataGrid}" TargetType="{x:Type DataGrid}">
-                            <Setter Property="AlternatingRowBackground" Value="{DynamicResource GrayBrush10}" />
-                        </Style>
-                    </DataGrid.Style>-->
-                    <!--<DataGrid.RowStyle>
-                    <Style TargetType="{x:Type DataGridRow}">
-                        <Setter Property="Background" Value="#00FF8B8B" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=IsMouseOver, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="True">
-                                <Setter Property="Background" Value="#F0FAFF" />
-                                <Setter Property="Foreground" Value="Red" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=IsSelected, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="True">
-                                <Setter Property="Background" Value="#F0FAFF" />
-                                <Setter Property="Foreground" Value="Red" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </DataGrid.RowStyle>-->
+
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Grid HorizontalAlignment="Left">
-                                        <Grid.Width>
-                                            <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
-                                        </Grid.Width>
+                                    <Border  CornerRadius="4">
+                                        <Border.Style>
+                                            <Style TargetType="Border" >
+                                                <Setter Property="Background" Value="Transparent" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                                        <Setter Property="Background" Value="#006ABE" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <Grid HorizontalAlignment="Left" Margin="5,0,0,0">
+                                            <Grid.Width>
+                                                <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
+                                            </Grid.Width>
 
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                            <ColumnDefinition Width="50"></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                                <ColumnDefinition Width="50"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
 
-                                        <Grid >
-                                            <!--<mah:MetroProgressBar Visibility="{Binding Progress, Converter={StaticResource DownloadProgressVisibilityConverter}}"  
-                                                               Value="{Binding Progress}" 
-                                                               Maximum="10000" 
-                                                               Foreground="#3357C3F1" 
-                                                                Height="2" 
-                                                                  VerticalAlignment="Bottom" >
-                                                
-                                            </mah:MetroProgressBar>-->
-                                        </Grid>
+                                            <StackPanel Margin="2,2"  Grid.Column="0">
+                                                <TextBlock Text="{Binding Name}"></TextBlock>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="总任务数："></TextBlock>
+                                                    <TextBlock Text="{Binding TaskFullCount}"></TextBlock>
 
-                                        <StackPanel Margin="2,2"  Grid.Column="0">
-                                            <TextBlock Text="{Binding Name}"></TextBlock>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="总任务数："></TextBlock>
-                                                <TextBlock Text="{Binding TaskFullCount}"></TextBlock>
-                                                
-                                                <TextBlock Text="匹配任务数：" Margin="10,0,0,0"></TextBlock>
-                                                <TextBlock Text="{Binding TaskMatchCount}"></TextBlock>
-                                                
-                                                <TextBlock Text="已添加任务：" Margin="10,0,0,0"></TextBlock>
-                                                <TextBlock Text="{Binding AlreadyAddedDownloadModel.Count}"></TextBlock>
+                                                    <TextBlock Text="匹配任务数：" Margin="10,0,0,0"></TextBlock>
+                                                    <TextBlock Text="{Binding TaskMatchCount}"></TextBlock>
+
+                                                    <TextBlock Text="已添加任务：" Margin="10,0,0,0"></TextBlock>
+                                                    <TextBlock Text="{Binding AlreadyAddedDownloadModel.Count}"></TextBlock>
+                                                </StackPanel>
                                             </StackPanel>
-                                        </StackPanel>
-                                    </Grid>
+                                        </Grid>
+                                    </Border>
+                                    
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

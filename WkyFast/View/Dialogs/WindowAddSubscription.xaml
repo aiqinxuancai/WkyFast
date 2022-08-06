@@ -27,33 +27,34 @@
         <ui:TitleBar Grid.Row="0" Grid.ColumnSpan="2" Title="添加订阅"/>
         
         <Border Margin="10,0,10,10" CornerRadius="4" Grid.RowSpan="1" Grid.Row="1" >
-            <TextBox Text=""  
+            <ui:TextBox Text=""  
                      Grid.Row="1" 
                      x:Name="UrlTextBox"  
                      Background="Transparent" 
                      AllowDrop="True" 
                      BorderBrush="#00CCCCCC" 
                      VerticalAlignment="Stretch" 
-                     TextWrapping="Wrap"  ></TextBox >
+                     TextWrapping="Wrap" PlaceholderText="订阅地址" ></ui:TextBox >
         </Border>
-        <Border Margin="10,0,10,10"  CornerRadius="4"  Grid.RowSpan="1" Grid.Row="2"  >
+        <Border Margin="10,0,10,6"  CornerRadius="4"  Grid.RowSpan="1" Grid.Row="2"  >
             <Grid>
-                <TextBox Text="" x:Name="RegexTextBox"  
+                <ui:TextBox Text="" x:Name="RegexTextBox"  
                      Background="Transparent" 
                      AllowDrop="True" 
-                     BorderBrush="#00CCCCCC"  VerticalAlignment="Center" Margin="0,0,68,0"  />
+                     BorderBrush="#00CCCCCC"  VerticalAlignment="Center" Margin="0,0,68,0" PlaceholderText="包含关键字" />
 
                 <CheckBox  x:Name="RegexCheckBox"  HorizontalAlignment="Right" VerticalAlignment="Center" Content="正则" Margin="0,0,5,0" ></CheckBox>
             </Grid>
 
         </Border>
-        <Border Margin="10,0,10,10"  CornerRadius="4"  Grid.RowSpan="1" Grid.Row="3"  >
+        <Border Margin="10,0,10,6"  CornerRadius="4"  Grid.RowSpan="1" Grid.Row="3"  >
             <Grid>
-                <TextBox Text="" x:Name="PathTextBox"  
-
+                <ui:TextBox Text="" 
+                            x:Name="PathTextBox"  
+                         
                      Background="Transparent" 
                      AllowDrop="True" 
-                     BorderBrush="#00CCCCCC" VerticalAlignment="Center"  />
+                     BorderBrush="#00CCCCCC"  PlaceholderText="保存目录"  />
 
 
             </Grid>

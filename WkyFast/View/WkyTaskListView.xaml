@@ -26,19 +26,7 @@
                   CanUserAddRows="False"
                   BorderBrush="Transparent"
                   HorizontalScrollBarVisibility="Disabled"  LoadingRow="MainDataGrid_LoadingRow">
-                    <!--<DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow" >
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="Transparent" />
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="#2D8CF0" />
-                                    <Setter Property="Background" Value="Transparent" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>-->
+
                     <DataGrid.HorizontalGridLinesBrush>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                             <GradientStop Color="#00000000" Offset="0"/>
@@ -46,27 +34,7 @@
                             <GradientStop Color="#00000000" Offset="1"/>
                         </LinearGradientBrush>
                     </DataGrid.HorizontalGridLinesBrush>
-                    <!--<DataGrid.Style>
-                        <Style  TargetType="{x:Type DataGrid}">
-                            <Setter Property="AlternatingRowBackground" Value="#2D8CF0" />
-                        </Style>
-                    </DataGrid.Style>-->
 
-                    <!--<DataGrid.RowStyle>
-                    <Style TargetType="{x:Type DataGridRow}">
-                        <Setter Property="Background" Value="#00FF8B8B" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=IsMouseOver, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="True">
-                                <Setter Property="Background" Value="#F0FAFF" />
-                                <Setter Property="Foreground" Value="Red" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=IsSelected, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="True">
-                                <Setter Property="Background" Value="#F0FAFF" />
-                                <Setter Property="Foreground" Value="Red" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </DataGrid.RowStyle>-->
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>

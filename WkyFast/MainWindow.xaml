@@ -3,14 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:local="clr-namespace:WkyFast"
         xmlns:view="clr-namespace:WkyFast.View"
         mc:Ignorable="d"
-
-xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Style="{StaticResource UiWindow}"
-        xmlns:tb="http://www.hardcodet.net/taskbar" 
-                 Title="WkyFast" Height="560" Width="860" Icon="icon.ico" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded" Unloaded="MetroWindow_Unloaded" >
+        Style="{StaticResource UiWindow}"
+        xmlns:tb="http://www.hardcodet.net/taskbar" xmlns:dialogs="clr-namespace:WkyFast.Dialogs"
+        Title="WkyFast" Height="560" Width="860" Icon="icon.ico" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded" Unloaded="MetroWindow_Unloaded" >
 
     <!--<Style TargetType="{x:Type Window}">
         <Setter Property="TextOptions.TextFormattingMode" Value="Display"></Setter>
@@ -103,6 +102,30 @@ xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
             <view:WkyTaskListView  x:Name="WkyTaskListView"></view:WkyTaskListView>
             <view:WkySubscriptionListView  x:Name="WkySubscriptionListView" Visibility="Hidden"></view:WkySubscriptionListView>
         </Grid>-->
+
+
+        <dialogs:LoginDialog
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0" 
+            Grid.ColumnSpan="2"
+            Visibility="Collapsed"
+            x:Name="WkyLoginDialog">
+        </dialogs:LoginDialog>
+
+        <ui:Snackbar
+                        x:Name="RootSnackbar"
+                        Title="Title"
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="0" 
+                        Grid.ColumnSpan="2"
+                        MaxWidth="600"
+                        Appearance="Secondary"
+                        CloseButtonEnabled="True"
+                        Icon="Warning24"
+                        Message="Message"
+                        Timeout="5000" />
 
     </Grid>
 </Window>

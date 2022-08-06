@@ -33,7 +33,7 @@
                      
                      AcceptsReturn="True" 
                      TextWrapping="Wrap"
-                     PlaceholderText="测试" 
+                     PlaceholderText="输入下载地址（多行多个）或拖放BT文件" 
                      AllowDrop="True" 
                      Drop="UrlTextBox_Drop" 
                      BorderBrush="#00CCCCCC" 

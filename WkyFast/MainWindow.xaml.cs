@@ -62,6 +62,10 @@ namespace WkyFast
             //支持选中？
             //默认加载第一个？的面板？
         }
+        public MainWindow(ISnackbarService snackbarService, IDialogService dialogService)
+        {
+
+        }
 
         ~MainWindow()
         {
@@ -125,10 +129,12 @@ namespace WkyFast
                     if (r.IsSuccess)
                     {
                         //TODO 选中并设备
-                        Debug.WriteLine("设备更新成功");
+                        
                         DeviceComboBox.ItemsSource = WkyApiManager.Instance.API.GetAllDevice();
                         var device = await WkyApiManager.Instance.SelectDevice();
                         DeviceComboBox.SelectedItem = device;
+
+                        Debug.WriteLine($"设备更新成功 选中{device?.PeerId}");
 
                         SubscriptionManager.Instance.User = WkyApiManager.Instance.API.UserInfo.UserId;
 
@@ -136,12 +142,20 @@ namespace WkyFast
 
                         await WkyApiManager.Instance.API.LoginAllPeer();
                         SubscriptionManager.Instance.Restart();
+
+                        if (device == null)
+                        {
+                            RootSnackbar.Show("未发现玩客云设备", "请在手机端先添加设备后再使用WkyFast");
+                        }
                     }
                     else
                     {
                         Debug.WriteLine("设备更新失败");
                         await this.Dispatcher.Invoke(async () => {
                             //await this.ShowMessageAsync("登录失败", "无法获取到玩客云设备");
+
+                            RootSnackbar.Show("需重新登录", "设备获取失败");
+
                             await ShowLoginAccount();
                         });
                     }
@@ -162,6 +176,8 @@ namespace WkyFast
                 Debug.WriteLine("正在登录...");
                 //var controller = await this.ShowProgressAsync("正在登录", "...");
                 //controller.SetIndeterminate();
+                WkyLoginDialog.ShowLoading(true); 
+
                 await Task.Delay(1000);
 
                 bool loginResult = await api.StartLogin();
@@ -202,17 +218,19 @@ namespace WkyFast
                 };
 
             //打开登录弹窗
-            WkyFast.Dialogs.LoginDialog loginDialog = new WkyFast.Dialogs.LoginDialog(loginDialogDelegate,
+            WkyLoginDialog.UpdateDefaltData(loginDialogDelegate,
                 mail,
                 password,
                 !string.IsNullOrWhiteSpace(password),
                 autoLogin);
-            loginDialog.Owner = this;
-            loginDialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            loginDialog.Show();
 
-            //await this.ShowMetroDialogAsync(loginDialog);
+            WkyLoginDialog.Visibility = Visibility.Visible;
+            WkyLoginDialog.ShowLoading(false);
+
+            
         }
+
+
 
         /// <summary>
         /// 输入完账号密码的登录流程
@@ -227,8 +245,7 @@ namespace WkyFast
             try
             {
                 Debug.WriteLine("正在登录...");
-                //var controller = await this.ShowProgressAsync("正在登录", "...");
-                //controller.SetIndeterminate();
+                WkyLoginDialog.ShowLoading(true);
                 await Task.Delay(1000);
 
                 WkyApiManager.Instance.API = new WkyApi(email, password, WkyLoginDeviceType.PC);
@@ -261,6 +278,7 @@ namespace WkyFast
             catch (Exception ex)
             {
                 Debug.WriteLine("登录错误 " + ex.Message);
+                RootSnackbar.Show("登录失败", ex.Message);
                 await ShowLoginAccount();
                 return false;
                 throw;
@@ -269,19 +287,13 @@ namespace WkyFast
 
         }
 
-        public static Task HideVisibleDialogs(Window parent)
+        public Task HideVisibleDialogs(Window parent)
         {
             return Task.Run(async () =>
             {
                 await parent.Dispatcher.Invoke(async () =>
                 {
-                    //BaseMetroDialog dialogBeingShow = await parent.GetCurrentDialogAsync<BaseMetroDialog>();
-
-                    //while (dialogBeingShow != null)
-                    //{
-                    //    await parent.HideMetroDialogAsync(dialogBeingShow);
-                    //    dialogBeingShow = await parent.GetCurrentDialogAsync<BaseMetroDialog>();
-                    //}
+                    WkyLoginDialog.Visibility = Visibility.Collapsed;
                 });
             });
         }
@@ -325,5 +337,7 @@ namespace WkyFast
                 this.Visibility = Visibility.Hidden;
             }
         }
+
+
     }
 }

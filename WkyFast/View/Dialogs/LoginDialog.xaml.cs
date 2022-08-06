@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Wpf.Ui.Controls;
 
 namespace WkyFast.Dialogs
 {
@@ -28,9 +29,14 @@ namespace WkyFast.Dialogs
     /// <summary>
     /// StartWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class LoginDialog : Window
+    public partial class LoginDialog : UserControl
     {
         private LoginDialogDelegate _loginDialogDelegate;
+
+        public LoginDialog()
+        {
+            InitializeComponent();
+        }
 
         public LoginDialog(LoginDialogDelegate loginDialogDelegate,
                             string InitialUsername,
@@ -38,12 +44,13 @@ namespace WkyFast.Dialogs
                             bool savePasswordChecked,
                             bool autoLoginChecked)
         {
-            _loginDialogDelegate = loginDialogDelegate;
             InitializeComponent();
+            _loginDialogDelegate = loginDialogDelegate;
             EmailTextBox.Text = InitialUsername;
-            PasswordTextBox.Password = InitialPassword;
+            PasswordTextBox.Text = InitialPassword;
             SavePasswordCheckBox.IsChecked = savePasswordChecked;
             AutoLoginCheckBox.IsChecked = autoLoginChecked;
+            Debug.WriteLine("LoginDialog创建");
         }
 
         ~LoginDialog()
@@ -51,6 +58,33 @@ namespace WkyFast.Dialogs
             Debug.WriteLine("LoginDialog销毁");
         }
 
+        public void UpdateDefaltData(LoginDialogDelegate loginDialogDelegate,
+                            string InitialUsername,
+                            string InitialPassword,
+                            bool savePasswordChecked,
+                            bool autoLoginChecked)
+        {
+            _loginDialogDelegate = loginDialogDelegate;
+            EmailTextBox.Text = InitialUsername;
+            PasswordTextBox.Text = InitialPassword;
+            SavePasswordCheckBox.IsChecked = savePasswordChecked;
+            AutoLoginCheckBox.IsChecked = autoLoginChecked;
+            Debug.WriteLine("LoginDialog更新");
+        }
+
+        public void ShowLoading(bool isShow = true)
+        {
+            //展示在Loading的画面
+            if (isShow)
+            {
+                this.LoadingView.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.LoadingView.Visibility = Visibility.Collapsed;
+            }
+
+        }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {

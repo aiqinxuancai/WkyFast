@@ -28,7 +28,7 @@
                 </Style>
             </Border.Style>
             <Grid>
-                <Grid Margin="4,0,4,0">
+                <Grid Margin="5,0,4,0">
                     <!--<Grid.Width>
                         <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
                     </Grid.Width>-->
