@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WkyFast.View.WkySubscriptionListView"
+﻿<Page x:Class="WkyFast.View.WkySubscriptionListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,17 +9,19 @@
              mc:Ignorable="d" 
              x:Name="Self"
              d:DesignHeight="450" d:DesignWidth="500">
-    <UserControl.Resources>
+    <Page.Resources>
         <converter:DownloadSizeContver x:Key="DownloadSizeContver"/>
         <converter:DownloadStatusContver x:Key="DownloadStatusContver"/>
         <converter:DownloadProgressContver x:Key="DownloadProgressContver"/>
         <converter:DownloadProgressVisibilityConverter x:Key="DownloadProgressVisibilityConverter"/>
 
-    </UserControl.Resources>
+    </Page.Resources>
 
     <Grid>
         <ScrollViewer>
             <StackPanel CanVerticallyScroll="True">
+                <Button x:Name="SubscriptionButton" Content="添加订阅" Width="80" Margin="10,0,0,0" Click="SubscriptionButton_Click"></Button>
+
                 <!--<TextBox Text="{Binding ViewModel.Text, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" />
                 <Slider Minimum="0" Maximum="100" Value="{Binding ViewModel.Number, ElementName=Self}" />-->
                 <DataGrid x:Name="MainDataGrid"  
@@ -144,4 +146,4 @@
 
         </ScrollViewer>
     </Grid>
-</UserControl>
+</Page>

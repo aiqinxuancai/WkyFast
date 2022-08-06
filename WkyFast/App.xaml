@@ -15,9 +15,8 @@
 
                 <ResourceDictionary Source="pack://application:,,,/Style/MetroFont.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Style/AQScrollBar.xaml" />
-                <ui:Resources Theme="Light" />
-
-
+                <ui:ControlsDictionary />
+                <ui:ThemesDictionary Theme="Light" />
 
 
             </ResourceDictionary.MergedDictionaries>

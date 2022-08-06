@@ -29,6 +29,7 @@ using WkyApiSharp.Service;
 using System.Threading;
 using WkyApiSharp.Events.Account;
 using System.Reactive.Linq;
+using Wpf.Ui.Mvvm.Contracts;
 
 namespace WkyFast
 {
@@ -45,6 +46,7 @@ namespace WkyFast
         public MainWindow()
         {
             InitializeComponent();
+            Wpf.Ui.Appearance.Accent.ApplySystemAccent();
 
             Instance = this;
 
@@ -52,6 +54,8 @@ namespace WkyFast
             Win11Style.LoadWin11Style(hWnd);
 
             LoadMainTabView();
+
+            //dialogService.SetDialogControl(RootDialog);
 
             EasyLogManager.Logger.Info("主界面初始化");
 
@@ -71,11 +75,11 @@ namespace WkyFast
 
         public void LoadMainTabView()
         {
-            ObservableCollection<MainTabItemModel> model = new ObservableCollection<MainTabItemModel>();
-            model.Add(new MainTabItemModel() { Title = "下载列表", Type = MainTabItemModelType.DownloadList });
-            model.Add(new MainTabItemModel() { Title = "订阅列表", Type = MainTabItemModelType.SubscriptionList });
-            WkyMainTabView.ViewModel = model;
-            WkyMainTabView.OnConfigSelected += WkyMainTabView_OnConfigSelected;
+            //ObservableCollection<MainTabItemModel> model = new ObservableCollection<MainTabItemModel>();
+            //model.Add(new MainTabItemModel() { Title = "下载列表", Type = MainTabItemModelType.DownloadList });
+            //model.Add(new MainTabItemModel() { Title = "订阅列表", Type = MainTabItemModelType.SubscriptionList });
+            //WkyMainTabView.ViewModel = model;
+            //WkyMainTabView.OnConfigSelected += WkyMainTabView_OnConfigSelected;
         }
 
 
@@ -90,23 +94,19 @@ namespace WkyFast
 
                 if (model.Type == MainTabItemModelType.DownloadList)
                 {
-                    WkyTaskListView.Visibility = Visibility.Visible;
-                    WkySubscriptionListView.Visibility = Visibility.Hidden;
+                    //WkyTaskListView.Visibility = Visibility.Visible;
+                    //WkySubscriptionListView.Visibility = Visibility.Hidden;
                 }
                 else if (model.Type == MainTabItemModelType.SubscriptionList)
                 {
-                    WkyTaskListView.Visibility = Visibility.Hidden;
-                    WkySubscriptionListView.Visibility = Visibility.Visible;
+                    //WkyTaskListView.Visibility = Visibility.Hidden;
+                    //WkySubscriptionListView.Visibility = Visibility.Visible;
                 }
 
             }
 
         }
 
-        private void AddTaskButton_Click(object sender, RoutedEventArgs e)
-        {
-            WindowAddTask.Show(this);
-        }
 
         /// <summary>
         /// 登录确认成功时调用
@@ -131,8 +131,8 @@ namespace WkyFast
                         DeviceComboBox.SelectedItem = device;
 
                         SubscriptionManager.Instance.User = WkyApiManager.Instance.API.UserInfo.UserId;
-                        WkySubscriptionListView.ViewModel = SubscriptionManager.Instance.SubscriptionModel; //订阅列表绑定
-                        WkyTaskListView.ViewModel = WkyApiManager.Instance.TaskList; //任务列表绑定
+
+                        //TODO
 
                         await WkyApiManager.Instance.API.LoginAllPeer();
                         SubscriptionManager.Instance.Restart();
@@ -207,6 +207,9 @@ namespace WkyFast
                 password,
                 !string.IsNullOrWhiteSpace(password),
                 autoLogin);
+            loginDialog.Owner = this;
+            loginDialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            loginDialog.Show();
 
             //await this.ShowMetroDialogAsync(loginDialog);
         }
@@ -228,7 +231,7 @@ namespace WkyFast
                 //controller.SetIndeterminate();
                 await Task.Delay(1000);
 
-                WkyApiManager.Instance.API = new WkyApiSharp.Service.WkyApi(email, password, WkyLoginDeviceType.PC);
+                WkyApiManager.Instance.API = new WkyApi(email, password, WkyLoginDeviceType.PC);
 
                 var loginResult = await WkyApiManager.Instance.API.StartLogin();
 
@@ -295,10 +298,7 @@ namespace WkyFast
             }
         }
 
-        private void SubscriptionButton_Click(object sender, RoutedEventArgs e)
-        {
-            WindowAddSubscription.Show(this);
-        }
+
 
         private void MetroWindow_Unloaded(object sender, RoutedEventArgs e)
         {

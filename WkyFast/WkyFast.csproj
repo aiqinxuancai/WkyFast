@@ -53,7 +53,7 @@
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.4.0" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
-    <PackageReference Include="WPF-UI" Version="2.0.1" />
+    <PackageReference Include="WPF-UI" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,7 +74,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Dialogs\WindowAddSubscription.xaml">
+    <Page Update="View\Dialogs\WindowAddSubscription.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
   </ItemGroup>

@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WkyFast.Dialogs;
 using WkyFast.Service;
 using WkyFast.Service.Model;
 
@@ -22,7 +23,7 @@ namespace WkyFast.View
     /// <summary>
     /// WkyTaskListView.xaml 的交互逻辑
     /// </summary>
-    public partial class WkyTaskListView : UserControl
+    public partial class WkyTaskListView : Page
     {
         public WkyTaskListView()
                     : this(new ObservableCollection<TaskModel>())
@@ -36,6 +37,9 @@ namespace WkyFast.View
             //主动刷新？
 
             this.ViewModel = viewModel;
+            this.ViewModel = WkyApiManager.Instance.TaskList;
+            //WkySubscriptionListView.ViewModel = SubscriptionManager.Instance.SubscriptionModel; //订阅列表绑定
+            //WkyTaskListView.ViewModel = WkyApiManager.Instance.TaskList; //任务列表绑定
         }
 
         private WkyApiSharp.Service.Model.RemoteDownloadList.Task _lastMenuTaskData;
@@ -186,6 +190,12 @@ namespace WkyFast.View
                     EasyLogManager.Logger.Error(ex);
                 }
             }
+        }
+
+
+        private void AddTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowAddTask.Show(Application.Current.MainWindow);
         }
     }
 }

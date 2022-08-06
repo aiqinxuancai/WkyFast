@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WkyFast.View.WkyTaskListView"
+﻿<Page x:Class="WkyFast.View.WkyTaskListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -14,6 +14,7 @@
     <Grid>
         <ScrollViewer>
             <StackPanel CanVerticallyScroll="True">
+                <Button x:Name="AddTaskButton" Margin="10,0,0,0" Content="添加任务" Width="80" Click="AddTaskButton_Click"></Button>
                 <!--<TextBox Text="{Binding ViewModel.Text, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" />
                 <Slider Minimum="0" Maximum="100" Value="{Binding ViewModel.Number, ElementName=Self}" />-->
                 <DataGrid x:Name="MainDataGrid"  
@@ -85,4 +86,4 @@
 
         </ScrollViewer>
     </Grid>
-</UserControl>
+</Page>
