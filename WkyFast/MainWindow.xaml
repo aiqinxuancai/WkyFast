@@ -49,10 +49,10 @@
                 <ui:NavigationItem Content="订阅" Icon="AppFolder24" PageTag="subscription" PageType="{x:Type view:WkySubscriptionListView}" Cursor="Hand"/>
                 <!--<ui:NavigationItem Content="Mail" Icon="Mail24" />-->
             </ui:NavigationStore.Items>
-            <!--<ui:NavigationStore.Footer>
-                <ui:NavigationItem Content="Library" Icon="Library24" />
+            <ui:NavigationStore.Footer>
+                <!--<ui:NavigationItem Content="Library" Icon="Library24" />-->
                 <ui:NavigationItem Content="Settings" Icon="Settings24" />
-            </ui:NavigationStore.Footer>-->
+            </ui:NavigationStore.Footer>
         </ui:NavigationStore>
 
         <Frame
