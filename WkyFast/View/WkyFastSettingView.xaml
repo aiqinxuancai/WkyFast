@@ -13,10 +13,10 @@
         <StackPanel Margin="6,6,6,6">
             <StackPanel >
                 <StackPanel>
-                    <ui:CardAction Icon="InprivateAccount24"  ContentStringFormat="" ToolTip="111" >
+                    <ui:CardAction x:Name="AccountCardAction" Icon="InprivateAccount24" Click="AccountCardAction_Click"  >
                         <StackPanel>
                             <TextBlock FontSize="13" FontWeight="Medium" Text="已登录账号" />
-                            <TextBlock FontSize="12" Text="xxx@xxx.me" />
+                            <TextBlock x:Name="AccountTextBlock" FontSize="12" Text="xxx@xxx.me" />
                         </StackPanel>
                     </ui:CardAction>
                 </StackPanel>

@@ -24,5 +24,15 @@ namespace WkyFast.View
         {
             InitializeComponent();
         }
+
+        private void AccountCardAction_Click(object sender, RoutedEventArgs e)
+        {
+            //询问登出
+            //if (MessageBox.Show("是否登出账号？", "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            //{
+            //}
+
+            MainWindow.Instance.ShowMessageBox("提示", "是否登出账号？", () => { }, () => { });
+        }
     }
 }

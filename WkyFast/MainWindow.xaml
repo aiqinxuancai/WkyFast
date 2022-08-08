@@ -51,7 +51,7 @@
             </ui:NavigationStore.Items>
             <ui:NavigationStore.Footer>
                 <!--<ui:NavigationItem Content="Library" Icon="Library24" />-->
-                <ui:NavigationItem Content="Settings" Icon="Settings24" />
+                <ui:NavigationItem Content="设置" Icon="Settings24" PageTag="settings" PageType="{x:Type view:WkyFastSettingView}" Cursor="Hand"/>
             </ui:NavigationStore.Footer>
         </ui:NavigationStore>
 
@@ -112,20 +112,29 @@
             Visibility="Collapsed"
             x:Name="WkyLoginDialog">
         </dialogs:LoginDialog>
+        
+        <ui:Dialog
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0" 
+            Grid.ColumnSpan="2"
+            x:Name="RootDialog"
+            Title="Dialog"
+            ButtonLeftName="YES" />
 
         <ui:Snackbar
-                        x:Name="RootSnackbar"
-                        Title="Title"
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
-                        Grid.Column="0" 
-                        Grid.ColumnSpan="2"
-                        MaxWidth="600"
-                        Appearance="Secondary"
-                        CloseButtonEnabled="True"
-                        Icon="Warning24"
-                        Message="Message"
-                        Timeout="5000" />
+            x:Name="RootSnackbar"
+            Title="Title"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0" 
+            Grid.ColumnSpan="2"
+            MaxWidth="600"
+            Appearance="Secondary"
+            CloseButtonEnabled="True"
+            Icon="Warning24"
+            Message="Message"
+            Timeout="5000" />
 
     </Grid>
 </Window>

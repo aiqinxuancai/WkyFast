@@ -62,10 +62,6 @@ namespace WkyFast
             //支持选中？
             //默认加载第一个？的面板？
         }
-        public MainWindow(ISnackbarService snackbarService, IDialogService dialogService)
-        {
-
-        }
 
         ~MainWindow()
         {
