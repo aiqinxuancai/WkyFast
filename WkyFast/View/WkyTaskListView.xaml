@@ -19,13 +19,13 @@
                 <Slider Minimum="0" Maximum="100" Value="{Binding ViewModel.Number, ElementName=Self}" />-->
                 <DataGrid x:Name="MainDataGrid"  
                           PreviewMouseWheel="UIElement_OnPreviewMouseWheel" ScrollViewer.CanContentScroll="True"
-                  ItemsSource="{Binding ViewModel, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" 
-                  AutoGenerateColumns="False" 
-                  HeadersVisibility="None" 
-                  GridLinesVisibility="Horizontal"
-                  CanUserAddRows="False"
-                  BorderBrush="Transparent"
-                  HorizontalScrollBarVisibility="Disabled"  LoadingRow="MainDataGrid_LoadingRow">
+                          ItemsSource="{Binding ViewModel, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" 
+                          AutoGenerateColumns="False" 
+                          HeadersVisibility="None" 
+                          GridLinesVisibility="Horizontal"
+                          CanUserAddRows="False"
+                          BorderBrush="Transparent"
+                          HorizontalScrollBarVisibility="Disabled"  LoadingRow="MainDataGrid_LoadingRow">
 
                     <DataGrid.HorizontalGridLinesBrush>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
