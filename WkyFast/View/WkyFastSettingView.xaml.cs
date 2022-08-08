@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WkyFast.Service;
 
 namespace WkyFast.View
 {
@@ -32,7 +33,14 @@ namespace WkyFast.View
             //{
             //}
 
-            MainWindow.Instance.ShowMessageBox("提示", "是否登出账号？", () => { }, () => { });
+            MainWindow.Instance.ShowMessageBox("提示", "是否登出账号？", () => { 
+                var user = WkyApiManager.Instance.API.User;
+                user.
+
+
+            }, () => {
+                //没有操作
+            });
         }
     }
 }
