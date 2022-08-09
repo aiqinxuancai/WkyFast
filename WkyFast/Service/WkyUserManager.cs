@@ -92,5 +92,20 @@ namespace WkyFast.Service
             autoLogin = false;
             return;
         }
+
+        public void Clear()
+        {
+            try
+            {
+                if (File.Exists(kConfigPath))
+                {
+                    File.Delete(kConfigPath);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
     }
 }

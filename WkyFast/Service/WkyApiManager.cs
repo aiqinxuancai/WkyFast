@@ -16,6 +16,8 @@ using WkyFast.Service.Model;
 using WkyApiSharp.Service.Model;
 using System.Reactive.Linq;
 using WkyApiSharp.Events.Account;
+using WkyApiSharp.Events;
+using System.Reactive.Subjects;
 
 namespace WkyFast.Service
 {
@@ -24,6 +26,11 @@ namespace WkyFast.Service
         private static int kMaxTaskListCount = 100;
 
         private static WkyApiManager instance = new WkyApiManager();
+
+        //事件
+        public IObservable<EventBase> EventReceived => _eventReceivedSubject.AsObservable();
+
+        private readonly Subject<EventBase> _eventReceivedSubject = new();
 
         public static WkyApiManager Instance
         {
@@ -80,6 +87,8 @@ namespace WkyFast.Service
                 {
                     Console.WriteLine("任务列表更新，UI刷新");
 
+                    _eventReceivedSubject.OnNext(r);
+
                     if (r.Peer != null && r.Peer.PeerId == _nowDevice?.PeerId)
                     {
                         var tasks = r.Peer.Tasks;
@@ -110,6 +119,13 @@ namespace WkyFast.Service
                     }
 
 
+                });
+
+            _api?.EventReceived
+                .OfType<LoginResultEvent>()
+                .Subscribe(async r =>
+                {
+                    _eventReceivedSubject.OnNext(r);
                 });
         }
 

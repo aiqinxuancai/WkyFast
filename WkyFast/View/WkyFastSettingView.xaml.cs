@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WkyApiSharp.Events.Account;
 using WkyFast.Service;
 
 namespace WkyFast.View
@@ -24,6 +26,16 @@ namespace WkyFast.View
         public WkyFastSettingView()
         {
             InitializeComponent();
+
+            AccountTextBlock.Text = WkyApiManager.Instance.API.User;
+
+            WkyApiManager.Instance.EventReceived
+                        .OfType<LoginResultEvent>()
+                        .Subscribe(async r =>
+                        {
+                            AccountTextBlock.Text = r.Account;
+                        });
+
         }
 
         private void AccountCardAction_Click(object sender, RoutedEventArgs e)
@@ -33,14 +45,21 @@ namespace WkyFast.View
             //{
             //}
 
-            MainWindow.Instance.ShowMessageBox("提示", "是否登出账号？", () => { 
-                var user = WkyApiManager.Instance.API.User;
-                user.
-
-
+            MainWindow.Instance.ShowMessageBox("提示", "是否登出账号？", () => {
+                MainWindow.Instance.ReLoginFunc();
+                this.AccountTextBlock.Text = "-";
             }, () => {
                 //没有操作
             });
         }
+
+        public void OnLoginResult(LoginResultEvent e)
+        {
+            if (e.IsSuccess)
+            {
+                this.AccountTextBlock.Text = e.Account;
+            }
+        }
+
     }
 }

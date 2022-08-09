@@ -47,41 +47,32 @@ namespace WkyFast
         {
             InitializeComponent();
             Wpf.Ui.Appearance.Accent.ApplySystemAccent();
-
             Instance = this;
-
             IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
             Win11Style.LoadWin11Style(hWnd);
-
-            LoadMainTabView();
-
-            //dialogService.SetDialogControl(RootDialog);
-
             EasyLogManager.Logger.Info("主界面初始化");
-
-            //支持选中？
-            //默认加载第一个？的面板？
         }
 
         ~MainWindow()
         {
-            //MainNotifyIcon.Visibility = Visibility.Hidden;
+
         }
 
         private async void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
+
             await LoginFunc();
         }
 
-        public void LoadMainTabView()
+        /// <summary>
+        /// 重新登录
+        /// </summary>
+        public async void ReLoginFunc()
         {
-            //ObservableCollection<MainTabItemModel> model = new ObservableCollection<MainTabItemModel>();
-            //model.Add(new MainTabItemModel() { Title = "下载列表", Type = MainTabItemModelType.DownloadList });
-            //model.Add(new MainTabItemModel() { Title = "订阅列表", Type = MainTabItemModelType.SubscriptionList });
-            //WkyMainTabView.ViewModel = model;
-            //WkyMainTabView.OnConfigSelected += WkyMainTabView_OnConfigSelected;
+            //移除账号相关信息
+            WkyUserManager.Instance.Clear();
+            await LoginFunc();
         }
-
 
         private void WkyMainTabView_OnConfigSelected(object sender, RoutedEventArgs e)
         {
@@ -167,7 +158,17 @@ namespace WkyFast
             if (autoLogin && !string.IsNullOrWhiteSpace(mail) && !string.IsNullOrWhiteSpace(password))
             {
                 var api = new WkyApiSharp.Service.WkyApi(mail, password, WkyLoginDeviceType.PC);
+                WkyApiManager.Instance.API = api;
 
+                //api.EventReceived
+                //    .OfType<LoginResultEvent>()
+                //    .Subscribe(async r =>
+                //    {
+                //        if (r.IsSuccess)
+                //        {
+                //            Console.WriteLine("登录成功");
+                //        }
+                //    });
 
                 Debug.WriteLine("正在登录...");
                 //var controller = await this.ShowProgressAsync("正在登录", "...");
@@ -180,7 +181,7 @@ namespace WkyFast
                 if (loginResult) 
                 {
                     //TODO 登录chen
-                    WkyApiManager.Instance.API = api;
+                    
                     await OnLoginSuccess();
                     await HideVisibleDialogs(this);
                 }
