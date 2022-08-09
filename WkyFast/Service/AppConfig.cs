@@ -34,6 +34,18 @@ namespace WkyFast.Service
         /// 最后增加订阅的路径
         /// </summary>
         public string LastAddSubscriptionPath { get; set; } = string.Empty;
+
+
+        public bool OSSSynchronizeOpen { get; set; } = false;
+
+
+        public string OSSEndpoint { get; set; } = string.Empty;
+
+        public string OSSBucket { get; set; } = string.Empty;
+
+        public string OSSAccessKeyId { get; set; } = string.Empty;
+
+        public string OSSAccessKeySecret { get; set; } = string.Empty;
     }
 
     /// <summary>
