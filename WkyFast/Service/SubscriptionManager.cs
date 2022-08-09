@@ -48,10 +48,11 @@ namespace WkyFast.Service
             set
             {
                 _user = value;
-                Load();
-                Start();
+
             }
         }
+
+
 
         public ObservableCollection<SubscriptionModel> SubscriptionModel { get; set; } = new ObservableCollection<SubscriptionModel>();
 
@@ -70,6 +71,15 @@ namespace WkyFast.Service
         //{
         //    Save();
         //}
+
+        /// <summary>
+        /// 载入并启动订阅刷新
+        /// </summary>
+        public void Restart()
+        {
+            Load();
+            Start();
+        }
 
         public void Start()
         {

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using WkyFast.Dialogs;
 using WkyFast.Service;
 using WkyFast.Service.Model;
 using WkyFast.Service.Model.SubscriptionModel;
@@ -14,7 +15,7 @@ namespace WkyFast.View
     /// <summary>
     /// WkyTaskListView.xaml 的交互逻辑
     /// </summary>
-    public partial class WkySubscriptionListView : UserControl
+    public partial class WkySubscriptionListView : Page
     {
         public WkySubscriptionListView()
                     : this(new ObservableCollection<SubscriptionModel>())
@@ -28,6 +29,7 @@ namespace WkyFast.View
             //主动刷新？
 
             this.ViewModel = viewModel;
+            this.ViewModel = SubscriptionManager.Instance.SubscriptionModel; //订阅列表绑定
         }
 
 
@@ -93,6 +95,11 @@ namespace WkyFast.View
         {
             SubscriptionManager.Instance.SubscriptionModel.Remove(_lastSubscriptionModel);
             SubscriptionManager.Instance.Save();
+        }
+
+        private void SubscriptionButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowAddSubscription.Show(Application.Current.MainWindow);
         }
     }
 }

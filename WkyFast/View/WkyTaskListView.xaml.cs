@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WkyFast.Dialogs;
 using WkyFast.Service;
 using WkyFast.Service.Model;
 
@@ -22,7 +23,7 @@ namespace WkyFast.View
     /// <summary>
     /// WkyTaskListView.xaml 的交互逻辑
     /// </summary>
-    public partial class WkyTaskListView : UserControl
+    public partial class WkyTaskListView : Page
     {
         public WkyTaskListView()
                     : this(new ObservableCollection<TaskModel>())
@@ -36,6 +37,9 @@ namespace WkyFast.View
             //主动刷新？
 
             this.ViewModel = viewModel;
+            this.ViewModel = WkyApiManager.Instance.TaskList;
+            //WkySubscriptionListView.ViewModel = SubscriptionManager.Instance.SubscriptionModel; //订阅列表绑定
+            //WkyTaskListView.ViewModel = WkyApiManager.Instance.TaskList; //任务列表绑定
         }
 
         private WkyApiSharp.Service.Model.RemoteDownloadList.Task _lastMenuTaskData;
@@ -136,7 +140,7 @@ namespace WkyFast.View
         {
             try
             {
-                await WkyApiManager.Instance.WkyApi.StartTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+                await WkyApiManager.Instance.API.StartTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.Id.ToString());
             }
             catch (Exception ex)
             {
@@ -148,7 +152,7 @@ namespace WkyFast.View
         {
             try
             {
-                await WkyApiManager.Instance.WkyApi.PauseTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+                await WkyApiManager.Instance.API.PauseTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.Id.ToString());
             }
             catch (Exception ex)
             {
@@ -163,7 +167,7 @@ namespace WkyFast.View
             {
                 try
                 {
-                    await WkyApiManager.Instance.WkyApi.DeleteTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+                    await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.Id.ToString());
                 }
                 catch (Exception ex)
                 {
@@ -179,13 +183,19 @@ namespace WkyFast.View
             {
                 try
                 {
-                    await WkyApiManager.Instance.WkyApi.DeleteTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString(), true);
+                    await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.Id.ToString(), true);
                 }
                 catch (Exception ex)
                 {
                     EasyLogManager.Logger.Error(ex);
                 }
             }
+        }
+
+
+        private void AddTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowAddTask.Show(Application.Current.MainWindow);
         }
     }
 }

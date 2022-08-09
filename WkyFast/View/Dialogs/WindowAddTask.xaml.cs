@@ -1,5 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,12 +17,12 @@ using System.Windows.Shapes;
 using WkyFast.Service;
 using WkyFast.Utils;
 
-namespace WkyFast.Window
+namespace WkyFast.Dialogs
 {
     /// <summary>
     /// WindowAddTask.xaml 的交互逻辑
     /// </summary>
-    public partial class WindowAddTask : MetroWindow
+    public partial class WindowAddTask : Window
     {
         public WindowAddTask()
         {
@@ -32,7 +31,7 @@ namespace WkyFast.Window
             Win11Style.LoadWin11Style(hWnd);
         }
 
-        public static void Show(MetroWindow owner)
+        public static void Show(Window owner)
         {
             WindowAddTask dialog = new WindowAddTask();
             dialog.Owner = owner;
@@ -72,12 +71,12 @@ namespace WkyFast.Window
             if (count == 0)
             {
                 EasyLogManager.Logger.Info($"任务添加失败");
-                await this.ShowMessageAsync("添加失败", $"任务添加失败");
+                //await this.ShowMessageAsync("添加失败", $"任务添加失败");
             }
             else if (files.Length != count)
             {
                 EasyLogManager.Logger.Info($"成功添加{count}个任务，有{files.Length - count}个添加失败");
-                await this.ShowMessageAsync("部分添加失败", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
+                //await this.ShowMessageAsync("部分添加失败", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
             }
             else
             {
@@ -133,12 +132,12 @@ namespace WkyFast.Window
                 if (count == 0)
                 {
                     EasyLogManager.Logger.Info($"任务添加失败");
-                    await this.ShowMessageAsync("添加失败", $"任务添加失败");
+                    //await this.ShowMessageAsync("添加失败", $"任务添加失败");
                 }
                 else if (files.Length != count)
                 {
                     EasyLogManager.Logger.Info($"成功添加{count}个任务，有{files.Length - count}个添加失败");
-                    await this.ShowMessageAsync("部分添加失败", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
+                    //await this.ShowMessageAsync("部分添加失败", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
                 }
             }
             else if (e.Data.GetDataPresent(DataFormats.Text))

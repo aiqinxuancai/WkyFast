@@ -1,38 +1,48 @@
-﻿<mah:MetroWindow x:Class="WkyFast.Window.WindowAddTask"
+﻿<Window x:Class="WkyFast.Dialogs.WindowAddTask"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WkyFast.Window"
-        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:local="clr-namespace:WkyFast.Dialogs"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Style="{StaticResource UiWindow}"
         mc:Ignorable="d"
-        Title="添加任务" Height="280" Width="500" WindowStartupLocation="CenterOwner" ShowMinButton="False" ShowMaxRestoreButton="False"  AllowDrop="True">
-    <mah:MetroWindow.Resources>
+        Title="添加任务" Height="280" Width="500" WindowStartupLocation="CenterOwner"  AllowDrop="True">
+    <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Style/AQButton.xaml" />
                 <ResourceDictionary Source="/Style/CustomProgressBar.xaml" />
-                
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </mah:MetroWindow.Resources>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="46*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <Border Margin="10,10,10,10" CornerRadius="4" Background="#0C000000" Grid.RowSpan="1" Grid.Row="0" >
-            <TextBox Text=""  Grid.Row="1" x:Name="UrlTextBox"  
-                     mah:ControlsHelper.FocusBorderThickness="0" 
-                     mah:ControlsHelper.FocusBorderBrush="Transparent"
-                     mah:ControlsHelper.MouseOverBorderBrush="Transparent"
+
+        <ui:TitleBar Grid.Row="0" Grid.ColumnSpan="2" Title="添加任务"/>
+
+        <Border Margin="10,0,10,10" CornerRadius="4"  Grid.RowSpan="1" Grid.Row="1" >
+            <ui:TextBox Text=""  Grid.Row="1" x:Name="UrlTextBox"  
                      Background="Transparent" 
-                     AllowDrop="True" Drop="UrlTextBox_Drop" 
-                     BorderBrush="#00CCCCCC" mah:TextBoxHelper.Watermark="输入下载链接（可多行添加多个）或拖放BT文件" TextWrapping="Wrap" PreviewDragOver="UrlTextBox_PreviewDragOver"  ></TextBox >
+                     
+                     AcceptsReturn="True" 
+                     TextWrapping="Wrap"
+                     PlaceholderText="输入下载地址（多行多个）或拖放BT文件" 
+                     AllowDrop="True" 
+                     Drop="UrlTextBox_Drop" 
+                     BorderBrush="#00CCCCCC" 
+                     PreviewDragOver="UrlTextBox_PreviewDragOver" 
+                     Margin="0,0,0,0" 
+                     VerticalAlignment="Stretch"  />
         </Border>
 
-        <Border Margin="10,0,10,10"  Grid.RowSpan="1" Grid.Row="1" >
+        <Border Margin="10,0,10,10"  Grid.RowSpan="1" Grid.Row="2" >
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="ConfirmButton" Style="{StaticResource AQButtonGreen}" Content="确定" Width="80" Click="ConfirmButton_Click" ></Button>
                 <Button x:Name="CancelButton" Style="{StaticResource AQButtonDefault}" Content="取消" Width="80" Margin="10,0,0,0" Click="CancelButton_Click" ></Button>
@@ -40,4 +50,4 @@
         </Border>
 
     </Grid>
-</mah:MetroWindow>
+</Window>
