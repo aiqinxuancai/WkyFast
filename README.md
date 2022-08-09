@@ -19,3 +19,6 @@ https://github.com/aiqinxuancai/WkyFast/releases
 ## 功能
 <img src="./docs/images/wkyfast.png" alt="WkyFast">
 
+<img src="./docs/images/wkyfast1.png" alt="WkyFast">
+
+<img src="./docs/images/wkyfast2.png" alt="WkyFast">
