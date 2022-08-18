@@ -43,14 +43,14 @@
             <ui:NavigationStore.Items>
                 <ui:NavigationItem
                     Content="任务"
-                    Icon="Home24"
+                    Icon="TextBulletListSquare20"
                     PageTag="home"
                     PageType="{x:Type view:WkyTaskListView}" Cursor="Hand" />
                 <ui:NavigationItem Content="订阅" Icon="AppFolder24" PageTag="subscription" PageType="{x:Type view:WkySubscriptionListView}" Cursor="Hand"/>
                 <!--<ui:NavigationItem Content="Mail" Icon="Mail24" />-->
             </ui:NavigationStore.Items>
             <ui:NavigationStore.Footer>
-                <!--<ui:NavigationItem Content="Library" Icon="Library24" />-->
+                <ui:NavigationItem Content="主页" Icon="Home24" Click="NavigationItem_Home_Click" />
                 <ui:NavigationItem Content="设置" Icon="Settings24" PageTag="settings" PageType="{x:Type view:WkyFastSettingView}" Cursor="Hand"/>
             </ui:NavigationStore.Footer>
         </ui:NavigationStore>

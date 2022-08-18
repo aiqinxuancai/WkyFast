@@ -335,6 +335,9 @@ namespace WkyFast
             }
         }
 
-
+        private void NavigationItem_Home_Click(object sender, RoutedEventArgs e)
+        {
+            BrowserHelper.OpenUrlBrowser("https://github.com/aiqinxuancai/WkyFast");
+        }
     }
 }
