@@ -144,6 +144,11 @@ namespace WkyFast.View
             try
             {
                 bool result = await WkyApiManager.Instance.API.StartTask(WkyApiManager.Instance.NowDevice.PeerId, t.GetOperationCode());
+                if (result)
+                {
+                    WkyApiManager.Instance.API.UpdateTask();
+                }
+                
             }
             catch (Exception ex)
             {
@@ -157,6 +162,11 @@ namespace WkyFast.View
             try
             {
                 bool result = await WkyApiManager.Instance.API.PauseTask(WkyApiManager.Instance.NowDevice.PeerId, t.GetOperationCode());
+                if (result)
+                {
+                    WkyApiManager.Instance.API.UpdateTask();
+                }
+                    
             }
             catch (Exception ex)
             {
@@ -175,6 +185,7 @@ namespace WkyFast.View
                     if (result)
                     {
                         MainWindow.Instance.ShowSnackbar("成功", $"已删除{t.Name}");
+                        WkyApiManager.Instance.API.UpdateTask();
                     } 
                 }
                 catch (Exception ex)
@@ -200,6 +211,8 @@ namespace WkyFast.View
                     if (result)
                     {
                         MainWindow.Instance.ShowSnackbar("成功", $"已删除{t.Name}");
+
+                        WkyApiManager.Instance.API.UpdateTask();
                     }
                 }
                 catch (Exception ex)
