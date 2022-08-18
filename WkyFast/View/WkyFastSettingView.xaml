@@ -4,13 +4,14 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WkyFast.View"
+      xmlns:service="clr-namespace:WkyFast.Service"
       mc:Ignorable="d" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="WkyFastSetting">
 
     <Grid>
-        <StackPanel Margin="6,6,6,6">
+        <StackPanel Margin="6,6,6,6" Cursor="Hand">
             <StackPanel >
                 <StackPanel>
                     <ui:CardAction x:Name="AccountCardAction" Icon="InprivateAccount24" Click="AccountCardAction_Click"  >
@@ -21,36 +22,36 @@
                     </ui:CardAction>
                 </StackPanel>
             </StackPanel>
-
-            <StackPanel Margin="0,10,0,0" >
-                <Label Content="订阅列表同步到阿里云OSS（未实现）" FontSize="14" FontWeight="Normal" Foreground="#CC000000"></Label>
+           
+            <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                <CheckBox Content="订阅列表同步到阿里云OSS（未实现）" IsChecked="{Binding Source={x:Static service:AppConfig.ConfigData}, Path=OSSSynchronizeOpen}" ></CheckBox>
             </StackPanel>
 
             <StackPanel Margin="0,10,0,0" >
-                <Label Content="阿里云OSS区域"></Label>
+                <Label Content="阿里云OSS-Endpoint"></Label>
                 <StackPanel>
-                    <ui:TextBox ></ui:TextBox>
+                    <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.ConfigData}, Path=OSSEndpoint}" Cursor="IBeam" PlaceholderText="https://oss-cn-hangzhou.aliyuncs.com"  ></ui:TextBox>
                 </StackPanel>
             </StackPanel>
 
             <StackPanel Margin="0,5,0,0" >
-                <Label Content="阿里云OSS桶"></Label>
+                <Label Content="阿里云OSS-Bucket"></Label>
                 <StackPanel>
-                    <ui:TextBox ></ui:TextBox>
+                    <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.ConfigData}, Path=OSSBucket}"></ui:TextBox>
                 </StackPanel>
             </StackPanel>
 
             <StackPanel Margin="0,5,0,0" >
-                <Label Content="阿里云OSSKey"></Label>
+                <Label Content="阿里云OSS-AccessKey ID" ></Label>
                 <StackPanel>
-                    <ui:TextBox ></ui:TextBox>
+                    <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.ConfigData}, Path=OSSAccessKeyId}"></ui:TextBox>
                 </StackPanel>
             </StackPanel>
 
             <StackPanel Margin="0,5,0,0" >
-                <Label Content="阿里云OSS"></Label>
+                <Label Content="阿里云OSS-AccessKey Secret"></Label>
                 <StackPanel>
-                    <ui:TextBox ></ui:TextBox>
+                    <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.ConfigData}, Path=OSSAccessKeySecret}"></ui:TextBox>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
