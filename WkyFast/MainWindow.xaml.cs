@@ -1,5 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
+﻿
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System;
@@ -24,17 +23,20 @@ using System.Windows.Shapes;
 using WkyFast.Service;
 using WkyFast.Utils;
 using WkyFast.View.Model;
-using WkyFast.Window;
+using WkyFast.Dialogs;
 using WkyApiSharp.Service.Model;
 using WkyApiSharp.Service;
 using System.Threading;
+using WkyApiSharp.Events.Account;
+using System.Reactive.Linq;
+using Wpf.Ui.Mvvm.Contracts;
 
 namespace WkyFast
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : Window
     {
         public static MainWindow Instance { get; set; }
 
@@ -44,39 +46,33 @@ namespace WkyFast
         public MainWindow()
         {
             InitializeComponent();
-
+            Wpf.Ui.Appearance.Accent.ApplySystemAccent();
             Instance = this;
-
             IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
             Win11Style.LoadWin11Style(hWnd);
-
-            LoadMainTabView();
-
             EasyLogManager.Logger.Info("主界面初始化");
-
-            //支持选中？
-            //默认加载第一个？的面板？
         }
 
         ~MainWindow()
         {
-            //MainNotifyIcon.Visibility = Visibility.Hidden;
+
         }
 
         private async void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
+
             await LoginFunc();
         }
 
-        public void LoadMainTabView()
+        /// <summary>
+        /// 重新登录
+        /// </summary>
+        public async void ReLoginFunc()
         {
-            ObservableCollection<MainTabItemModel> model = new ObservableCollection<MainTabItemModel>();
-            model.Add(new MainTabItemModel() { Title = "下载列表", Type = MainTabItemModelType.DownloadList });
-            model.Add(new MainTabItemModel() { Title = "订阅列表", Type = MainTabItemModelType.SubscriptionList });
-            WkyMainTabView.ViewModel = model;
-            WkyMainTabView.OnConfigSelected += WkyMainTabView_OnConfigSelected;
+            //移除账号相关信息
+            WkyUserManager.Instance.Clear();
+            await LoginFunc();
         }
-
 
         private void WkyMainTabView_OnConfigSelected(object sender, RoutedEventArgs e)
         {
@@ -89,23 +85,19 @@ namespace WkyFast
 
                 if (model.Type == MainTabItemModelType.DownloadList)
                 {
-                    WkyTaskListView.Visibility = Visibility.Visible;
-                    WkySubscriptionListView.Visibility = Visibility.Hidden;
+                    //WkyTaskListView.Visibility = Visibility.Visible;
+                    //WkySubscriptionListView.Visibility = Visibility.Hidden;
                 }
                 else if (model.Type == MainTabItemModelType.SubscriptionList)
                 {
-                    WkyTaskListView.Visibility = Visibility.Hidden;
-                    WkySubscriptionListView.Visibility = Visibility.Visible;
+                    //WkyTaskListView.Visibility = Visibility.Hidden;
+                    //WkySubscriptionListView.Visibility = Visibility.Visible;
                 }
 
             }
 
         }
 
-        private void AddTaskButton_Click(object sender, RoutedEventArgs e)
-        {
-            WindowAddTask.Show(this);
-        }
 
         /// <summary>
         /// 登录确认成功时调用
@@ -115,96 +107,46 @@ namespace WkyFast
         {
             int runCount = 0;
 
-            do
-            {
-                if (runCount == 3)
+            //注册通知获取数据
+            WkyApiManager.Instance.API?.EventReceived
+                .OfType<UpdateDeviceResultEvent>()
+                .Subscribe(async r =>
                 {
-                    //获取多次NowDevice失败跳出
-                    break;
-                }
-                try
-                {
-                    //失败可以重试？
-                    await SelectDevice();
-                }
-                catch (Exception ex)
-                {
-                    //出错
-                    Debug.WriteLine(ex.Message);
-                }
-                runCount++;
-            }
-            while (WkyApiManager.Instance.NowDevice == null);
+                    Debug.WriteLine("设备更新完毕");
+                    if (r.IsSuccess)
+                    {
+                        //TODO 选中并设备
+                        
+                        DeviceComboBox.ItemsSource = WkyApiManager.Instance.API.GetAllDevice();
+                        var device = await WkyApiManager.Instance.SelectDevice();
+                        DeviceComboBox.SelectedItem = device;
 
-            //多次获取失败，重新开始登录
-            if (runCount == 3)
-            {
-                await this.ShowMessageAsync("登录失败", "无法获取到玩客云设备");
-                await ShowLoginAccount();
-            }
-            else
-            {
-                //test
-                //SubscriptionManager.Instance.CheckSubscription();
-                SubscriptionManager.Instance.User = WkyApiManager.Instance.WkyApi.UserInfo.UserId;
+                        Debug.WriteLine($"设备更新成功 选中{device?.PeerId}");
 
-                WkySubscriptionListView.ViewModel = SubscriptionManager.Instance.SubscriptionModel;
-            }
+                        SubscriptionManager.Instance.User = WkyApiManager.Instance.API.UserInfo.UserId;
 
-            
-        }
+                        //TODO
 
-        /// <summary>
-        /// 更新UI上的
-        /// </summary>
-        /// <returns></returns>
-        private async Task SelectDevice()
-        {
-            await WkyApiManager.Instance.UpdateDevice(); //获取peer
+                        await WkyApiManager.Instance.API.LoginAllPeer();
+                        SubscriptionManager.Instance.Restart();
 
-            DeviceComboBox.ItemsSource = WkyApiManager.Instance.DeviceList;
+                        if (device == null)
+                        {
+                            RootSnackbar.Show("未发现玩客云设备", "请在手机端先添加设备后再使用WkyFast");
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("设备更新失败");
+                        await this.Dispatcher.Invoke(async () => {
+                            //await this.ShowMessageAsync("登录失败", "无法获取到玩客云设备");
 
-            var device = await WkyApiManager.Instance.SelectDevice();
+                            RootSnackbar.Show("需重新登录", "设备获取失败");
 
-            DeviceComboBox.SelectedItem = device;
-
-            if (!string.IsNullOrWhiteSpace(device?.Peerid))
-            {
-                await WkyApiManager.Instance.WkyApi.RemoteDownloadLogin(device?.Peerid);
-
-                WkyTaskListView.ViewModel = WkyApiManager.Instance.TaskList;
-
-                _tokenTaskListSource = new CancellationTokenSource();
-                Task.Run(async () =>
-                {
-                    await UpdateTaskFunc(_tokenTaskListSource.Token);
-                }, _tokenTaskListSource.Token);
-            }
-            //刷新下载列表
-        }
-
-
-        private async Task UpdateTaskFunc(CancellationToken cancellationToken)
-        {
-            while (true) {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    Debug.WriteLine("退出Task刷新");
-                    break;
-                }
-                Debug.WriteLine("刷新Task列表");
-                try
-                {
-                    await WkyApiManager.Instance.UpdateTask();
-                }
-                catch (Exception ex)
-                {
-                    EasyLogManager.Logger.Error(ex.ToString());
-                }
-                
-
-                TaskHelper.Sleep(5 * 1000, 100, cancellationToken);
-            }
+                            await ShowLoginAccount();
+                        });
+                    }
+                });
         }
 
 
@@ -215,47 +157,43 @@ namespace WkyFast
             //先使用seesion
             if (autoLogin && !string.IsNullOrWhiteSpace(mail) && !string.IsNullOrWhiteSpace(password))
             {
-                bool useSession = false;
-                bool autoLoginSuccess = false;
-                if (File.Exists("Session.json"))
+                var api = new WkyApiSharp.Service.WkyApi(mail, password, WkyLoginDeviceType.PC);
+                WkyApiManager.Instance.API = api;
+
+                //api.EventReceived
+                //    .OfType<LoginResultEvent>()
+                //    .Subscribe(async r =>
+                //    {
+                //        if (r.IsSuccess)
+                //        {
+                //            Console.WriteLine("登录成功");
+                //        }
+                //    });
+
+                Debug.WriteLine("正在登录...");
+                //var controller = await this.ShowProgressAsync("正在登录", "...");
+                //controller.SetIndeterminate();
+                WkyLoginDialog.ShowLoading(true); 
+
+                await Task.Delay(1000);
+
+                bool loginResult = await api.StartLogin();
+                if (loginResult) 
                 {
-                    //检查日期
-                    Debug.WriteLine("使用session");
-                    var sessionContent = File.ReadAllText("Session.json");
-                    try
-                    {
-                        WkyApiLoginResultModel loginResultModel = JsonConvert.DeserializeObject<WkyApiLoginResultModel>(sessionContent);
-                        var api = new WkyApiSharp.Service.WkyApi(sessionContent, "", "", WkyLoginDeviceType.PC);
-                        var listPeer = await api.ListPeer(); //检查session是否可用
-                        if (listPeer.Rtn == 0)
-                        {
-                            Debug.WriteLine("Session可用");
-                            useSession = true;
-                            WkyApiManager.Instance.WkyApi = api;
-                            Debug.WriteLine("session登录完成");
-                            await OnLoginSuccess();
-                        }
-                        else
-                        {
-                            Debug.WriteLine($"session登录失败：{listPeer.Msg}");
-                            //验证失败，尝试走自动登录流程
-                            autoLoginSuccess = await AutoLoginWithAccount(mail, password, autoLogin, autoLogin);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Session登录错误：" + ex.Message);
-                        await ShowLoginAccount();
-                        throw;
-                    }
+                    //TODO 登录chen
+                    
+                    await OnLoginSuccess();
+                    await HideVisibleDialogs(this);
                 }
-                if (!useSession && !autoLoginSuccess) //判断自动登录是否成功
+                else
                 {
+                    await HideVisibleDialogs(this);
                     await ShowLoginAccount();
                 }
             }
             else
             {
+                //未设置账号，弹出登录
                 await ShowLoginAccount();
             }
         }
@@ -264,7 +202,7 @@ namespace WkyFast
         {
             WkyUserManager.Instance.LoadPasswrod(out var mail, out var password, out var autoLogin);
 
-            LoginDialogDelegate loginDialogDelegate = async delegate (WkyFast.Window.LoginDialog loginDialog,
+            LoginDialogDelegate loginDialogDelegate = async delegate (WkyFast.Dialogs.LoginDialog loginDialog,
                 LoginDialogTapType type,
                 string email,
                 string password,
@@ -277,35 +215,43 @@ namespace WkyFast
                 };
 
             //打开登录弹窗
-            WkyFast.Window.LoginDialog loginDialog = new WkyFast.Window.LoginDialog(loginDialogDelegate,
+            WkyLoginDialog.UpdateDefaltData(loginDialogDelegate,
                 mail,
                 password,
                 !string.IsNullOrWhiteSpace(password),
                 autoLogin);
 
-            await this.ShowMetroDialogAsync(loginDialog);
+            WkyLoginDialog.Visibility = Visibility.Visible;
+            WkyLoginDialog.ShowLoading(false);
+
+            
         }
 
+
+
+        /// <summary>
+        /// 输入完账号密码的登录流程
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <param name="savePassword"></param>
+        /// <param name="autoLogin"></param>
+        /// <returns></returns>
         private async Task<bool> AutoLoginWithAccount(string email, string password, bool savePassword, bool autoLogin)
         {
             try
             {
                 Debug.WriteLine("正在登录...");
-                var controller = await this.ShowProgressAsync("正在登录", "...");
-                controller.SetIndeterminate();
+                WkyLoginDialog.ShowLoading(true);
                 await Task.Delay(1000);
 
-                WkyApiManager.Instance.WkyApi = new WkyApiSharp.Service.WkyApi(email, password, WkyLoginDeviceType.PC);
+                WkyApiManager.Instance.API = new WkyApi(email, password, WkyLoginDeviceType.PC);
 
-                var loginResult = await WkyApiManager.Instance.WkyApi.Login();
+                var loginResult = await WkyApiManager.Instance.API.StartLogin();
 
                 if (loginResult)
                 {
-                    await HideVisibleDialogs(this);
                     Debug.WriteLine("登录成功");
-
-                    var sessionContent = WkyApiManager.Instance.WkyApi.GetSessionContent();
-                    File.WriteAllText("Session.json", sessionContent);
                     if (savePassword)
                     {
                         WkyUserManager.Instance.SavePassword(email, password, autoLogin);
@@ -316,12 +262,20 @@ namespace WkyFast
                     }
 
                     await OnLoginSuccess();
+                    await HideVisibleDialogs(this);
                     return true;
+                }
+                else
+                {
+                    Debug.WriteLine("登录失败 需要重新输入账号密码");
+                    await HideVisibleDialogs(this);
+                    await ShowLoginAccount();
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("登录错误 " + ex.Message);
+                RootSnackbar.Show("登录失败", ex.Message);
                 await ShowLoginAccount();
                 return false;
                 throw;
@@ -330,47 +284,30 @@ namespace WkyFast
 
         }
 
-
-        private async Task CloseCustomDialog(DependencyObject obj)
-        {
-            var dialog = ((DependencyObject)obj).TryFindParent<BaseMetroDialog>()!;
-            if (dialog != null)
-            {
-                await this.HideMetroDialogAsync(dialog);
-            }
-        }
-
-        public static Task HideVisibleDialogs(MetroWindow parent)
+        public Task HideVisibleDialogs(Window parent)
         {
             return Task.Run(async () =>
             {
                 await parent.Dispatcher.Invoke(async () =>
                 {
-                    BaseMetroDialog dialogBeingShow = await parent.GetCurrentDialogAsync<BaseMetroDialog>();
-
-                    while (dialogBeingShow != null)
-                    {
-                        await parent.HideMetroDialogAsync(dialogBeingShow);
-                        dialogBeingShow = await parent.GetCurrentDialogAsync<BaseMetroDialog>();
-                    }
+                    WkyLoginDialog.Visibility = Visibility.Collapsed;
                 });
             });
         }
 
 
-        private void DeviceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void DeviceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            WkyApiSharp.Service.Model.ListPeer.Device? device = DeviceComboBox.SelectedItem as WkyApiSharp.Service.Model.ListPeer.Device;
+            WkyDevice device = DeviceComboBox.SelectedItem as WkyDevice;
             if (device != null)
             {
                 AppConfig.ConfigData.LastDeviceId = device.DeviceId;
+                var selected = await WkyApiManager.Instance.SelectDevice();
+                //DeviceComboBox.SelectedItem = device;
             }
         }
 
-        private void SubscriptionButton_Click(object sender, RoutedEventArgs e)
-        {
-            WindowAddSubscription.Show(this);
-        }
+
 
         private void MetroWindow_Unloaded(object sender, RoutedEventArgs e)
         {
@@ -397,5 +334,7 @@ namespace WkyFast
                 this.Visibility = Visibility.Hidden;
             }
         }
+
+
     }
 }

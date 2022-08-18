@@ -13,6 +13,11 @@ using WkyFast.Utils;
 using Flurl.Http;
 using Newtonsoft.Json;
 using WkyFast.Service.Model;
+using WkyApiSharp.Service.Model;
+using System.Reactive.Linq;
+using WkyApiSharp.Events.Account;
+using WkyApiSharp.Events;
+using System.Reactive.Subjects;
 
 namespace WkyFast.Service
 {
@@ -22,6 +27,11 @@ namespace WkyFast.Service
 
         private static WkyApiManager instance = new WkyApiManager();
 
+        //事件
+        public IObservable<EventBase> EventReceived => _eventReceivedSubject.AsObservable();
+
+        private readonly Subject<EventBase> _eventReceivedSubject = new();
+
         public static WkyApiManager Instance
         {
             get
@@ -30,180 +40,117 @@ namespace WkyFast.Service
             }
         }
 
+        public WkyApi? API
+        {
+            set
+            {
+                _api = value;
+                //开始监听
+                SetupEvent();
+            }
+            get
+            {
+                return _api;
+            }
+        }
 
-        public WkyApi WkyApi { set; get; } 
 
-        public ObservableCollection<WkyApiSharp.Service.Model.ListPeer.ResultClass> PeerList { set; get; } = new();
+        private WkyApi? _api;
 
-        public WkyApiSharp.Service.Model.ListPeer.Device NowDevice { set; get; }
+        public WkyDevice? NowDevice
+        {
+            set
+            {
+                _nowDevice = value;
+            }
+            get
+            {
+                return _nowDevice;
+            }
 
-        public ObservableCollection<WkyApiSharp.Service.Model.ListPeer.Device> DeviceList { set; get; } = new();
+        }
 
-        public WkyApiGetUsbInfoResultModel NowUsbInfo { set; get; }
+
+        public WkyDevice? _nowDevice;
+
 
         public ObservableCollection<TaskModel> TaskList { set; get; } = new ObservableCollection<TaskModel>();
 
 
-        public async Task UpdateTask()
+        private void SetupEvent()
         {
-            var remoteDownloadListResult = await WkyApiManager.Instance.WkyApi.RemoteDownloadList(WkyApiManager.Instance.NowDevice.Peerid);
+            //安装事件监听
 
-            if (remoteDownloadListResult.Rtn == 0)
-            {
-                var obList = remoteDownloadListResult.Tasks.ToList();
-                MainWindow.Instance.Dispatcher.Invoke(() => {
-                    //更顺滑的更新任务
-                    //List<TaskModel> newTask = new List<TaskModel>();
+            _api?.EventReceived
+                .OfType<UpdateTaskListEvent>()
+                .Subscribe(async r =>
+                {
+                    Console.WriteLine("任务列表更新，UI刷新");
 
-                    //for (int i = 0; i < obList.Count; i++)
-                    //{
-                    //    //在当前列表中筛选？
-                    //    var index = TaskList.ToList().FindIndex(a => a.Data.Id == obList[i].Id);
+                    _eventReceivedSubject.OnNext(r);
 
-                    //    if (index != -1)
-                    //    {
-                    //        TaskList[index].Data = obList[i];
-                    //    }
-                    //    else
-                    //    {
-                    //        newTask.Add(new TaskModel() { Data = obList[i] } );
-                    //    }
-                    //}
-                    //newTask.Reverse();
-                    //foreach (var task in newTask)
-                    //{
-                    //    TaskList.Insert(0, task);
-                    //}
-
-                    ////保持等于kMaxTaskListCount的数量
-                    //while (TaskList.Count > kMaxTaskListCount)
-                    //{
-                    //    TaskList.RemoveAt(TaskList.Count - 1);
-                    //}
-                    
-                    if (obList.Count - TaskList.Count > 0)
+                    if (r.Peer != null && r.Peer.PeerId == _nowDevice?.PeerId)
                     {
-                        while (obList.Count - TaskList.Count > 0)
-                        {
-                            TaskList.Add(new TaskModel());
-                        }
-                    }
-                    else if (obList.Count - TaskList.Count < 0)
-                    {
-                        while (obList.Count - TaskList.Count < 0)
-                        {
-                            TaskList.RemoveAt(TaskList.Count - 1);
-                        }
+                        var tasks = r.Peer.Tasks;
+
+                        MainWindow.Instance.Dispatcher.Invoke(() => {
+                            //TODO 更顺滑的更新任务
+
+                            if (tasks.Count - TaskList.Count > 0)
+                            {
+                                while (tasks.Count - TaskList.Count > 0)
+                                {
+                                    TaskList.Add(new TaskModel());
+                                }
+                            }
+                            else if (tasks.Count - TaskList.Count < 0)
+                            {
+                                while (tasks.Count - TaskList.Count < 0)
+                                {
+                                    TaskList.RemoveAt(TaskList.Count - 1);
+                                }
+                            }
+
+                            for (int i = 0; i < tasks.Count; i++)
+                            {
+                                TaskList[i].Data = tasks[i].Data;
+                            }
+                        });
                     }
 
-                    for (int i = 0;i < obList.Count; i++)
-                    {
-                        TaskList[i].Data = obList[i];
-                    }
+
                 });
-            }
+
+            _api?.EventReceived
+                .OfType<LoginResultEvent>()
+                .Subscribe(async r =>
+                {
+                    _eventReceivedSubject.OnNext(r);
+                });
         }
 
-        /// <summary>
-        /// 玩客云登录成功后的信息处理
-        /// </summary>
-        public async Task<int> UpdateDevice()
-        {
-            var wkyApi = WkyApi;
-            //获取设备信息
-            var listPeerResult = await wkyApi.ListPeer();
-
-            if (listPeerResult.Rtn == 0)
-            {
-                PeerList.Clear();
-                foreach (var item in listPeerResult.Result)
-                {
-                    if (item.ResultClass != null)
-                    {
-                        PeerList.Add(item.ResultClass);
-                    }
-                }
-
-                DeviceList.Clear();
-                foreach (var peer in PeerList)
-                {
-                    foreach (var device in peer.Devices)
-                    {
-                        DeviceList.Add(device);
-                    }
-                }
-            }
-            else
-            {
-                throw new Exception("获取Peer失败");
-            }
-
-
-            return DeviceList.Count;
-        }
 
         /// <summary>
         /// 选中设备，优先从上次选择中选中
         /// </summary>
-        public async Task<WkyApiSharp.Service.Model.ListPeer.Device?> SelectDevice()
+        public async Task<WkyDevice> SelectDevice()
         {
-            if (PeerList != null && PeerList.Count > 0)
+            var device = _api?.GetDeviceWithId(AppConfig.ConfigData.LastDeviceId);
+            if (device != null)
             {
-                WkyApiSharp.Service.Model.ListPeer.Device? selectDevice = null;
-
-                foreach (var peer in PeerList)
-                {
-                    foreach (var device in peer.Devices)
-                    {
-                        if (!string.IsNullOrWhiteSpace(AppConfig.ConfigData.LastDeviceId))
-                        {
-                            if (device.DeviceId == AppConfig.ConfigData.LastDeviceId)
-                            {
-                                selectDevice = device;
-                            }
-                        }
-                    }
-                }
-
-
-                if (selectDevice != null)
-                {
-                    //更新USB信息
-                    NowUsbInfo = await WkyApi.GetUsbInfo(selectDevice.DeviceId);
-                    NowDevice = selectDevice;
-                    return selectDevice;
-                }
-
-                //到这里说明没有配置AppConfig.ConfigData.LastDeviceId 或者 peer.Devices为空
-
-                selectDevice = PeerList?.First()?.Devices?.First();
-                if (selectDevice != null)
-                {
-                    NowUsbInfo = await WkyApi.GetUsbInfo(selectDevice.DeviceId);
-                    NowDevice = selectDevice;
-                }
-                
-                return selectDevice;
+                _nowDevice = device;
+                return device;
             }
+            
             return null;
         }
 
         public string GetUsbInfoDefDownloadPath()
         {
             var savePath = string.Empty;
-            if (NowUsbInfo != null && NowUsbInfo.Rtn == 0)
+            foreach (var partition in _nowDevice.Partitions)
             {
-                foreach (var disk in NowUsbInfo.Result)
-                {
-                    if (disk.ResultClass != null)
-                    {
-                        foreach (var partition in disk.ResultClass.Partitions)
-                        {
-                            savePath = partition.Path + "/onecloud/tddownload";
-                        }
-                    }
-
-                }
+                savePath = partition.Path + "/onecloud/tddownload";
             }
             return savePath;
         }
@@ -215,21 +162,9 @@ namespace WkyFast.Service
         public List<string> GetUsbInfoDefPath()
         {
             List<string> path = new List<string>();
-            var savePath = string.Empty;
-            if (NowUsbInfo != null && NowUsbInfo.Rtn == 0)
+            foreach (var partition in _nowDevice.Partitions)
             {
-                foreach (var disk in NowUsbInfo.Result)
-                {
-                    if (disk.ResultClass != null)
-                    {
-                        foreach (var partition in disk.ResultClass.Partitions)
-                        {
-                            //savePath = partition.Path;
-                            path.Add(partition.Path);
-                        }
-                    }
-
-                }
+                path.Add(partition.Path);
             }
             return path;
         }
@@ -247,11 +182,11 @@ namespace WkyFast.Service
             {
                 var data = await url.WithTimeout(15).GetBytesAsync();
 
-                var bcCheck = await WkyApi.BtCheck(NowDevice.Peerid, data);
+                var bcCheck = await _api?.BtCheck(_nowDevice?.Device.Peerid, data);
                 Debug.WriteLine(bcCheck.ToString());
                 if (bcCheck.Rtn == 0)
                 {
-                    var result = await WkyApi.CreateTaskWithBtCheck(NowDevice.Peerid, path, bcCheck);
+                    var result = await _api?.CreateTaskWithBtCheck(_nowDevice.Device.Peerid, path, bcCheck);
                     if (result.Rtn == 0)
                     {
                         downloadResult.Result = true;
@@ -284,10 +219,10 @@ namespace WkyFast.Service
             {
                 savePath = GetUsbInfoDefDownloadPath();
             }
-            var urlResoleResult = await WkyApi.UrlResolve(NowDevice.Peerid, url);
+            var urlResoleResult = await _api?.UrlResolve(_nowDevice?.Device.Peerid, url);
             if (urlResoleResult.Rtn == 0)
             {
-                var createResult = await WkyApi.CreateBatchTaskWithUrlResolve(NowDevice.Peerid, savePath, urlResoleResult, null);
+                var createResult = await _api?.CreateBatchTaskWithUrlResolve(_nowDevice.Device.Peerid, savePath, urlResoleResult, null);
                 if (createResult.Rtn == 0)
                 {
                     foreach (var item in createResult.Tasks)
@@ -310,10 +245,10 @@ namespace WkyFast.Service
             {
                 savePath = GetUsbInfoDefDownloadPath();
             }
-            var btResoleResult = await WkyApi.BtCheck(NowDevice.Peerid, filePath);
+            var btResoleResult = await _api?.BtCheck(NowDevice?.Device.Peerid, filePath);
             if (btResoleResult.Rtn == 0)
             {
-                var createResult = await WkyApi.CreateBatchTaskWithBtCheck(NowDevice.Peerid, savePath, btResoleResult, null);
+                var createResult = await _api?.CreateBatchTaskWithBtCheck(NowDevice.Device.Peerid, savePath, btResoleResult, null);
                 if (createResult.Rtn == 0)
                 {
                     foreach (var item in createResult.Tasks)

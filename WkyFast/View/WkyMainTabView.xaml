@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WkyFast.View"
-             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" 
+             
              xmlns:control="clr-namespace:WkyFast.View.View" 
              mc:Ignorable="d" 
              x:Name="Self"
@@ -25,7 +25,7 @@
                   CanUserAddRows="False"
                   SelectionChanged="mainConfigViewDataGrid_SelectionChanged" 
                   Background="Transparent" 
-                  
+                  BorderBrush="Transparent"
                   HorizontalScrollBarVisibility="Disabled">
                 <DataGrid.Resources>
                     <!--<SolidColorBrush x:Key="MahApps.Brushes.DataGrid.Selection.Background.MouseOver" Color="#CC9DD3FA" />-->
@@ -47,11 +47,11 @@
                         <GradientStop Color="#00000000" Offset="1"/>
                     </LinearGradientBrush>
                 </DataGrid.HorizontalGridLinesBrush>
-                <DataGrid.Style>
+                <!--<DataGrid.Style>
                     <Style BasedOn="{StaticResource MahApps.Styles.DataGrid}" TargetType="{x:Type DataGrid}">
                         <Setter Property="AlternatingRowBackground" Value="{DynamicResource GrayBrush10}" />
                     </Style>
-                </DataGrid.Style>
+                </DataGrid.Style>-->
                 <DataGrid.RowStyle>
                     <Style TargetType="{x:Type DataGridRow}">
                         <Setter Property="Background" Value="#00FF8B8B" />

@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WkyFast.Dialogs;
 using WkyFast.Service;
 using WkyFast.Service.Model;
 
@@ -22,7 +23,7 @@ namespace WkyFast.View
     /// <summary>
     /// WkyTaskListView.xaml 的交互逻辑
     /// </summary>
-    public partial class WkyTaskListView : UserControl
+    public partial class WkyTaskListView : Page
     {
         public WkyTaskListView()
                     : this(new ObservableCollection<TaskModel>())
@@ -36,6 +37,9 @@ namespace WkyFast.View
             //主动刷新？
 
             this.ViewModel = viewModel;
+            this.ViewModel = WkyApiManager.Instance.TaskList;
+            //WkySubscriptionListView.ViewModel = SubscriptionManager.Instance.SubscriptionModel; //订阅列表绑定
+            //WkyTaskListView.ViewModel = WkyApiManager.Instance.TaskList; //任务列表绑定
         }
 
         private WkyApiSharp.Service.Model.RemoteDownloadList.Task _lastMenuTaskData;
@@ -112,7 +116,9 @@ namespace WkyFast.View
                         menu.Items.Add(new Separator());
                     }
 
-                    
+                    //MenuItem menuCopyLink = new MenuItem() { Header = "复制链接" };
+                    //menuCopyLink.Click += MenuCopyLink_Click;
+                    //menu.Items.Add(menuCopyLink);
 
                     MenuItem menuDelete = new MenuItem() { Header = "删除任务" };
                     menuDelete.Click += MenuDelete_Click;
@@ -136,7 +142,7 @@ namespace WkyFast.View
         {
             try
             {
-                await WkyApiManager.Instance.WkyApi.StartTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+                bool result = await WkyApiManager.Instance.API.StartTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.GetOperationCode());
             }
             catch (Exception ex)
             {
@@ -148,7 +154,7 @@ namespace WkyFast.View
         {
             try
             {
-                await WkyApiManager.Instance.WkyApi.PauseTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+                bool result = await WkyApiManager.Instance.API.PauseTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.GetOperationCode());
             }
             catch (Exception ex)
             {
@@ -158,34 +164,63 @@ namespace WkyFast.View
 
         private async void MenuDelete_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show($"是否确认删除任务：\r\n{_lastMenuTaskData.Name}？", "确认", MessageBoxButton.OKCancel);
-            if (result == MessageBoxResult.OK)
-            {
+            MainWindow.Instance.ShowMessageBox("提示", $"是否确认删除任务\r\n{_lastMenuTaskData.Name}？", async () => {
                 try
                 {
-                    await WkyApiManager.Instance.WkyApi.DeleteTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString());
+                    //status
+                    bool result = await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.GetOperationCode());
+                    if (result)
+                    {
+                        MainWindow.Instance.ShowSnackbar("成功", $"已删除{_lastMenuTaskData.Name}", Wpf.Ui.Common.SymbolRegular.clear);
+                    } 
                 }
                 catch (Exception ex)
                 {
                     EasyLogManager.Logger.Error(ex);
+
+
                 }
-            }
+            }, () => {
+                //没有操作
+            });
+
         }
 
         private async void MenuDeleteFile_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show($"是否确认删除任务及文件：\r\n{_lastMenuTaskData.Name}？", "确认", MessageBoxButton.OKCancel);
-            if (result == MessageBoxResult.OK)
-            {
+            MainWindow.Instance.ShowMessageBox("提示", $"是否确认删除任务及文件：\r\n{_lastMenuTaskData.Name}？", async () => {
                 try
                 {
-                    await WkyApiManager.Instance.WkyApi.DeleteTask(WkyApiManager.Instance.NowDevice.Peerid, _lastMenuTaskData.Id.ToString(), true);
+                    bool result = await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.GetOperationCode(), true);
+                    if (result)
+                    {
+                        MainWindow.Instance.ShowSnackbar("成功", $"已删除{_lastMenuTaskData.Name}");
+                    }
                 }
                 catch (Exception ex)
                 {
                     EasyLogManager.Logger.Error(ex);
                 }
-            }
+            }, () => {
+                //没有操作
+            });
+        }
+
+        private async void MenuCopyLink_Click(object sender, RoutedEventArgs e)
+        {
+
+            //try
+            //{
+            //    await WkyApiManager.Instance.API.StartTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.Id.ToString());
+            //}
+            //catch (Exception ex)
+            //{
+            //    EasyLogManager.Logger.Error(ex);
+            //}
+        }
+        private void AddTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowAddTask.Show(Application.Current.MainWindow);
         }
     }
 }

@@ -1,63 +1,68 @@
-﻿<mah:MetroWindow x:Class="WkyFast.MainWindow"
+﻿<Window x:Class="WkyFast.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:local="clr-namespace:WkyFast"
-        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:view="clr-namespace:WkyFast.View"
         mc:Ignorable="d"
-        xmlns:tb="http://www.hardcodet.net/taskbar" xmlns:view="clr-namespace:WkyFast.View"
-                 Title="WkyFast" Height="560" Width="860" Icon="icon.ico" TitleBarHeight="28" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded" TitleCharacterCasing="Normal" Unloaded="MetroWindow_Unloaded" >
+        Style="{StaticResource UiWindow}"
+        xmlns:tb="http://www.hardcodet.net/taskbar" xmlns:dialogs="clr-namespace:WkyFast.Dialogs"
+        Title="WkyFast" Height="560" Width="860" Icon="icon.ico" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded" Unloaded="MetroWindow_Unloaded" >
 
+    <!--<Style TargetType="{x:Type Window}">
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"></Setter>
+    </Style>-->
 
-
-    <mah:MetroWindow.Resources>
+    <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Style/AQButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </mah:MetroWindow.Resources>
-    
-    <mah:MetroWindow.RightWindowCommands>
-        <mah:WindowCommands Foreground="White">
-            <Button x:Name="ButtonGithub" Click="ButtonGithub_Click"  Visibility="Visible" >
-                <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        Width="16" 
-        Height="16"
-        x:Name="IconGithub">
-                    <Canvas.LayoutTransform>
-                        <MatrixTransform Matrix="1,0,0,-1,0,0" />
-                    </Canvas.LayoutTransform>
-                    <Path Data="M150 300C67.125 300 0 232.875 0 150C0 83.625 42.9375 27.5625 102.5625 7.6875C110.0625 6.375 112.875 10.875 112.875 14.8125C112.875 18.375 112.6875 30.1875 112.6875 42.75C75 35.8125000000001 65.25 51.9375 62.25 60.375C60.5625 64.6875 53.25 78 46.875 81.5625C41.625 84.375 34.125 91.3125 46.6875 91.5C58.5 91.6875 66.9375 80.625 69.75 76.125C83.25 53.4375 104.8125 59.8125 113.4375 63.75C114.75 73.5 118.6875 80.0625 123 83.8125C89.625 87.5625 54.75 100.5 54.75 157.875C54.75 174.1875 60.5625 187.6875 70.125 198.1875C68.625 201.9375 63.375 217.3125 71.625 237.9375C71.625 237.9375 84.1875 241.875 112.875 222.5625C124.875 225.9375 137.625 227.625 150.375 227.625C163.125 227.625 175.875 225.9375 187.875 222.5625C216.5625 242.0625 229.125 237.9375 229.125 237.9375C237.375 217.3125 232.125 201.9375 230.625 198.1875C240.1875 187.6875 246 174.375 246 157.875C246 100.3125 210.9375 87.5625 177.5625 83.8125C183 79.125 187.6875 70.125 187.6875 56.0625C187.6875 35.9999999999999 187.5 19.875 187.5 14.8125C187.5 10.8749999999999 190.3125 6.1874999999999 197.8125 7.6874999999999A150.225 150.225 0 0 1 300 150C300 232.875 232.875 300 150 300z"
-                          Stroke="{x:Null}"
-                          Fill="#FF000000"
-                          Stretch="Uniform"
-                          Width="16"
-                          Height="16"
-                          SnapsToDevicePixels="False"
-                          UseLayoutRounding="False"
-                          StrokeThickness="0"
-                          StrokeStartLineCap="flat"
-                          StrokeEndLineCap="flat"
-                          StrokeLineJoin="miter"/>
-                </Canvas>
-            </Button>
-           
-        </mah:WindowCommands>
-    </mah:MetroWindow.RightWindowCommands>
+    </Window.Resources>
 
     <Grid>
-
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="60"/>
             <ColumnDefinition Width="77*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Grid.ColumnSpan="2" Icon="icon.ico" Title="WkyFast"/>
+
+        <ui:NavigationStore
+            Grid.Column="0"
+            Grid.Row="1"
+            Frame="{Binding ElementName=MainFrame}"
+            SelectedPageIndex="0">
+            <ui:NavigationStore.Items>
+                <ui:NavigationItem
+                    Content="任务"
+                    Icon="Home24"
+                    PageTag="home"
+                    PageType="{x:Type view:WkyTaskListView}" Cursor="Hand" />
+                <ui:NavigationItem Content="订阅" Icon="AppFolder24" PageTag="subscription" PageType="{x:Type view:WkySubscriptionListView}" Cursor="Hand"/>
+                <!--<ui:NavigationItem Content="Mail" Icon="Mail24" />-->
+            </ui:NavigationStore.Items>
+            <ui:NavigationStore.Footer>
+                <!--<ui:NavigationItem Content="Library" Icon="Library24" />-->
+                <ui:NavigationItem Content="设置" Icon="Settings24" PageTag="settings" PageType="{x:Type view:WkyFastSettingView}" Cursor="Hand"/>
+            </ui:NavigationStore.Footer>
+        </ui:NavigationStore>
+
+        <Frame
+            x:Name="MainFrame"
+            Grid.Column="1"
+            Grid.Row="1"
+            Margin="0,0,0,0" />
+
+
+
 
         <tb:TaskbarIcon x:Name="MainNotifyIcon"
                     Visibility="Visible"
@@ -67,32 +72,69 @@
                         LeftClickCommand=""
                     IconSource="/icon.ico" TrayLeftMouseDown="MainNotifyIcon_TrayLeftMouseDown">
         </tb:TaskbarIcon>
-      
+
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-            <StackPanel Orientation="Horizontal" Margin="10">
-                <Border ClipToBounds="True" CornerRadius="4" Background="#10000000">
+            <Grid Margin="100,0,150,0">
+                <StackPanel Orientation="Horizontal" Margin="10">
                     <ComboBox x:Name="DeviceComboBox" 
-                              mah:ControlsHelper.FocusBorderBrush="Transparent" 
-                              Background="Transparent" 
-                              mah:ControlsHelper.MouseOverBorderBrush="Transparent" 
-                              BorderBrush="Transparent" 
                               Width="180"
-                              DisplayMemberPath="DeviceName" 
-                              SelectionChanged="DeviceComboBox_SelectionChanged">
-                        
+                              DisplayMemberPath="Device.DeviceName" 
+                              SelectionChanged="DeviceComboBox_SelectionChanged" Padding="10,5,10,5"   Height="30" >
+
                     </ComboBox>
-                </Border>
-                <Button x:Name="AddTaskButton" Style="{StaticResource AQButtonGreen}" Margin="10,0,0,0" Content="添加任务" Width="80" Click="AddTaskButton_Click"></Button>
-                <Button x:Name="SubscriptionButton" Style="{StaticResource AQButtonBlue}" Content="添加订阅" Width="80" Margin="10,0,0,0" Click="SubscriptionButton_Click"></Button>
-            </StackPanel>
+                </StackPanel>
+
+            </Grid>
+
+
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1">
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <Border ClipToBounds="True" CornerRadius="4" >
+
+            </Border>
+
+        </StackPanel>
+
+        <!--<Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1">
             <view:WkyMainTabView  x:Name="WkyMainTabView"></view:WkyMainTabView>
-        </Grid>
-        <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1">
+        </Grid>-->
+        <!--<Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1">
             <view:WkyTaskListView  x:Name="WkyTaskListView"></view:WkyTaskListView>
             <view:WkySubscriptionListView  x:Name="WkySubscriptionListView" Visibility="Hidden"></view:WkySubscriptionListView>
-        </Grid>
+        </Grid>-->
+
+
+        <dialogs:LoginDialog
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0" 
+            Grid.ColumnSpan="2"
+            Visibility="Collapsed"
+            x:Name="WkyLoginDialog">
+        </dialogs:LoginDialog>
+        
+        <ui:Dialog
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0" 
+            Grid.ColumnSpan="2"
+            x:Name="RootDialog"
+            Title="Dialog"
+            ButtonLeftName="YES" />
+
+        <ui:Snackbar
+            x:Name="RootSnackbar"
+            Title="Title"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0" 
+            Grid.ColumnSpan="2"
+            MaxWidth="600"
+            Appearance="Secondary"
+            CloseButtonEnabled="True"
+            Icon="Warning24"
+            Message="Message"
+            Timeout="5000" />
 
     </Grid>
-</mah:MetroWindow>
+</Window>
