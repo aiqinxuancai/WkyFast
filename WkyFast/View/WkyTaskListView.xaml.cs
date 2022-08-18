@@ -116,9 +116,9 @@ namespace WkyFast.View
                         menu.Items.Add(new Separator());
                     }
 
-                    //MenuItem menuCopyLink = new MenuItem() { Header = "复制链接" };
-                    //menuCopyLink.Click += MenuCopyLink_Click;
-                    //menu.Items.Add(menuCopyLink);
+                    MenuItem menuCopyLink = new MenuItem() { Header = "复制链接" };
+                    menuCopyLink.Click += MenuCopyLink_Click;
+                    menu.Items.Add(menuCopyLink);
 
                     MenuItem menuDelete = new MenuItem() { Header = "删除任务" };
                     menuDelete.Click += MenuDelete_Click;
@@ -140,9 +140,10 @@ namespace WkyFast.View
 
         private async void MenuRestart_Click(object sender, RoutedEventArgs e)
         {
+            WkyApiSharp.Service.Model.RemoteDownloadList.Task t = _lastMenuTaskData;
             try
             {
-                bool result = await WkyApiManager.Instance.API.StartTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.GetOperationCode());
+                bool result = await WkyApiManager.Instance.API.StartTask(WkyApiManager.Instance.NowDevice.PeerId, t.GetOperationCode());
             }
             catch (Exception ex)
             {
@@ -152,9 +153,10 @@ namespace WkyFast.View
 
         private async void MenuStop_Click(object sender, RoutedEventArgs e)
         {
+            WkyApiSharp.Service.Model.RemoteDownloadList.Task t = _lastMenuTaskData;
             try
             {
-                bool result = await WkyApiManager.Instance.API.PauseTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.GetOperationCode());
+                bool result = await WkyApiManager.Instance.API.PauseTask(WkyApiManager.Instance.NowDevice.PeerId, t.GetOperationCode());
             }
             catch (Exception ex)
             {
@@ -164,14 +166,15 @@ namespace WkyFast.View
 
         private async void MenuDelete_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.Instance.ShowMessageBox("提示", $"是否确认删除任务\r\n{_lastMenuTaskData.Name}？", async () => {
+            WkyApiSharp.Service.Model.RemoteDownloadList.Task t = _lastMenuTaskData;
+            MainWindow.Instance.ShowMessageBox("提示", $"是否确认删除任务\r\n{t.Name}？", async () => {
                 try
                 {
                     //status
-                    bool result = await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.GetOperationCode());
+                    bool result = await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, t.GetOperationCode());
                     if (result)
                     {
-                        MainWindow.Instance.ShowSnackbar("成功", $"已删除{_lastMenuTaskData.Name}");
+                        MainWindow.Instance.ShowSnackbar("成功", $"已删除{t.Name}");
                     } 
                 }
                 catch (Exception ex)
@@ -188,13 +191,15 @@ namespace WkyFast.View
 
         private async void MenuDeleteFile_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.Instance.ShowMessageBox("提示", $"是否确认删除任务及文件：\r\n{_lastMenuTaskData.Name}？", async () => {
+            WkyApiSharp.Service.Model.RemoteDownloadList.Task t = _lastMenuTaskData;
+
+            MainWindow.Instance.ShowMessageBox("提示", $"是否确认删除任务及文件：\r\n{t.Name}？", async () => {
                 try
                 {
-                    bool result = await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.GetOperationCode(), true);
+                    bool result = await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, t.GetOperationCode(), true);
                     if (result)
                     {
-                        MainWindow.Instance.ShowSnackbar("成功", $"已删除{_lastMenuTaskData.Name}");
+                        MainWindow.Instance.ShowSnackbar("成功", $"已删除{t.Name}");
                     }
                 }
                 catch (Exception ex)
@@ -208,15 +213,19 @@ namespace WkyFast.View
 
         private async void MenuCopyLink_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                //_lastMenuTaskData.Url
+                WkyApiSharp.Service.Model.RemoteDownloadList.Task t = _lastMenuTaskData;
 
-            //try
-            //{
-            //    await WkyApiManager.Instance.API.StartTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.Id.ToString());
-            //}
-            //catch (Exception ex)
-            //{
-            //    EasyLogManager.Logger.Error(ex);
-            //}
+                Clipboard.SetDataObject(t.Url);
+
+                MainWindow.Instance.ShowSnackbar("已复制链接", $"{t.Url}");
+            }
+            catch (Exception ex)
+            {
+                EasyLogManager.Logger.Error(ex);
+            }
         }
         private void AddTaskButton_Click(object sender, RoutedEventArgs e)
         {

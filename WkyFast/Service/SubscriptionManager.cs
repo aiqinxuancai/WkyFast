@@ -355,12 +355,17 @@ namespace WkyFast.Service
             if (File.Exists(fileName))
             {
                 SubscriptionModel.Clear();
+
                 List<SubscriptionModel> subscriptionModel = JsonConvert.DeserializeObject<List<SubscriptionModel>>(File.ReadAllText(fileName));
 
-                foreach (SubscriptionModel item in subscriptionModel)
+                if (subscriptionModel != null)
                 {
-                    SubscriptionModel.Add(item);
+                    foreach (SubscriptionModel item in subscriptionModel)
+                    {
+                        SubscriptionModel.Add(item);
+                    }
                 }
+
             }
         }
 
