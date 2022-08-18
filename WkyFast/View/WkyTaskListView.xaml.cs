@@ -171,7 +171,7 @@ namespace WkyFast.View
                     bool result = await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, _lastMenuTaskData.GetOperationCode());
                     if (result)
                     {
-                        MainWindow.Instance.ShowSnackbar("成功", $"已删除{_lastMenuTaskData.Name}", Wpf.Ui.Common.SymbolRegular.clear);
+                        MainWindow.Instance.ShowSnackbar("成功", $"已删除{_lastMenuTaskData.Name}");
                     } 
                 }
                 catch (Exception ex)
