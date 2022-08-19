@@ -60,8 +60,10 @@ namespace WkyFast
 
         private async void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-
+            ActionVersion.CheckVersion();
             await LoginFunc();
+
+            
         }
 
         /// <summary>

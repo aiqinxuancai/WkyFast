@@ -24,6 +24,10 @@ jobs:
         run: dotnet clean $env:GITHUB_WORKSPACE\WkyFast.sln --configuration Release && dotnet nuget locals all --clear
       - name: Restore dependencies
         run: dotnet restore
+      - name: Set Version
+        run: powershell (Get-Content $env:GITHUB_WORKSPACE\WkyFast\Utils\ActionVersion.cs) -Replace '{VERSION}', '$env:GITHUB_REF_NAME' | Set-Content $env:GITHUB_WORKSPACE\WkyFast\Utils\ActionVersion.cs
+      - name: Set Build
+        run: powershell (Get-Content $env:GITHUB_WORKSPACE\WkyFast\Utils\ActionVersion.cs) -Replace '{BUILD}', '$env:GITHUB_RUN_NUMBER' | Set-Content $env:GITHUB_WORKSPACE\WkyFast\Utils\ActionVersion.cs
       - name: Build
         run: dotnet build --no-restore
       - name: Test

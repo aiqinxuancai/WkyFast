@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WkyApiSharp.Events.Account;
 using WkyFast.Service;
+using WkyFast.Utils;
 
 namespace WkyFast.View
 {
@@ -61,5 +62,10 @@ namespace WkyFast.View
             }
         }
 
+        private void BadgeNewVersion_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            //跳转至最新
+            BrowserHelper.OpenUrlBrowser("https://github.com/aiqinxuancai/WkyFast/releases/latest");
+        }
     }
 }
