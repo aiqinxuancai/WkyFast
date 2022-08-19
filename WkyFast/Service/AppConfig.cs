@@ -62,6 +62,7 @@ namespace WkyFast.Service
         static AppConfig()
         {
             Init();
+            Debug.WriteLine(_configPath);
         }
 
         public static void InitDefault() //载入默认配置

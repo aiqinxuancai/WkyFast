@@ -18,7 +18,7 @@
                 <TextBlock Text="WkyFast当前版本" VerticalAlignment="Center" ></TextBlock>
                 <ui:Badge Appearance="Secondary" Content="{Binding Source={x:Static utils:ActionVersion.Version}}" />
                 <TextBlock Text="最新版本" VerticalAlignment="Center" Margin="15,0,0,0" ></TextBlock>
-                <ui:Badge x:Name="BadgeNewVersion"  Appearance="Primary" Content="{Binding Source={x:Static utils:ActionVersion.NowGithubVersion}}" MouseLeftButtonDown="BadgeNewVersion_MouseLeftButtonDown" />
+                <ui:Badge x:Name="BadgeNewVersion"  Appearance="Secondary" Content="{Binding Source={x:Static utils:ActionVersion.NowGithubVersion}}" MouseLeftButtonDown="BadgeNewVersion_MouseLeftButtonDown" />
             </StackPanel>
 
 
