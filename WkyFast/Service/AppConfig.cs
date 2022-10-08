@@ -55,7 +55,7 @@ namespace WkyFast.Service
     {
         public static AppConfigData ConfigData { set; get; } = new AppConfigData();
 
-        private static string _configPath = Environment.CurrentDirectory + @"\Config.json";
+        private static string _configPath = AppContext.BaseDirectory + @"Config.json";
 
         private static object _lock = new object();
 
