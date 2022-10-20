@@ -21,4 +21,5 @@ https://github.com/aiqinxuancai/WkyFast/releases
 
 <img src="./docs/images/wkyfast1.png" alt="WkyFast">
 
+注：关键字可使用|来表示或
 <img src="./docs/images/wkyfast2.png" alt="WkyFast">
