@@ -151,6 +151,7 @@ namespace WkyFast.Dialogs
 
                         SubscriptionManager.Instance.Add(url, path, regex, regexEnable);
 
+                        MainWindow.Instance.ShowSnackbar("添加成功", $"已添加订阅{title}", Wpf.Ui.Common.SymbolRegular.AddCircle24);
                         //AppConfig.ConfigData.LastAddSubscriptionPath = TextBoxPath.Text;
                     });
 
