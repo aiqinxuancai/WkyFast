@@ -49,14 +49,17 @@
         </Border>
         <Border Margin="10,0,10,6"  CornerRadius="4"  Grid.RowSpan="1" Grid.Row="3"  >
             <Grid>
-                <ui:TextBox Text="" 
-                            x:Name="PathTextBox"  
-                         
-                     Background="Transparent" 
-                     AllowDrop="True" 
-                     BorderBrush="#00CCCCCC"  PlaceholderText="保存目录"  />
-
-
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="100*"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0" 
+                          Height="30"
+                          Padding="10,5,10,5"
+                          DisplayMemberPath="Description" 
+                          x:Name="ComboBoxPartition" SelectionChanged="ComboBoxPartition_SelectionChanged"  />
+                <ui:TextBox Grid.Column="2" x:Name="TextBoxPath" Padding="10,5,10,5" ClearButtonEnabled="False" TextChanged="TextBoxPath_TextChanged" PlaceholderText="保存目录"/>
             </Grid>
 
         </Border>

@@ -292,8 +292,15 @@ namespace WkyFast.Service
                                         return;
                                     }
 
-                                    var savePath = basePaths[0] + (subscription.Path.StartsWith("/") ? "" : "/")  + subscription.Path; //Path.Combine(basePaths[0], subscription.Path);
                                     
+                                    var savePath = basePaths[0] + (subscription.Path.StartsWith("/") ? "" : "/") + subscription.Path;
+
+                                    //如果是一个完整路径，则直接使用，否则使用旧逻辑
+                                    bool isFullPath = basePaths.Any(a => subscription.Path.StartsWith(a));
+                                    if (isFullPath)
+                                    {
+                                        savePath = subscription.Path;
+                                    }
 
                                     EasyLogManager.Logger.Info($"添加下载{subject} {link} {savePath}");
 

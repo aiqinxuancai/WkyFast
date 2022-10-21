@@ -30,10 +30,10 @@ namespace WkyFast.Service
         /// </summary>
         public string LastDeviceId { get; set; } = string.Empty;
 
-        /// <summary>
-        /// 最后增加订阅的路径
-        /// </summary>
-        public string LastAddSubscriptionPath { get; set; } = string.Empty;
+        ///// <summary>
+        ///// 最后增加订阅的路径
+        ///// </summary>
+        //public string LastAddSubscriptionPath { get; set; } = string.Empty;
 
 
         /// <summary>
