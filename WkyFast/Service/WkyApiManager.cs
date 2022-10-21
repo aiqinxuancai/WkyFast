@@ -42,12 +42,6 @@ namespace WkyFast.Service
 
         public WkyApi? API
         {
-            set
-            {
-                _api = value;
-                //开始监听
-                SetupEvent();
-            }
             get
             {
                 return _api;
@@ -55,7 +49,7 @@ namespace WkyFast.Service
         }
 
 
-        private WkyApi? _api;
+        private WkyApi? _api = new();
 
         public WkyDevice? NowDevice
         {
@@ -77,6 +71,11 @@ namespace WkyFast.Service
         public ObservableCollection<TaskModel> TaskList { set; get; } = new ObservableCollection<TaskModel>();
 
 
+        WkyApiManager()
+        {
+            SetupEvent();
+        }
+       
         private void SetupEvent()
         {
             //安装事件监听
@@ -150,7 +149,7 @@ namespace WkyFast.Service
             var savePath = string.Empty;
             foreach (var partition in _nowDevice.Partitions)
             {
-                savePath = partition.Path + "/onecloud/tddownload";
+                savePath = partition.Partition.Path + "/onecloud/tddownload";
             }
             return savePath;
         }
@@ -164,7 +163,7 @@ namespace WkyFast.Service
             List<string> path = new List<string>();
             foreach (var partition in _nowDevice.Partitions)
             {
-                path.Add(partition.Path);
+                path.Add(partition.Partition.Path);
             }
             return path;
         }

@@ -36,6 +36,32 @@ namespace WkyFast.Service
         public string LastAddSubscriptionPath { get; set; } = string.Empty;
 
 
+        /// <summary>
+        /// 设备默认选择下载的分区对应表 
+        /// 【设备ID->分区路径】
+        /// </summary>
+        public Dictionary<string, string> AddTaskSavePartitionDict { get; set; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// 分区路径->存储路径
+        /// 【分区路径->存储路径】
+        /// </summary>
+        public Dictionary<string, string> AddTaskSavePathDict { get; set; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// 设备默认选择订阅的分区对应表 
+        /// 【设备ID->分区路径】
+        /// </summary>
+        public Dictionary<string, string> AddSubscriptionSavePartitionDict { get; set; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// 分区路径->存储路径
+        /// 【分区路径->存储路径】
+        /// </summary>
+        public Dictionary<string, string> AddSubscriptionSavePathDict { get; set; } = new Dictionary<string, string>();
+
+        //OSS相关设置
+
         public bool OSSSynchronizeOpen { get; set; } = false;
 
 
@@ -46,6 +72,9 @@ namespace WkyFast.Service
         public string OSSAccessKeyId { get; set; } = string.Empty;
 
         public string OSSAccessKeySecret { get; set; } = string.Empty;
+
+
+        //获取
     }
 
     /// <summary>

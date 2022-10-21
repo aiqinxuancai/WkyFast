@@ -13,7 +13,7 @@
     <Grid>
         <ScrollViewer>
             <StackPanel CanVerticallyScroll="True">
-                <Button x:Name="AddTaskButton" Margin="10,0,0,0" Content="添加任务" Width="80" Click="AddTaskButton_Click"></Button>
+                <Button x:Name="AddTaskButton" Margin="10,0,0,0" Content="添加任务" Width="80" Click="AddTaskButton_Click" IsEnabled="False"></Button>
                 <!--<TextBox Text="{Binding ViewModel.Text, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" />
                 <Slider Minimum="0" Maximum="100" Value="{Binding ViewModel.Number, ElementName=Self}" />-->
                 <DataGrid x:Name="MainDataGrid"  

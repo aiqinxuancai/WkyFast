@@ -159,8 +159,11 @@ namespace WkyFast
             //先使用seesion
             if (autoLogin && !string.IsNullOrWhiteSpace(mail) && !string.IsNullOrWhiteSpace(password))
             {
-                var api = new WkyApiSharp.Service.WkyApi(mail, password, WkyLoginDeviceType.PC);
-                WkyApiManager.Instance.API = api;
+                //var api = new WkyApiSharp.Service.WkyApi(mail, password, WkyLoginDeviceType.PC);
+
+                var api = WkyApiManager.Instance.API;
+                api.Init(mail, password, WkyLoginDeviceType.PC);
+                
 
                 //api.EventReceived
                 //    .OfType<LoginResultEvent>()
@@ -246,8 +249,8 @@ namespace WkyFast
                 Debug.WriteLine("正在登录...");
                 WkyLoginDialog.ShowLoading(true);
                 await Task.Delay(1000);
-
-                WkyApiManager.Instance.API = new WkyApi(email, password, WkyLoginDeviceType.PC);
+                WkyApiManager.Instance.API.Init(email, password, WkyLoginDeviceType.PC);
+                //WkyApiManager.Instance.API = new WkyApi(email, password, WkyLoginDeviceType.PC);
 
                 var loginResult = await WkyApiManager.Instance.API.StartLogin();
 

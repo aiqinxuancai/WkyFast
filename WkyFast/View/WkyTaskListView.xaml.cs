@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WkyApiSharp.Events.Account;
 using WkyFast.Dialogs;
 using WkyFast.Service;
 using WkyFast.Service.Model;
@@ -40,6 +42,15 @@ namespace WkyFast.View
             this.ViewModel = WkyApiManager.Instance.TaskList;
             //WkySubscriptionListView.ViewModel = SubscriptionManager.Instance.SubscriptionModel; //订阅列表绑定
             //WkyTaskListView.ViewModel = WkyApiManager.Instance.TaskList; //任务列表绑定
+
+            WkyApiManager.Instance.API?.EventReceived
+                .OfType<UpdateDeviceResultEvent>()
+                .Subscribe(async r => {
+
+                    this.AddTaskButton.IsEnabled = true;
+                
+                });
+
         }
 
         private WkyApiSharp.Service.Model.RemoteDownloadList.Task _lastMenuTaskData;
