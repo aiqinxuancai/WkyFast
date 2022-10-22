@@ -61,6 +61,8 @@ namespace WkyFast
         private async void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ActionVersion.CheckVersion();
+
+            VisibilityAnimation.SetAnimationType(WkyLoginDialog, VisibilityAnimation.AnimationType.Fade);
             await LoginFunc();
 
             
@@ -154,6 +156,7 @@ namespace WkyFast
 
         private async Task LoginFunc()
         {
+            EasyLogManager.Logger.Info("开始登录...");
             //登录过程
             WkyUserManager.Instance.LoadPasswrod(out var mail, out var password, out var autoLogin);
             //先使用seesion
@@ -205,6 +208,7 @@ namespace WkyFast
 
         private async Task ShowLoginAccount()
         {
+            EasyLogManager.Logger.Info("展示登录弹窗");
             WkyUserManager.Instance.LoadPasswrod(out var mail, out var password, out var autoLogin);
 
             LoginDialogDelegate loginDialogDelegate = async delegate (WkyFast.Dialogs.LoginDialog loginDialog,
@@ -228,6 +232,7 @@ namespace WkyFast
 
             WkyLoginDialog.Visibility = Visibility.Visible;
             WkyLoginDialog.ShowLoading(false);
+
 
             
         }
@@ -295,6 +300,7 @@ namespace WkyFast
             {
                 await parent.Dispatcher.Invoke(async () =>
                 {
+                    EasyLogManager.Logger.Info("隐藏登录弹窗");
                     WkyLoginDialog.Visibility = Visibility.Collapsed;
                 });
             });

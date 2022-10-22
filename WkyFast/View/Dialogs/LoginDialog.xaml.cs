@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WkyFast.Service;
 using Wpf.Ui.Controls;
 
 namespace WkyFast.Dialogs
@@ -74,6 +75,7 @@ namespace WkyFast.Dialogs
 
         public void ShowLoading(bool isShow = true)
         {
+            EasyLogManager.Logger.Info("展示Loading...");
             //展示在Loading的画面
             if (isShow)
             {
