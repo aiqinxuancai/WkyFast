@@ -177,7 +177,7 @@ namespace WkyFast.View.Contver
             {
                 0 => Visibility.Visible,
                 1 => Visibility.Visible,
-                _ => Visibility.Hidden
+                _ => Visibility.Collapsed
             };
         }
 

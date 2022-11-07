@@ -78,7 +78,8 @@
                             </Border>
 
 
-                            <TextBlock Margin="5,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Margin="5,0,0,0" 
+                                       VerticalAlignment="Center">
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{StaticResource DownloadProgressContver}">
                                         <Binding Path="Data.Progress"/>
@@ -86,9 +87,9 @@
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
-                            <TextBlock Text="/" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock Text="{Binding Data.Size, Converter={StaticResource DownloadSizeContver}}" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock Text="  " VerticalAlignment="Center"></TextBlock>
+                            <TextBlock Text="/" VerticalAlignment="Center" Visibility="{Binding Data.State, Converter={StaticResource DownloadSpeedVisibilityConverter}}"></TextBlock>
+                            <TextBlock Text="{Binding Data.Size, Converter={StaticResource DownloadSizeContver}}" VerticalAlignment="Center" Visibility="{Binding Data.State, Converter={StaticResource DownloadSpeedVisibilityConverter}}"></TextBlock>
+                            <TextBlock Text="  " VerticalAlignment="Center" Visibility="{Binding Data.State, Converter={StaticResource DownloadSpeedVisibilityConverter}}"></TextBlock>
 
 
                             <TextBlock  VerticalAlignment="Center" Visibility="{Binding Data.State, Converter={StaticResource DownloadSpeedVisibilityConverter}}" Text="{Binding Data.Speed, Converter={StaticResource DownloadSizeContver}}"></TextBlock>
