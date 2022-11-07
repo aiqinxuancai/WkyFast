@@ -255,11 +255,11 @@ namespace WkyFast.Service
 
                     if (CheckTitle(subscription, subject))
                     {
-                        EasyLogManager.Logger.Info($"标题验证 {subject} 通过，准备下载");
+                        //EasyLogManager.Logger.Info($"标题验证 {subject} 通过，准备下载");
                     }
                     else
                     {
-                        EasyLogManager.Logger.Info($"标题验证 {subject} 未通过");
+                        //EasyLogManager.Logger.Info($"标题验证 {subject} 未通过");
                         continue;
                     }
                     

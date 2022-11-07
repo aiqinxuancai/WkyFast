@@ -149,6 +149,7 @@ namespace WkyFast.Dialogs
             }
             else
             {
+                //EasyLogManager.Logger.Info($"成功添加任务");
                 MainWindow.Instance.ShowSnackbar("成功", $"{count}个任务已添加");
                 this.Close();
             }
@@ -203,7 +204,7 @@ namespace WkyFast.Dialogs
                     {
                         EasyLogManager.Logger.Error(ex);
                     }
-
+                    
                 }
 
                 if (count == 0)
@@ -215,6 +216,11 @@ namespace WkyFast.Dialogs
                 {
                     EasyLogManager.Logger.Info($"成功添加{count}个任务，有{files.Length - count}个添加失败");
                     MainWindow.Instance.ShowSnackbar("成功", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
+                }
+                else
+                {
+                    MainWindow.Instance.ShowSnackbar("成功", $"{count}个任务已添加");
+                    this.Close();
                 }
             }
             else if (e.Data.GetDataPresent(DataFormats.Text))

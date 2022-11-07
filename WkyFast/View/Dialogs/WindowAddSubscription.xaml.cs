@@ -133,6 +133,7 @@ namespace WkyFast.Dialogs
                         //progressView.CloseAsync();
                         //this.ShowMessageAsync("Url不合法", ex.ToString());
                         //return;
+                        EasyLogManager.Logger.Error(ex);
                     }
                     
                     string title = SubscriptionManager.Instance.GetSubscriptionTitle(url);
@@ -150,6 +151,8 @@ namespace WkyFast.Dialogs
 
                         SubscriptionManager.Instance.Add(url, path, regex, regexEnable);
 
+                        EasyLogManager.Logger.Info($"订阅已添加：{title} {url}");
+
                         MainWindow.Instance.ShowSnackbar("添加成功", $"已添加订阅{title}", Wpf.Ui.Common.SymbolRegular.AddCircle24);
                         //AppConfig.ConfigData.LastAddSubscriptionPath = TextBoxPath.Text;
                     });
@@ -163,6 +166,7 @@ namespace WkyFast.Dialogs
             catch (Exception ex)
             {
                 //await this.ShowMessageAsync("添加异常，请重试", ex.ToString());
+                EasyLogManager.Logger.Error(ex);
             }
             ConfirmButton.IsEnabled = true;
         }
