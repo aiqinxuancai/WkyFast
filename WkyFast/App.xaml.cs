@@ -50,7 +50,7 @@ namespace WkyFast
 
         void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            EasyLogManager.Logger.Error(e?.ToString());
+            EasyLogManager.Logger.Error(e.Exception);
             MessageBox.Show(e?.Exception?.Message + Environment.NewLine + e?.Exception?.InnerException?.ToString(), "Error#2", MessageBoxButton.OK, MessageBoxImage.Information);
             e.Handled = true;
         }
