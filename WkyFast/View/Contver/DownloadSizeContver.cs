@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 using WkyFast.Utils;
+using Color = System.Windows.Media.Color;
+using ColorConverter = System.Windows.Media.ColorConverter;
 
 namespace WkyFast.View.Contver
 {
@@ -60,6 +64,37 @@ namespace WkyFast.View.Contver
             return DependencyProperty.UnsetValue;
         }
     }
+
+    [ValueConversion(typeof(long), typeof(SolidColorBrush))]
+    public class DownloadStatusBrushContver : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            //ColorConverter colorConverter = new ColorConverter();
+
+            var color = (long)value switch
+            {
+                0 => (Color)ColorConverter.ConvertFromString("#2d8cf0"), //"添加中", //蓝色
+                8 =>  (Color)ColorConverter.ConvertFromString("#2d8cf0"),//"等待中", //蓝色
+                9 => (Color)ColorConverter.ConvertFromString("#ff9900"),//"已暂停", //橙色
+                1 => (Color)ColorConverter.ConvertFromString("#2d8cf0"),//"下载中", //蓝色
+                11 => (Color)ColorConverter.ConvertFromString("#19be6b"), //已完成 //绿色
+                14 => (Color)ColorConverter.ConvertFromString("#2d8cf0"),//"准备添加中", //蓝色
+                38 => (Color)ColorConverter.ConvertFromString("#ed4014"),//"磁盘写入异常", //红色
+                _ => (Color)ColorConverter.ConvertFromString("#f8f8f9"), //value, //灰色
+            };
+
+
+            return new SolidColorBrush(color);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return DependencyProperty.UnsetValue;
+        }
+    }
+
+
 
 
     /// <summary>

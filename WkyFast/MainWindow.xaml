@@ -8,6 +8,7 @@
         xmlns:view="clr-namespace:WkyFast.View"
         mc:Ignorable="d"
         Style="{StaticResource UiWindow}"
+        
         xmlns:tb="http://www.hardcodet.net/taskbar" xmlns:dialogs="clr-namespace:WkyFast.Dialogs"
         Title="WkyFast" Height="560" Width="860" Icon="icon.ico" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded" Unloaded="MetroWindow_Unloaded" >
 

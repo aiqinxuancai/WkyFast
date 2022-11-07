@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WkyFast.View" 
-             
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:converter="clr-namespace:WkyFast.View.Contver" xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              x:Name="Self"
@@ -95,14 +95,77 @@
                                     <StackPanel Margin="2,2"  Grid.Column="0">
                                         <TextBlock Text="{Binding Name}"></TextBlock>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="总任务数："></TextBlock>
+                                            <!--<TextBlock Text="总任务数："></TextBlock>
                                             <TextBlock Text="{Binding TaskFullCount}"></TextBlock>
 
                                             <TextBlock Text="匹配任务数：" Margin="10,0,0,0"></TextBlock>
                                             <TextBlock Text="{Binding TaskMatchCount}"></TextBlock>
 
                                             <TextBlock Text="已添加任务：" Margin="10,0,0,0"></TextBlock>
-                                            <TextBlock Text="{Binding AlreadyAddedDownloadModel.Count}"></TextBlock>
+                                            <TextBlock Text="{Binding AlreadyAddedDownloadModel.Count}"></TextBlock>-->
+                                            <Border CornerRadius="4" Height="18" MinWidth="40" BorderThickness="1" BorderBrush="#E8EAEC" Background="#60FFFFFF"
+                                                    ToolTip="总任务数">
+                                                <TextBlock Text="{Binding TaskFullCount}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock" >
+                                                            <Setter Property="Foreground" Value="#515a6e" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                                </TextBlock>
+                                            </Border>
+  
+                                            <Border CornerRadius="4" Height="18" MinWidth="40"  Background="#19BE6B" Margin="5,0,0,0"
+                                                    ToolTip="已添加任务数/匹配任务数" HorizontalAlignment="Center">
+                                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Margin="5,0,5,0" >
+                                                    <ui:SymbolIcon Symbol="CheckmarkCircle20" Foreground="#FFFFFF" />
+                                                    <TextBlock Text="{Binding TaskMatchCount}" Margin="2,0,0,0">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock" >
+                                                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                                                        <Setter Property="Foreground" Value="#FFFFFF" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+
+                                                    <TextBlock Text="/" Margin="2,0,2,0">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock" >
+                                                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                                                        <Setter Property="Foreground" Value="#FFFFFF" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                    <TextBlock Text="{Binding AlreadyAddedDownloadModel.Count}" Margin="0,0,2,0">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock" >
+                                                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                                                        <Setter Property="Foreground" Value="#FFFFFF" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </StackPanel>
+              
+                                            </Border>
+
+
+                             
                                         </StackPanel>
                                     </StackPanel>
                                 </Grid>
