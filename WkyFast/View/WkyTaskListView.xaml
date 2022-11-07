@@ -11,70 +11,68 @@
              d:DesignHeight="450" d:DesignWidth="500">
 
     <Grid>
-        <ScrollViewer>
-            <StackPanel CanVerticallyScroll="True">
-                <Button x:Name="AddTaskButton" Margin="10,0,0,0" Content="添加任务" Width="80" Click="AddTaskButton_Click" IsEnabled="False"></Button>
-                <!--<TextBox Text="{Binding ViewModel.Text, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" />
+        <Button x:Name="AddTaskButton" Margin="10,0,0,0" Content="添加任务" Width="80" Click="AddTaskButton_Click" IsEnabled="False" VerticalAlignment="Top"></Button>
+        <!--<TextBox Text="{Binding ViewModel.Text, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" />
                 <Slider Minimum="0" Maximum="100" Value="{Binding ViewModel.Number, ElementName=Self}" />-->
-                <DataGrid x:Name="MainDataGrid"  
-                          PreviewMouseWheel="UIElement_OnPreviewMouseWheel" ScrollViewer.CanContentScroll="True"
+        <DataGrid x:Name="MainDataGrid"  
+                          ScrollViewer.CanContentScroll="True"
                           ItemsSource="{Binding ViewModel, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" 
                           AutoGenerateColumns="False" 
                           HeadersVisibility="None" 
                           GridLinesVisibility="Horizontal"
                           CanUserAddRows="False"
                           BorderBrush="Transparent"
-                          HorizontalScrollBarVisibility="Disabled"  LoadingRow="MainDataGrid_LoadingRow">
+                          HorizontalScrollBarVisibility="Disabled"  LoadingRow="MainDataGrid_LoadingRow" Margin="0,40,0,0">
 
-                    <DataGrid.HorizontalGridLinesBrush>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Color="#00000000" Offset="0"/>
-                            <GradientStop Color="#00000000" Offset=".5"/>
-                            <GradientStop Color="#00000000" Offset="1"/>
-                        </LinearGradientBrush>
-                    </DataGrid.HorizontalGridLinesBrush>
-                    
-                    <DataGrid.CellStyle>
-                        <!--Override Highlighting so that its easy to see what is selected even when the control is not focused-->
-                        <Style TargetType="{x:Type DataGridCell}">
-                            <Style.Triggers>
-                                <Trigger  Property="IsSelected" Value="true">
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
-                                    <Setter Property="BorderBrush" Value="Transparent" />
-                                </Trigger>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="True" />
-                                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=IsKeyboardFocusWithin}" Value="False" />
-                                    </MultiDataTrigger.Conditions>
-                                    <MultiDataTrigger.Setters>
-                                        <Setter Property="Background" Value="Transparent" />
-                                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
-                                        <Setter Property="BorderBrush" Value="Transparent" />
-                                    </MultiDataTrigger.Setters>
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.CellStyle>
-                    
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
+            <DataGrid.HorizontalGridLinesBrush>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#00000000" Offset="0"/>
+                    <GradientStop Color="#00000000" Offset=".5"/>
+                    <GradientStop Color="#00000000" Offset="1"/>
+                </LinearGradientBrush>
+            </DataGrid.HorizontalGridLinesBrush>
 
-                                    <StackPanel Margin="0,0,0,0">
-                                        <control:TaskListCellControl></control:TaskListCellControl>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+            <DataGrid.CellStyle>
+                <!--Override Highlighting so that its easy to see what is selected even when the control is not focused-->
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Setter Property="Width" Value="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type ScrollContentPresenter}}, Mode=OneWay}"/>
+                    <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+              
+                    <Style.Triggers>
+                        <Trigger  Property="IsSelected" Value="true">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                        </Trigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="True" />
+                                <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=IsKeyboardFocusWithin}" Value="False" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
 
-                    </DataGrid.Columns>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
 
-                </DataGrid>
-            </StackPanel>
+                            <StackPanel Margin="0,0,0,0">
+                                <control:TaskListCellControl></control:TaskListCellControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-        </ScrollViewer>
+            </DataGrid.Columns>
+
+        </DataGrid>
     </Grid>
 </Page>

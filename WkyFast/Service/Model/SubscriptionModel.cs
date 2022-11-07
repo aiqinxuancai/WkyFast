@@ -14,6 +14,7 @@ namespace WkyFast.Service.Model.SubscriptionModel
     using System.Globalization;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
+    using WkyApiSharp.Service.Model;
 
     public partial class SubscriptionModel : BaseNotificationModel
     {
@@ -22,6 +23,10 @@ namespace WkyFast.Service.Model.SubscriptionModel
         /// </summary>
         [JsonProperty("Url")]
         public string Url { get; set; }
+
+
+        [JsonProperty("Device")]
+        public WkyDevice Device { get; set; }
 
         /// <summary>
         /// 存储路径
@@ -37,6 +42,8 @@ namespace WkyFast.Service.Model.SubscriptionModel
 
         [JsonProperty("IsFilterRegex")]
         public bool IsFilterRegex { get; set; }
+
+
 
 
         /// <summary>

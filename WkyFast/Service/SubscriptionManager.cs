@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using WkyFast.Utils;
 using WkyFast.Service.Model.SubscriptionModel;
 using System.Text.RegularExpressions;
+using WkyApiSharp.Service.Model;
 
 namespace WkyFast.Service
 {
@@ -304,7 +305,7 @@ namespace WkyFast.Service
 
                                     EasyLogManager.Logger.Info($"添加下载{subject} {link} {savePath}");
 
-                                    var addResult = WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, savePath).Result;
+                                    var addResult = WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, subscription.Device, savePath).Result;
 
                                     if (addResult.SuccessCount > 0)
                                     {
@@ -387,7 +388,7 @@ namespace WkyFast.Service
 
         //存储订阅，读取加载订阅
 
-        public bool Add(string url, string path, string keyword = "", bool keywordIsRegex = false)
+        public bool Add(string url, WkyDevice device, string path, string keyword = "", bool keywordIsRegex = false)
         {
             if (SubscriptionModel.ToList().Find( a => { return a.Url == url; }) != null)
             {
@@ -401,7 +402,7 @@ namespace WkyFast.Service
             model.Filter = keyword;
             model.IsFilterRegex = keywordIsRegex;
             model.Path = path;
-
+            model.Device = device;
             EasyLogManager.Logger.Error($"添加订阅：{model.Url}");
 
             SubscriptionModel.Add(model);

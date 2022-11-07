@@ -24,13 +24,17 @@ namespace WkyFast.Dialogs
     /// </summary>
     public partial class WindowAddSubscription : Window
     {
+        private WkyDevice? _device;
+
         public WindowAddSubscription()
         {
             InitializeComponent();
             IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
             Win11Style.LoadWin11Style(hWnd);
 
-            this.ComboBoxPartition.ItemsSource = WkyApiManager.Instance.NowDevice.Partitions;
+            _device = WkyApiManager.Instance.NowDevice;
+
+            this.ComboBoxPartition.ItemsSource = _device?.Partitions;
             LoadDefaultPartitionSelected();
             LoadDefaultPathSelected();
         }
@@ -45,14 +49,14 @@ namespace WkyFast.Dialogs
 
         private void LoadDefaultPartitionSelected()
         {
-            if (AppConfig.ConfigData.AddSubscriptionSavePartitionDict.TryGetValue(WkyApiManager.Instance.NowDevice.DeviceId, out var partitionpath))
+            if (AppConfig.ConfigData.AddSubscriptionSavePartitionDict.TryGetValue(_device.DeviceId, out var partitionpath))
             {
                 //寻找
-                var p = WkyApiManager.Instance.NowDevice.Partitions.FirstOrDefault(a => a.Partition.Path == partitionpath);
+                var p = _device.Partitions.FirstOrDefault(a => a.Partition.Path == partitionpath);
 
                 if (p != null)
                 {
-                    this.ComboBoxPartition.SelectedIndex = WkyApiManager.Instance.NowDevice.Partitions.IndexOf(p);
+                    this.ComboBoxPartition.SelectedIndex = _device.Partitions.IndexOf(p);
                 }
                 else
                 {
@@ -149,7 +153,9 @@ namespace WkyFast.Dialogs
                             path = wkyPartition.Partition.Path + TextBoxPath.Text + (TextBoxPath.Text.EndsWith("/") ? "" : "/") + title;
                         }
 
-                        SubscriptionManager.Instance.Add(url, path, regex, regexEnable);
+
+
+                        SubscriptionManager.Instance.Add(url, _device, path, regex, regexEnable);
 
                         EasyLogManager.Logger.Info($"订阅已添加：{title} {url}");
 

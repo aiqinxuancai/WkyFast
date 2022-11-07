@@ -18,103 +18,104 @@
     </Page.Resources>
 
     <Grid>
-        <ScrollViewer>
-            <StackPanel CanVerticallyScroll="True">
-                <Button x:Name="SubscriptionButton" Content="添加订阅" Width="80" Margin="10,0,0,0" Click="SubscriptionButton_Click"></Button>
-
-                <!--<TextBox Text="{Binding ViewModel.Text, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" />
-                <Slider Minimum="0" Maximum="100" Value="{Binding ViewModel.Number, ElementName=Self}" />-->
-                <DataGrid x:Name="MainDataGrid"  
-                          PreviewMouseWheel="UIElement_OnPreviewMouseWheel" ScrollViewer.CanContentScroll="True"
+        <Button x:Name="SubscriptionButton" Content="添加订阅" Width="80" Margin="10,0,0,0" Click="SubscriptionButton_Click" VerticalAlignment="Top"></Button>
+        <DataGrid x:Name="MainDataGrid"  
+                          
+                  ScrollViewer.CanContentScroll="True"
                           ItemsSource="{Binding ViewModel, ElementName=Self, UpdateSourceTrigger=PropertyChanged}" 
                           AutoGenerateColumns="False" 
                           HeadersVisibility="None" 
                           GridLinesVisibility="Horizontal"
                           CanUserAddRows="False"
                           BorderBrush="Transparent"
-                          HorizontalScrollBarVisibility="Disabled" LoadingRow="MainDataGrid_LoadingRow"
+                          HorizontalScrollBarVisibility="Disabled" LoadingRow="MainDataGrid_LoadingRow" Margin="0,40,0,0"
                           >
 
-                    <DataGrid.HorizontalGridLinesBrush>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Color="#00000000" Offset="0"/>
-                            <GradientStop Color="#00000000" Offset=".5"/>
-                            <GradientStop Color="#00000000" Offset="1"/>
-                        </LinearGradientBrush>
-                    </DataGrid.HorizontalGridLinesBrush>
-                    <DataGrid.CellStyle>
-                        <!--Override Highlighting so that its easy to see what is selected even when the control is not focused-->
-                        <Style TargetType="{x:Type DataGridCell}">
-                            <Style.Triggers>
-                                <Trigger  Property="IsSelected" Value="true">
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
-                                    <Setter Property="BorderBrush" Value="Transparent" />
-                                </Trigger>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="True" />
-                                        <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=IsKeyboardFocusWithin}" Value="False" />
-                                    </MultiDataTrigger.Conditions>
-                                    <MultiDataTrigger.Setters>
+            <DataGrid.HorizontalGridLinesBrush>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#00000000" Offset="0"/>
+                    <GradientStop Color="#00000000" Offset=".5"/>
+                    <GradientStop Color="#00000000" Offset="1"/>
+                </LinearGradientBrush>
+            </DataGrid.HorizontalGridLinesBrush>
+            <DataGrid.CellStyle>
+                <!--Override Highlighting so that its easy to see what is selected even when the control is not focused-->
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Setter Property="Width" Value="{Binding Path=ActualWidth, RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type ScrollContentPresenter}}, Mode=OneWay}"/>
+                    <Setter Property="HorizontalAlignment" Value="Left"/>
+
+                    <Style.Triggers>
+                        <Trigger  Property="IsSelected" Value="true">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                        </Trigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsSelected}" Value="True" />
+                                <Condition Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=IsKeyboardFocusWithin}" Value="False" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border  CornerRadius="4" >
+                                <Border.Style>
+                                    <Style TargetType="Border" >
+
                                         <Setter Property="Background" Value="Transparent" />
-                                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
-                                        <Setter Property="BorderBrush" Value="Transparent" />
-                                    </MultiDataTrigger.Setters>
-                                </MultiDataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.CellStyle>
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border  CornerRadius="4">
-                                        <Border.Style>
-                                            <Style TargetType="Border" >
-                                                <Setter Property="Background" Value="Transparent" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
-                                                        <Setter Property="Background" Value="#006ABE" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <Grid HorizontalAlignment="Left" Margin="5,0,0,0">
-                                            <Grid.Width>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                                <Setter Property="Background" Value="#006ABE" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid HorizontalAlignment="Left" Margin="5,0,0,0" >
+                                    <!--<Grid.Width>
                                                 <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
-                                            </Grid.Width>
+                                            </Grid.Width>-->
+                                    <!--<Grid.Width>
+                                                <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ScrollContentPresenter}}" />
+                                            </Grid.Width>-->
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="50"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
 
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                                <ColumnDefinition Width="50"></ColumnDefinition>
-                                            </Grid.ColumnDefinitions>
+                                    <StackPanel Margin="2,2"  Grid.Column="0">
+                                        <TextBlock Text="{Binding Name}"></TextBlock>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="总任务数："></TextBlock>
+                                            <TextBlock Text="{Binding TaskFullCount}"></TextBlock>
 
-                                            <StackPanel Margin="2,2"  Grid.Column="0">
-                                                <TextBlock Text="{Binding Name}"></TextBlock>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="总任务数："></TextBlock>
-                                                    <TextBlock Text="{Binding TaskFullCount}"></TextBlock>
+                                            <TextBlock Text="匹配任务数：" Margin="10,0,0,0"></TextBlock>
+                                            <TextBlock Text="{Binding TaskMatchCount}"></TextBlock>
 
-                                                    <TextBlock Text="匹配任务数：" Margin="10,0,0,0"></TextBlock>
-                                                    <TextBlock Text="{Binding TaskMatchCount}"></TextBlock>
+                                            <TextBlock Text="已添加任务：" Margin="10,0,0,0"></TextBlock>
+                                            <TextBlock Text="{Binding AlreadyAddedDownloadModel.Count}"></TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
 
-                                                    <TextBlock Text="已添加任务：" Margin="10,0,0,0"></TextBlock>
-                                                    <TextBlock Text="{Binding AlreadyAddedDownloadModel.Count}"></TextBlock>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </Grid>
-                                    </Border>
-                                    
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-                    </DataGrid.Columns>
+            </DataGrid.Columns>
 
-                </DataGrid>
-            </StackPanel>
+        </DataGrid>
 
-        </ScrollViewer>
+
     </Grid>
 </Page>
