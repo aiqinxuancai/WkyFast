@@ -6,12 +6,20 @@ using System.Threading.Tasks;
 
 namespace WkyFast.Service.Model
 {
-    public class DownloadResult
+    public class WkyDownloadResult
     {
-        //是否成功添加
-        public bool Result { get; set; }
+        //返回值非0或网络请求有异常
+        public bool hasError { get; set; }
 
-        //是否是添加重复任务
-        public bool isDuplicateAddTask { get; set; }
+        //总量
+        public int AllTaskCount { get; set; }
+
+        //成功添加的数量
+        public int SuccessCount { get; set; }
+
+        //已经存在的数量
+        public int DuplicateAddTaskCount { get; set; }
+
+
     }
 }

@@ -122,7 +122,7 @@ namespace WkyFast.Dialogs
                 try
                 {
                     var result = await WkyApiManager.Instance.DownloadUrl(file, wkyPartition.Partition.Path + TextBoxPath.Text);
-                    if (result)
+                    if (result.SuccessCount > 0)
                     {
                         EasyLogManager.Logger.Info($"任务已添加：{file}");
                         count++;
@@ -140,15 +140,16 @@ namespace WkyFast.Dialogs
             if (count == 0)
             {
                 EasyLogManager.Logger.Info($"任务添加失败");
-                //await this.ShowMessageAsync("添加失败", $"任务添加失败");
+                MainWindow.Instance.ShowSnackbar("失败", "任务添加失败");
             }
             else if (files.Length != count)
             {
                 EasyLogManager.Logger.Info($"成功添加{count}个任务，有{files.Length - count}个添加失败");
-                //TODO await this.ShowMessageAsync("部分添加失败", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
+                MainWindow.Instance.ShowSnackbar("成功", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
             }
             else
             {
+                MainWindow.Instance.ShowSnackbar("成功", $"{count}个任务已添加");
                 this.Close();
             }
 
@@ -191,10 +192,10 @@ namespace WkyFast.Dialogs
                     try
                     {
                         var result = await WkyApiManager.Instance.DownloadBtFile(file, wkyPartition.Partition.Path + TextBoxPath.Text);
-                        if (result)
+                        if (result.SuccessCount > 0)
                         {
                             EasyLogManager.Logger.Info($"任务已添加：{file}");
-                            count++;
+                            count ++;
                         }
 
                     }
@@ -208,12 +209,12 @@ namespace WkyFast.Dialogs
                 if (count == 0)
                 {
                     EasyLogManager.Logger.Info($"任务添加失败");
-                    //await this.ShowMessageAsync("添加失败", $"任务添加失败");
+                    MainWindow.Instance.ShowSnackbar("失败", "任务添加失败");
                 }
                 else if (files.Length != count)
                 {
                     EasyLogManager.Logger.Info($"成功添加{count}个任务，有{files.Length - count}个添加失败");
-                    //await this.ShowMessageAsync("部分添加失败", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
+                    MainWindow.Instance.ShowSnackbar("成功", $"成功添加{count}个任务，有{files.Length - count}个添加失败");
                 }
             }
             else if (e.Data.GetDataPresent(DataFormats.Text))

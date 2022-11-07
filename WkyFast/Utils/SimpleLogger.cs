@@ -133,22 +133,22 @@ namespace WkyFast.Utils
             switch (level)
             {
                 case LogLevel.TRACE:
-                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [TRACE]   ";
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [TRACE]";
                     break;
                 case LogLevel.INFO:
-                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [INFO]    ";
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [INFO]";
                     break;
                 case LogLevel.DEBUG:
-                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [DEBUG]   ";
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [DEBUG]";
                     break;
                 case LogLevel.WARNING:
-                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [WARNING] ";
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [WARNING]";
                     break;
                 case LogLevel.ERROR:
-                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [ERROR]   ";
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [ERROR]";
                     break;
                 case LogLevel.FATAL:
-                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [FATAL]   ";
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [FATAL]";
                     break;
                 default:
                     pretext = "";

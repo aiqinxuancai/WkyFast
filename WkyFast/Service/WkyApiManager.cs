@@ -172,10 +172,10 @@ namespace WkyFast.Service
         /// 从一个BT的URL添加到下载中（用于订阅的下载）
         /// </summary>
         /// <param name="url"></param>
-        public async Task<DownloadResult> DownloadBtFileUrl(string url, string path)
+        public async Task<WkyDownloadResult> DownloadBtFileUrl(string url, string path)
         {
-            DownloadResult downloadResult = new DownloadResult();
-            downloadResult.Result = false;
+            WkyDownloadResult downloadResult = new WkyDownloadResult();
+            downloadResult.SuccessCount = 0;
 
             try
             {
@@ -188,17 +188,25 @@ namespace WkyFast.Service
                     var result = await _api?.CreateTaskWithBtCheck(_nowDevice.Device.Peerid, path, bcCheck);
                     if (result.Rtn == 0)
                     {
-                        downloadResult.Result = true;
+                        downloadResult.AllTaskCount = result.Tasks.Length;
                         foreach (var item in result.Tasks)
                         {
                             if (item.Result == 202)
                             {
                                 Debug.WriteLine($"重复添加任务：{item.Name}");
-                                downloadResult.isDuplicateAddTask = true;
-                                downloadResult.Result = false;
+                                downloadResult.DuplicateAddTaskCount++;
                             }
+                            else if (item.Result == 0)
+                            {
+                                downloadResult.SuccessCount++;
+                            }
+
                         }
                         
+                    }
+                    else
+                    {
+                        downloadResult.hasError = true;
                     }
                 } 
                 
@@ -206,63 +214,112 @@ namespace WkyFast.Service
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
- 
+                downloadResult.hasError = true;
+
             }
             
             return downloadResult;
         }
 
-        public async Task<bool> DownloadUrl(string url, string savePath = "")
+        public async Task<WkyDownloadResult> DownloadUrl(string url, string savePath = "")
         {
-            if (string.IsNullOrWhiteSpace( savePath))
+            WkyDownloadResult downloadResult = new WkyDownloadResult();
+            downloadResult.SuccessCount = 0;
+
+            try
             {
-                savePath = GetUsbInfoDefDownloadPath();
-            }
-            var urlResoleResult = await _api?.UrlResolve(_nowDevice?.Device.Peerid, url);
-            if (urlResoleResult.Rtn == 0)
-            {
-                var createResult = await _api?.CreateBatchTaskWithUrlResolve(_nowDevice.Device.Peerid, savePath, urlResoleResult, null);
-                if (createResult.Rtn == 0)
+                if (string.IsNullOrWhiteSpace(savePath))
                 {
-                    foreach (var item in createResult.Tasks)
+                    savePath = GetUsbInfoDefDownloadPath();
+                }
+                var urlResoleResult = await _api?.UrlResolve(_nowDevice?.Device.Peerid, url);
+                if (urlResoleResult.Rtn == 0)
+                {
+                    var createResult = await _api?.CreateBatchTaskWithUrlResolve(_nowDevice.Device.Peerid, savePath, urlResoleResult, null);
+                    if (createResult.Rtn == 0)
                     {
-                        if (item.Result == 202)
+                        foreach (var item in createResult.Tasks)
                         {
-                            Debug.WriteLine($"重复添加任务：{item.Name}");
-                            return false;
+                            if (item.Result == 202)
+                            {
+                                Debug.WriteLine($"重复添加任务：{item.Name}");
+                                downloadResult.DuplicateAddTaskCount++;
+                            }
+                            else if (item.Result == 0)
+                            {
+                                downloadResult.SuccessCount++;
+                            }
                         }
                     }
-                    return true;
+                    else
+                    {
+                        downloadResult.hasError = true;
+                    }
+                }
+                else
+                {
+                    downloadResult.hasError = true;
                 }
             }
-            return false;
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                downloadResult.hasError = true;
+            }
+
+            
+
+
+            return downloadResult;
         }
 
-        public async Task<bool> DownloadBtFile(string filePath, string savePath = "")
+        public async Task<WkyDownloadResult> DownloadBtFile(string filePath, string savePath = "")
         {
-            if (string.IsNullOrWhiteSpace(savePath))
+            WkyDownloadResult downloadResult = new WkyDownloadResult();
+            downloadResult.SuccessCount = 0;
+
+            try
             {
-                savePath = GetUsbInfoDefDownloadPath();
-            }
-            var btResoleResult = await _api?.BtCheck(NowDevice?.Device.Peerid, filePath);
-            if (btResoleResult.Rtn == 0)
-            {
-                var createResult = await _api?.CreateBatchTaskWithBtCheck(NowDevice.Device.Peerid, savePath, btResoleResult, null);
-                if (createResult.Rtn == 0)
+                if (string.IsNullOrWhiteSpace(savePath))
                 {
-                    foreach (var item in createResult.Tasks)
+                    savePath = GetUsbInfoDefDownloadPath();
+                }
+                var btResoleResult = await _api?.BtCheck(NowDevice?.Device.Peerid, filePath);
+                if (btResoleResult.Rtn == 0)
+                {
+                    var createResult = await _api?.CreateBatchTaskWithBtCheck(NowDevice.Device.Peerid, savePath, btResoleResult, null);
+                    if (createResult.Rtn == 0)
                     {
-                        if (item.Result == 202)
+                        foreach (var item in createResult.Tasks)
                         {
-                            Debug.WriteLine($"重复添加任务：{item.Name}");
-                            return false;
+                            if (item.Result == 202)
+                            {
+                                Debug.WriteLine($"重复添加任务：{item.Name}");
+                                downloadResult.DuplicateAddTaskCount++;
+                            }
+                            else if (item.Result == 0)
+                            {
+                                downloadResult.SuccessCount++;
+                            }
                         }
                     }
-
-                    return true;
+                    else
+                    {
+                        downloadResult.hasError = true;
+                    }
+                }
+                else
+                {
+                    downloadResult.hasError = true;
                 }
             }
-            return false;
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                downloadResult.hasError = true;
+            }
+            
+            return downloadResult;
         }
 
 

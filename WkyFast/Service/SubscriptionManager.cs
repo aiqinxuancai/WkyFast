@@ -306,12 +306,12 @@ namespace WkyFast.Service
 
                                     var addResult = WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, savePath).Result;
 
-                                    if (addResult.Result)
+                                    if (addResult.SuccessCount > 0)
                                     {
                                         subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl} );
                                         EasyLogManager.Logger.Info($"添加成功");
                                     }
-                                    else if (addResult.isDuplicateAddTask)
+                                    else if (addResult.DuplicateAddTaskCount > 0)
                                     {
                                         subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl });
                                         EasyLogManager.Logger.Info($"成功，任务已经存在，不再重复添加");
