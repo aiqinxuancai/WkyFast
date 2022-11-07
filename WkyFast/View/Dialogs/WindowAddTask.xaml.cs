@@ -51,39 +51,53 @@ namespace WkyFast.Dialogs
 
         private void LoadDefaultPartitionSelected()
         {
-            if (AppConfig.ConfigData.AddTaskSavePartitionDict.TryGetValue(WkyApiManager.Instance.NowDevice.DeviceId, out var partitionpath))
+            try 
             {
-                //寻找
-                var p = WkyApiManager.Instance.NowDevice.Partitions.FirstOrDefault(a => a.Partition.Path == partitionpath);
-
-                if (p != null)
+                if (AppConfig.ConfigData.AddTaskSavePartitionDict.TryGetValue(WkyApiManager.Instance.NowDevice.DeviceId, out var partitionpath))
                 {
-                    this.ComboBoxPartition.SelectedIndex = WkyApiManager.Instance.NowDevice.Partitions.IndexOf(p);
-                    LoadDefaultPathSelected();
+                    //寻找
+                    var p = WkyApiManager.Instance.NowDevice.Partitions.FirstOrDefault(a => a.Partition.Path == partitionpath);
+
+                    if (p != null)
+                    {
+                        this.ComboBoxPartition.SelectedIndex = WkyApiManager.Instance.NowDevice.Partitions.IndexOf(p);
+                    }
+                    else
+                    {
+                        this.ComboBoxPartition.SelectedIndex = 0;
+                    }
                 }
                 else
                 {
                     this.ComboBoxPartition.SelectedIndex = 0;
                 }
-            }
-            else
+            } 
+            catch (Exception ex)
             {
-                this.ComboBoxPartition.SelectedIndex = 0;
+                
             }
 
         }
         private void LoadDefaultPathSelected()
         {
-            WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
+            try
+            {
+                WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
 
-            if (AppConfig.ConfigData.AddTaskSavePathDict.TryGetValue(wkyPartition.Partition.Path, out var path))
-            {
-                this.TextBoxPath.Text = path;
+                if (AppConfig.ConfigData.AddTaskSavePathDict.TryGetValue(wkyPartition.Partition.Path, out var path))
+                {
+                    this.TextBoxPath.Text = path;
+                }
+                else
+                {
+                    this.TextBoxPath.Text = "/onecloud/tddownload";
+                }
             }
-            else
+            catch (Exception ex) 
             {
-                this.TextBoxPath.Text = "/onecloud/tddownload";
+                EasyLogManager.Logger.Error(ex);
             }
+
         }
 
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
@@ -107,7 +121,6 @@ namespace WkyFast.Dialogs
             {
                 try
                 {
-                    
                     var result = await WkyApiManager.Instance.DownloadUrl(file, wkyPartition.Partition.Path + TextBoxPath.Text);
                     if (result)
                     {

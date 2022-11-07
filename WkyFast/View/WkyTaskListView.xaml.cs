@@ -47,8 +47,11 @@ namespace WkyFast.View
                 .OfType<UpdateDeviceResultEvent>()
                 .Subscribe(async r => {
 
-                    this.AddTaskButton.IsEnabled = true;
-                
+                    if (r.IsSuccess)
+                    {
+                        this.AddTaskButton.IsEnabled = true;
+                    }
+
                 });
 
         }
@@ -253,7 +256,14 @@ namespace WkyFast.View
         }
         private void AddTaskButton_Click(object sender, RoutedEventArgs e)
         {
-            WindowAddTask.Show(Application.Current.MainWindow);
+            if (WkyApiManager.Instance.NowDevice != null)
+            {
+                WindowAddTask.Show(Application.Current.MainWindow);
+            }
+            else
+            {
+                MainWindow.Instance.ShowSnackbar("无法添加任务", $"当前没有选中任何设备");
+            }
         }
     }
 }

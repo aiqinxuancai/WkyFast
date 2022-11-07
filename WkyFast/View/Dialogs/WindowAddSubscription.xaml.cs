@@ -53,7 +53,6 @@ namespace WkyFast.Dialogs
                 if (p != null)
                 {
                     this.ComboBoxPartition.SelectedIndex = WkyApiManager.Instance.NowDevice.Partitions.IndexOf(p);
-                    LoadDefaultPathSelected();
                 }
                 else
                 {

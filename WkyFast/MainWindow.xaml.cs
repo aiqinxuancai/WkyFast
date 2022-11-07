@@ -136,7 +136,7 @@ namespace WkyFast
 
                         if (device == null)
                         {
-                            RootSnackbar.Show("未发现玩客云设备", "请在手机端先添加设备后再使用WkyFast");
+                            RootSnackbar.Show("未发现可用设备", "请【在手机端添加设备】或【检查设备是否离线】");
                         }
                     }
                     else
