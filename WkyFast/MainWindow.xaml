@@ -34,7 +34,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ui:TitleBar Grid.Row="0" Grid.ColumnSpan="2" Icon="icon.ico" Title="WkyFast">
+        <ui:TitleBar Grid.Row="0" Grid.ColumnSpan="2" Icon="icon.ico" Title="WkyFast" Cursor="Hand">
             <!--<ui:TitleBar.Header>
                 <StackPanel
                     Margin="0,0,12,0"
@@ -59,13 +59,13 @@
             Grid.Column="0"
             Grid.Row="1"
             Frame="{Binding ElementName=MainFrame}"
-            SelectedPageIndex="0">
+            SelectedPageIndex="0" Cursor="Hand">
             <ui:NavigationStore.Items>
                 <ui:NavigationItem
                     Content="任务"
                     Icon="TextBulletListSquare20"
                     PageTag="home"
-                    PageType="{x:Type view:WkyTaskListView}" Cursor="Hand" />
+                    PageType="{x:Type view:WkyTaskListView}" Cursor="Hand"  />
                 <ui:NavigationItem Content="订阅" Icon="AppFolder24" PageTag="subscription" PageType="{x:Type view:WkySubscriptionListView}" Cursor="Hand"/>
                 <!--<ui:NavigationItem Content="Mail" Icon="Mail24" />-->
             </ui:NavigationStore.Items>
