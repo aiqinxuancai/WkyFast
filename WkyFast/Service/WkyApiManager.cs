@@ -40,7 +40,7 @@ namespace WkyFast.Service
             }
         }
 
-        public WkyApi? API
+        public WkyApi API
         {
             get
             {
@@ -49,7 +49,7 @@ namespace WkyFast.Service
         }
 
 
-        private WkyApi? _api = new();
+        private WkyApi _api = new();
 
         public WkyDevice? NowDevice
         {
