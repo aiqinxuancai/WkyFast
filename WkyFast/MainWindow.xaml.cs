@@ -62,10 +62,16 @@ namespace WkyFast
         {
             ActionVersion.CheckVersion();
 
+            WkyApiManager.Instance.EventReceived
+                .OfType<DownloadSuccessEvent>()
+                .Subscribe(async r =>
+                {
+                    EasyLogManager.Logger.Info($"下载完成 {r.Task.Data.Name} {r.Task.Data.Path}");
+                });
+
             VisibilityAnimation.SetAnimationType(WkyLoginDialog, VisibilityAnimation.AnimationType.Fade);
             await LoginFunc();
 
-            
         }
 
         /// <summary>
