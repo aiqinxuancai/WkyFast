@@ -62,7 +62,7 @@ namespace WkyFast
         {
             ActionVersion.CheckVersion();
 
-            WkyApiManager.Instance.EventReceived
+            WkyApiManager.Instance.API.EventReceived
                 .OfType<DownloadSuccessEvent>()
                 .Subscribe(async r =>
                 {

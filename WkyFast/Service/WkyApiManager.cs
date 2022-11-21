@@ -28,9 +28,9 @@ namespace WkyFast.Service
         private static WkyApiManager instance = new WkyApiManager();
 
         //事件
-        public IObservable<EventBase> EventReceived => _eventReceivedSubject.AsObservable();
+        //public IObservable<EventBase> EventReceived => _eventReceivedSubject.AsObservable();
 
-        private readonly Subject<EventBase> _eventReceivedSubject = new();
+        //private readonly Subject<EventBase> _eventReceivedSubject = new();
 
         public static WkyApiManager Instance
         {
@@ -86,7 +86,7 @@ namespace WkyFast.Service
                 {
                     Console.WriteLine("任务列表更新，UI刷新");
 
-                    _eventReceivedSubject.OnNext(r);
+                    //_eventReceivedSubject.OnNext(r);
 
                     if (r.Peer != null && r.Peer.PeerId == _nowDevice?.PeerId)
                     {
@@ -124,7 +124,7 @@ namespace WkyFast.Service
                 .OfType<LoginResultEvent>()
                 .Subscribe(async r =>
                 {
-                    _eventReceivedSubject.OnNext(r);
+                    //_eventReceivedSubject.OnNext(r);
                 });
         }
 

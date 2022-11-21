@@ -30,7 +30,7 @@ namespace WkyFast.View
 
             AccountTextBlock.Text = WkyApiManager.Instance.API.User;
 
-            WkyApiManager.Instance.EventReceived
+            WkyApiManager.Instance.API.EventReceived
                         .OfType<LoginResultEvent>()
                         .Subscribe(async r =>
                         {
