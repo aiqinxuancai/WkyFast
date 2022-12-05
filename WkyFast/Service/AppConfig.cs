@@ -74,6 +74,10 @@ namespace WkyFast.Service
         public string OSSAccessKeySecret { get; set; } = string.Empty;
 
 
+        public bool PushDeerOpen { get; set; } = false;
+
+        public string PushDeerKey { get; set; } = string.Empty;
+
         //获取
     }
 

@@ -12,7 +12,7 @@
       Title="WkyFastSetting">
 
     <Grid>
-        <StackPanel Margin="6,6,6,6" Cursor="Hand">
+        <StackPanel Margin="6,6,6,6" Cursor="IBeam">
 
             <StackPanel Margin="0,10,0,0" Orientation="Horizontal" >
                 <TextBlock Text="WkyFast当前版本" VerticalAlignment="Center" ></TextBlock>
@@ -32,7 +32,14 @@
                     </ui:CardAction>
                 </StackPanel>
             </StackPanel>
-           
+
+            <StackPanel Margin="0,10,0,0" Orientation="Horizontal" Cursor="IBeam">
+                <StackPanel>
+                    <CheckBox Content="使用PushDeer推送任务完成" IsChecked="{Binding Source={x:Static service:AppConfig.ConfigData}, Path=PushDeerOpen}" ></CheckBox>
+                    <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.ConfigData}, Path=PushDeerKey}" Cursor="IBeam" PlaceholderText="PushDeerKey" MinWidth="400"  />
+                </StackPanel>
+            </StackPanel>
+            
             <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
                 <CheckBox Content="订阅列表同步到阿里云OSS（未实现）" IsChecked="{Binding Source={x:Static service:AppConfig.ConfigData}, Path=OSSSynchronizeOpen}" ></CheckBox>
             </StackPanel>

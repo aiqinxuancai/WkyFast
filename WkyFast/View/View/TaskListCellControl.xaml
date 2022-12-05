@@ -15,8 +15,10 @@
         <converter:DownloadProgressVisibilityConverter x:Key="DownloadProgressVisibilityConverter"/>
         <converter:DownloadSpeedVisibilityConverter x:Key="DownloadSpeedVisibilityConverter"/>
         <converter:DownloadStatusBrushContver x:Key="DownloadStatusBrushContver"/>
-
+        <converter:ExistVisibilityConverter x:Key="ExistVisibilityConverter"/>
         
+
+
     </UserControl.Resources>
     <Grid>
         <Border  CornerRadius="4">
@@ -77,6 +79,21 @@
                                 </TextBlock>
                             </Border>
 
+
+                            <Border Margin="5,0,0,0" CornerRadius="4" Height="18" MinWidth="40" Background="#DCDEE2" Visibility="{Binding Data.Exist, Converter={StaticResource ExistVisibilityConverter}}">
+                                <TextBlock Text="文件已删除"  Foreground="#515A6E" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,4,0">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock" >
+                                            <Setter Property="Foreground" Value="#FFFFFF" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Border>
 
                             <TextBlock Margin="5,0,0,0" 
                                        VerticalAlignment="Center">

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using WkyFast.Service;
+using WkyFast.Utils;
 
 namespace WkyFast
 {
@@ -19,7 +20,7 @@ namespace WkyFast
     {
         static App()
         {
-
+            TimeHelper.SecondsToFormatString(99);
 
             TextOptions.TextFormattingModeProperty.OverrideMetadata(typeof(Window),
                 new FrameworkPropertyMetadata(TextFormattingMode.Display, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.Inherits));
