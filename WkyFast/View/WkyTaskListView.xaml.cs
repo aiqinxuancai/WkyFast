@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WkyApiSharp.Events.Account;
+using WkyApiSharp.Service.Model;
 using WkyFast.Dialogs;
 using WkyFast.Service;
 using WkyFast.Service.Model;
@@ -102,16 +103,7 @@ namespace WkyFast.View
                 {
                     menu.Items.Clear();
 
-                    /*
-                        0 => "添加中",
-                        8 => "等待中",
-                        9 => "已暂停",
-                        1 => "下载中",
-                        11 => "已完成",
-                        14 => "准备添加中",
-                     */
-
-                    if (_lastMenuTaskData.State == (int)TaskState.Pause)
+                    if (_lastMenuTaskData.State == (int)TaskState.Pause || _lastMenuTaskData.State == (int)TaskState.LackResources)
                     {
                         MenuItem menuRestart = new MenuItem() { Header = "继续下载" };
                         menuRestart.Click += MenuRestart_Click;
