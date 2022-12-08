@@ -194,20 +194,8 @@ namespace WkyFast.View.Contver
     [ValueConversion(typeof(uint), typeof(Visibility))]
     public class ExistVisibilityConverter : IMultiValueConverter
     {
-
-        //public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        //{
-        //    return (long)value switch
-        //    {
-        //        0 => Visibility.Visible,
-        //        _ => Visibility.Collapsed
-        //    };
-        //}
-
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            long fullSize = 0;
-            double progress = 0;
             if (values.Length == 2)
             {
                 if ((long)values[0] == 0 && (long)values[1] == (long)TaskState.Completed)
