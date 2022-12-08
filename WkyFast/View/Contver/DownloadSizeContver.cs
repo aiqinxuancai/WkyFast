@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using WkyApiSharp.Service.Model;
 using WkyFast.Utils;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
@@ -191,19 +192,35 @@ namespace WkyFast.View.Contver
 
 
     [ValueConversion(typeof(uint), typeof(Visibility))]
-    public class ExistVisibilityConverter : IValueConverter
+    public class ExistVisibilityConverter : IMultiValueConverter
     {
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        //public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        //{
+        //    return (long)value switch
+        //    {
+        //        0 => Visibility.Visible,
+        //        _ => Visibility.Collapsed
+        //    };
+        //}
+
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return (long)value switch
+            long fullSize = 0;
+            double progress = 0;
+            if (values.Length == 2)
             {
-                0 => Visibility.Visible,
-                _ => Visibility.Collapsed
-            };
+                if ((long)values[0] == 0 && (long)values[1] == (long)TaskState.Completed)
+                {
+                    return Visibility.Visible;
+                }
+            }
+
+            return Visibility.Collapsed;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

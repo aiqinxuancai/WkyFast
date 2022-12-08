@@ -80,7 +80,13 @@
                             </Border>
 
 
-                            <Border Margin="5,0,0,0" CornerRadius="4" Height="18" MinWidth="40" Background="#DCDEE2" Visibility="{Binding Data.Exist, Converter={StaticResource ExistVisibilityConverter}}">
+                            <Border Margin="5,0,0,0" CornerRadius="4" Height="18" MinWidth="40" Background="#DCDEE2" >
+                                <Border.Visibility>
+                                    <MultiBinding Converter="{StaticResource ExistVisibilityConverter}">
+                                        <Binding Path="Data.Exist"/>
+                                        <Binding Path="Data.State"/>
+                                    </MultiBinding>
+                                </Border.Visibility>
                                 <TextBlock Text="文件已删除"  Foreground="#515A6E" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,4,0">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock" >
