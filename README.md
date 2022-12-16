@@ -8,7 +8,9 @@
 <p align="center" color="#6a737d">
 <h2 align="center">WkyFast</h2>
 </p>
-
+<p align="center">
+<img src="https://visitor-badge.glitch.me/badge?page_id=githubwkyfast" alt="visitor badge"/>
+</p>
 <p align="center" color="#6a737d">
 简易玩客云PC客户端，支持批量任务添加和订阅下载 <br>
 </p>
