@@ -103,7 +103,9 @@ namespace WkyFast.View
                 {
                     menu.Items.Clear();
 
-                    if (_lastMenuTaskData.State == (int)TaskState.Pause || _lastMenuTaskData.State == (int)TaskState.LackResources)
+                    if (_lastMenuTaskData.State == (int)TaskState.Pause || 
+                    _lastMenuTaskData.State == (int)TaskState.LackResources ||
+                    _lastMenuTaskData.State == (int)TaskState.DiskError)
                     {
                         MenuItem menuRestart = new MenuItem() { Header = "继续下载" };
                         menuRestart.Click += MenuRestart_Click;
