@@ -13,7 +13,7 @@ namespace WkyFast.Utils
 
         private static OssClient CreateOssClient()
         {
-            var client = new OssClient(AppConfig.ConfigData.OSSEndpoint, AppConfig.ConfigData.OSSAccessKeyId, AppConfig.ConfigData.OSSAccessKeySecret);
+            var client = new OssClient(AppConfig.Instance.ConfigData.OSSEndpoint, AppConfig.Instance.ConfigData.OSSAccessKeyId, AppConfig.Instance.ConfigData.OSSAccessKeySecret);
             return client;
         }
 
@@ -25,9 +25,9 @@ namespace WkyFast.Utils
             try
             {
                 //文件是否存在
-                if (client.DoesObjectExist(AppConfig.ConfigData.OSSBucket, objectName))
+                if (client.DoesObjectExist(AppConfig.Instance.ConfigData.OSSBucket, objectName))
                 {
-                    var oldData = client.GetObject(AppConfig.ConfigData.OSSBucket, objectName).Content;
+                    var oldData = client.GetObject(AppConfig.Instance.ConfigData.OSSBucket, objectName).Content;
                     StreamReader reader = new StreamReader(oldData);
                     string oldText = reader.ReadToEnd();
                     ret = oldText;
@@ -49,9 +49,9 @@ namespace WkyFast.Utils
             try
             {
                 //文件是否存在
-                if (client.DoesObjectExist(AppConfig.ConfigData.OSSBucket, objectName))
+                if (client.DoesObjectExist(AppConfig.Instance.ConfigData.OSSBucket, objectName))
                 {
-                    var oldData = client.GetObject(AppConfig.ConfigData.OSSBucket, objectName).Content;
+                    var oldData = client.GetObject(AppConfig.Instance.ConfigData.OSSBucket, objectName).Content;
                     StreamReader reader = new StreamReader(oldData);
                     reader.BaseStream.Position = 0;
                     return reader.BaseStream;
@@ -80,7 +80,7 @@ namespace WkyFast.Utils
             {
                 byte[] array = Encoding.UTF8.GetBytes(fileContent);
                 MemoryStream stream = new MemoryStream(array);
-                client.PutObject(AppConfig.ConfigData.OSSBucket, objectName, stream);
+                client.PutObject(AppConfig.Instance.ConfigData.OSSBucket, objectName, stream);
                 stream.Dispose();
  
             }
@@ -104,7 +104,7 @@ namespace WkyFast.Utils
             var client = CreateOssClient();
             try
             {
-                client.PutObject(AppConfig.ConfigData.OSSBucket, objectName, stream);
+                client.PutObject(AppConfig.Instance.ConfigData.OSSBucket, objectName, stream);
                 stream.Dispose();
 
             }

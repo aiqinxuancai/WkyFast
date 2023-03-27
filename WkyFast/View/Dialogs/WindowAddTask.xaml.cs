@@ -53,7 +53,7 @@ namespace WkyFast.Dialogs
         {
             try 
             {
-                if (AppConfig.ConfigData.AddTaskSavePartitionDict.TryGetValue(WkyApiManager.Instance.NowDevice.DeviceId, out var partitionpath))
+                if (AppConfig.Instance.ConfigData.AddTaskSavePartitionDict.TryGetValue(WkyApiManager.Instance.NowDevice.DeviceId, out var partitionpath))
                 {
                     //寻找
                     var p = WkyApiManager.Instance.NowDevice.Partitions.FirstOrDefault(a => a.Partition.Path == partitionpath);
@@ -84,7 +84,7 @@ namespace WkyFast.Dialogs
             {
                 WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
 
-                if (AppConfig.ConfigData.AddTaskSavePathDict.TryGetValue(wkyPartition.Partition.Path, out var path))
+                if (AppConfig.Instance.ConfigData.AddTaskSavePathDict.TryGetValue(wkyPartition.Partition.Path, out var path))
                 {
                     this.TextBoxPath.Text = path;
                 }
@@ -240,16 +240,16 @@ namespace WkyFast.Dialogs
             
             WkyPartition wkyPartition = (WkyPartition)((ComboBox)e.Source).SelectedItem;
             //当前选择的设备ID
-            AppConfig.ConfigData.AddTaskSavePartitionDict[AppConfig.ConfigData.LastDeviceId] = wkyPartition.Partition.Path;
-            AppConfig.Save();
+            AppConfig.Instance.ConfigData.AddTaskSavePartitionDict[AppConfig.Instance.ConfigData.LastDeviceId] = wkyPartition.Partition.Path;
+            AppConfig.Instance.Save();
         }
 
         private void TextBoxPath_TextChanged(object sender, TextChangedEventArgs e)
         {
             WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
             //当前选择的设备ID
-            AppConfig.ConfigData.AddTaskSavePathDict[wkyPartition.Partition.Path] = TextBoxPath.Text;
-            AppConfig.Save();
+            AppConfig.Instance.ConfigData.AddTaskSavePathDict[wkyPartition.Partition.Path] = TextBoxPath.Text;
+            AppConfig.Instance.Save();
         }
     }
 }

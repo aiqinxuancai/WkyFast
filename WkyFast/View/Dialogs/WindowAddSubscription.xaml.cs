@@ -49,7 +49,7 @@ namespace WkyFast.Dialogs
 
         private void LoadDefaultPartitionSelected()
         {
-            if (AppConfig.ConfigData.AddSubscriptionSavePartitionDict.TryGetValue(_device.DeviceId, out var partitionpath))
+            if (AppConfig.Instance.ConfigData.AddSubscriptionSavePartitionDict.TryGetValue(_device.DeviceId, out var partitionpath))
             {
                 //寻找
                 var p = _device.Partitions.FirstOrDefault(a => a.Partition.Path == partitionpath);
@@ -73,7 +73,7 @@ namespace WkyFast.Dialogs
         {
             WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
 
-            if (AppConfig.ConfigData.AddSubscriptionSavePathDict.TryGetValue(wkyPartition.Partition.Path, out var path))
+            if (AppConfig.Instance.ConfigData.AddSubscriptionSavePathDict.TryGetValue(wkyPartition.Partition.Path, out var path))
             {
                 this.TextBoxPath.Text = path;
             }
@@ -87,14 +87,14 @@ namespace WkyFast.Dialogs
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
 
-            //if (string.IsNullOrWhiteSpace(AppConfig.ConfigData.LastAddSubscriptionPath))
+            //if (string.IsNullOrWhiteSpace(AppConfig.Instance.ConfigData.LastAddSubscriptionPath))
             //{
             //    TextBoxPath.Text = "/onecloud/tddownload";
             //}
             //else
             //{
             //    //TODO
-            //    TextBoxPath.Text = AppConfig.ConfigData.LastAddSubscriptionPath;
+            //    TextBoxPath.Text = AppConfig.Instance.ConfigData.LastAddSubscriptionPath;
             //}
 
         }
@@ -160,7 +160,7 @@ namespace WkyFast.Dialogs
                         EasyLogManager.Logger.Info($"订阅已添加：{title} {url}");
 
                         MainWindow.Instance.ShowSnackbar("添加成功", $"已添加订阅{title}", Wpf.Ui.Common.SymbolRegular.AddCircle24);
-                        //AppConfig.ConfigData.LastAddSubscriptionPath = TextBoxPath.Text;
+                        //AppConfig.Instance.ConfigData.LastAddSubscriptionPath = TextBoxPath.Text;
                     });
 
                 });
@@ -188,16 +188,16 @@ namespace WkyFast.Dialogs
 
             WkyPartition wkyPartition = (WkyPartition)((ComboBox)e.Source).SelectedItem;
             //当前选择的设备ID
-            AppConfig.ConfigData.AddSubscriptionSavePartitionDict[AppConfig.ConfigData.LastDeviceId] = wkyPartition.Partition.Path;
-            AppConfig.Save();
+            AppConfig.Instance.ConfigData.AddSubscriptionSavePartitionDict[AppConfig.Instance.ConfigData.LastDeviceId] = wkyPartition.Partition.Path;
+            AppConfig.Instance.Save();
         }
 
         private void TextBoxPath_TextChanged(object sender, TextChangedEventArgs e)
         {
             WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
             //当前选择的设备ID
-            AppConfig.ConfigData.AddSubscriptionSavePathDict[wkyPartition.Partition.Path] = TextBoxPath.Text;
-            AppConfig.Save();
+            AppConfig.Instance.ConfigData.AddSubscriptionSavePathDict[wkyPartition.Partition.Path] = TextBoxPath.Text;
+            AppConfig.Instance.Save();
         }
 
     }

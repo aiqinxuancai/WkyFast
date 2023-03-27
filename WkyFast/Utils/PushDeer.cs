@@ -14,7 +14,7 @@ namespace WkyFast.Utils
         public static async Task SendPushDeer(string title, string msg = "")
         {
 
-            if (string.IsNullOrEmpty(msg) || string.IsNullOrEmpty(AppConfig.ConfigData.PushDeerKey))
+            if (string.IsNullOrEmpty(msg) || string.IsNullOrEmpty(AppConfig.Instance.ConfigData.PushDeerKey))
             {
                 return;
             }
@@ -30,7 +30,7 @@ namespace WkyFast.Utils
 
                 var postData = new FormUrlEncodedContent(new Dictionary<string, string>()
                     {
-                        {"pushkey" , AppConfig.ConfigData.PushDeerKey },
+                        {"pushkey" , AppConfig.Instance.ConfigData.PushDeerKey },
                         {"text" , title },
                         {"desp" , msg },
                     });

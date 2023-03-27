@@ -10,20 +10,21 @@ using System.Diagnostics;
 using PropertyChanged;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace WkyFast.Service
 {
     [AddINotifyPropertyChangedInterface]
     public class AppConfigData : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public void OnPropertyChanged([CallerMemberName] string PropertyName = "")
-        {
-            PropertyChangedEventArgs propertyChangedEventArgs = new PropertyChangedEventArgs(PropertyName);
-            PropertyChanged(this, propertyChangedEventArgs);
-            AppConfig.Save();
-        }
+        //public void OnPropertyChanged([CallerMemberName] string PropertyName = "")
+        //{
+        //    PropertyChangedEventArgs propertyChangedEventArgs = new PropertyChangedEventArgs(PropertyName);
+        //    PropertyChanged(this, propertyChangedEventArgs);
+        //    AppConfig.Instance.Save();
+        //}
 
         /// <summary>
         /// 最后使用的设备ID
@@ -86,38 +87,52 @@ namespace WkyFast.Service
     /// </summary>
     public class AppConfig
     {
-        public static AppConfigData ConfigData { set; get; } = new AppConfigData();
+        private static readonly Lazy<AppConfig> lazy = new Lazy<AppConfig>(() => new AppConfig());
+        
+        public static AppConfig Instance => lazy.Value;
 
-        private static string _configPath = AppContext.BaseDirectory + @"Config.json";
+        public AppConfigData ConfigData { set; get; } = new AppConfigData();
 
-        private static object _lock = new object();
+        private string _configPath = AppContext.BaseDirectory + @"Config.json";
 
-        static AppConfig()
+        private object _lock = new object();
+
+        private AppConfig()
         {
             Init();
             Debug.WriteLine(_configPath);
         }
 
-        public static void InitDefault() //载入默认配置
+        public void InitDefault() //载入默认配置
         {
             ConfigData.LastDeviceId = string.Empty;
         }
 
 
-        public static bool Init()
+        public bool Init()
         {
             try
             {
+
+                Debug.WriteLine($"初始化配置" + Thread.CurrentThread.ManagedThreadId);
                 if (File.Exists(_configPath) == false)
                 {
+                    Debug.WriteLine($"默认初始化");
                     InitDefault();
                     Save();
                     return false;
                 }
-                ConfigData = JsonConvert.DeserializeObject<AppConfigData>(System.IO.File.ReadAllText(_configPath));
+                lock (_lock)
+                {
+                    var fileContent = File.ReadAllText(_configPath);
+                    var appData = JsonConvert.DeserializeObject<AppConfigData>(fileContent);
+                    ConfigData = appData;
+                    ConfigData.PropertyChanged += AppConfigData_PropertyChanged;
+                }
+
                 return true;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 InitDefault();
                 Save();
@@ -125,20 +140,24 @@ namespace WkyFast.Service
                 return false;
             }
         }
-
-
-        public static void Save()
+        private void AppConfigData_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            Debug.WriteLine("存储配置");
+            Save();
+        }
+
+        public void Save()
+        {
+
             try
             {
-                lock(_lock)
+                lock (_lock)
                 {
-                    //Debug.WriteLine($"存储配置目录{_configPath}");
-                    System.IO.File.WriteAllText(_configPath, JsonConvert.SerializeObject(ConfigData));
+                    var data = JsonConvert.SerializeObject(ConfigData);
+                    Debug.WriteLine($"存储配置{Thread.CurrentThread.ManagedThreadId} {data}");
+                    File.WriteAllText(_configPath, data);
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
             }

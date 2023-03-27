@@ -134,7 +134,7 @@ namespace WkyFast.Service
         /// </summary>
         public async Task<WkyDevice> SelectDevice()
         {
-            var device = _api?.GetDeviceWithId(AppConfig.ConfigData.LastDeviceId);
+            var device = _api?.GetDeviceWithId(AppConfig.Instance.ConfigData.LastDeviceId);
             if (device != null)
             {
                 _nowDevice = device;

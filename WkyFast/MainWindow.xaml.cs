@@ -67,7 +67,7 @@ namespace WkyFast
                 .Subscribe(async r =>
                 {
                     EasyLogManager.Logger.Info($"下载完成 {r.Task.Data.Name} {r.Task.Data.Path}");
-                    if (AppConfig.ConfigData.PushDeerOpen)
+                    if (AppConfig.Instance.ConfigData.PushDeerOpen)
                     {
                         await PushDeer.SendPushDeer($"下载完成 {r.Task.Data.Name}", $"用时 {TimeHelper.SecondsToFormatString((int)r.Task.Data.DownTime)}");
                     }
@@ -322,7 +322,7 @@ namespace WkyFast
             WkyDevice device = DeviceComboBox.SelectedItem as WkyDevice;
             if (device != null)
             {
-                AppConfig.ConfigData.LastDeviceId = device.DeviceId;
+                AppConfig.Instance.ConfigData.LastDeviceId = device.DeviceId;
                 var selected = await WkyApiManager.Instance.SelectDevice();
                 //DeviceComboBox.SelectedItem = device;
             }
