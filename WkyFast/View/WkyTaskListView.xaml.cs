@@ -123,6 +123,9 @@ namespace WkyFast.View
                         menu.Items.Add(menuStop);
                         menu.Items.Add(new Separator());
                     }
+                    MenuItem menuCopyTitle = new MenuItem() { Header = "复制标题" };
+                    menuCopyTitle.Click += MenuCopyTitle_Click;
+                    menu.Items.Add(menuCopyTitle);
 
                     MenuItem menuCopyLink = new MenuItem() { Header = "复制链接" };
                     menuCopyLink.Click += MenuCopyLink_Click;
@@ -144,6 +147,23 @@ namespace WkyFast.View
 
 
             };
+        }
+
+        private async void MenuCopyTitle_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //_lastMenuTaskData.Url
+                WkyApiSharp.Service.Model.RemoteDownloadList.Task t = _lastMenuTaskData;
+
+                Clipboard.SetDataObject(t.Name);
+
+                MainWindow.Instance.ShowSnackbar("已复制标题", $"{t.Name}");
+            }
+            catch (Exception ex)
+            {
+                EasyLogManager.Logger.Error(ex);
+            }
         }
 
         private async void MenuRestart_Click(object sender, RoutedEventArgs e)
