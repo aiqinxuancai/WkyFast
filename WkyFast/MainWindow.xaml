@@ -59,7 +59,7 @@
             Grid.Column="0"
             Grid.Row="1"
             Frame="{Binding ElementName=MainFrame}"
-            SelectedPageIndex="0" Cursor="Hand">
+            SelectedPageIndex="0" >
             <ui:NavigationStore.Items>
                 <ui:NavigationItem
                     Content="任务"
