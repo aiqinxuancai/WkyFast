@@ -73,14 +73,11 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border CornerRadius="4" >
-                                
                                 <Border.ToolTip >
-
                                     <ToolTip Background="#00000000" BorderBrush="#00000000" ToolTipService.ShowOnDisabled="True" ToolTipService.HasDropShadow="True">
                                         <ToolTip.Template>
                                             <ControlTemplate TargetType="{x:Type ToolTip}">
                                                 <Border Background="White" CornerRadius="5" BorderThickness="1" BorderBrush="#20000000" >
-                                                    <!-- ToolTip内容 -->
                                                     <Border CornerRadius="4" Padding="5,5,5,5" >
                                                         <Border.Style>
                                                             <Style TargetType="Border" >
@@ -91,9 +88,6 @@
                                                             <TextBlock Text="最近下载"></TextBlock>
                                                             <TextBlock Text="{Binding LastSubscriptionContent}" TextWrapping="Wrap"></TextBlock>
                                                         </StackPanel>
-
-
-
                                                     </Border>
                                                 </Border>
                                             </ControlTemplate>

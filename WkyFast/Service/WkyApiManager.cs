@@ -195,6 +195,7 @@ namespace WkyFast.Service
                     var result = await _api?.CreateTaskWithBtCheck(wkyDevice.Device.Peerid, path, bcCheck);
                     if (result.Rtn == 0)
                     {
+                        downloadResult.Result = result;
                         downloadResult.AllTaskCount = result.Tasks.Length;
                         foreach (var item in result.Tasks)
                         {

@@ -16,6 +16,7 @@
         <converter:DownloadSpeedVisibilityConverter x:Key="DownloadSpeedVisibilityConverter"/>
         <converter:DownloadStatusBrushContver x:Key="DownloadStatusBrushContver"/>
         <converter:ExistVisibilityConverter x:Key="ExistVisibilityConverter"/>
+        <converter:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
         
 
 
@@ -61,7 +62,11 @@
                     </Grid>
 
                     <StackPanel Margin="2,2"  Grid.Column="0">
-                        <TextBlock Text="{Binding Data.Name}"></TextBlock>
+                        <TextBlock Text="{Binding ShowName}">
+                            <TextBlock.ToolTip>
+                                <TextBlock Text="{Binding Data.Name}" TextWrapping="WrapWithOverflow"></TextBlock>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Border CornerRadius="4" Height="18" MinWidth="40" 
                                     Background="{Binding Data.State, Converter={StaticResource DownloadStatusBrushContver}}">
@@ -79,7 +84,27 @@
                                 </TextBlock>
                             </Border>
 
-
+                            <Border Margin="5,0,0,0" BorderThickness="1" BorderBrush="#91D5FF" CornerRadius="4" Height="18" MinWidth="40" Background="#E6F7FF" Visibility="{Binding FromSubscription, Converter={StaticResource BoolVisibilityConverter}}">
+                                <!--<Border.Visibility >
+                                    <MultiBinding Converter="{StaticResource ExistVisibilityConverter}">
+                                        <Binding Path="Data.Exist"/>
+                                        <Binding Path="Data.State"/>
+                                    </MultiBinding>
+                                </Border.Visibility>-->
+                                <TextBlock Text="订阅"  Foreground="#1890FF" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,4,0">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock" >
+                                            <Setter Property="Foreground" Value="#FFFFFF" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Border>
+                            
                             <Border Margin="5,0,0,0" CornerRadius="4" Height="18" MinWidth="40" Background="#DCDEE2" >
                                 <Border.Visibility>
                                     <MultiBinding Converter="{StaticResource ExistVisibilityConverter}">

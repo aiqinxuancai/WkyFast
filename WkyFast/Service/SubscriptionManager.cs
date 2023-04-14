@@ -17,6 +17,7 @@ using WkyFast.Utils;
 using WkyFast.Service.Model.SubscriptionModel;
 using System.Text.RegularExpressions;
 using WkyApiSharp.Service.Model;
+using System.Collections;
 
 namespace WkyFast.Service
 {
@@ -57,6 +58,7 @@ namespace WkyFast.Service
 
         public ObservableCollection<SubscriptionModel> SubscriptionModel { get; set; } = new ObservableCollection<SubscriptionModel>();
 
+        public Hashtable TaskUrlToSubscriptionName { get; set; } = new Hashtable();
 
         public SubscriptionManager()
         {
@@ -192,6 +194,29 @@ namespace WkyFast.Service
 
         }
 
+
+        public string GetSubscriptionName(string downloadName)
+        {
+            foreach (var sub in SubscriptionModel)
+            {
+                foreach (var model in sub.AlreadyAddedDownloadModel)
+                {
+                    if (model.Result != null && model.Result.Tasks.Count() > 0)
+                    {
+                        foreach (var task in model.Result.Tasks)
+                        {
+                            if (task.Name == downloadName)
+                            {
+                                return model.Name;
+                            }
+                        }
+                        
+                    }
+                }
+            }
+            return "";
+        }
+
         /// <summary>
         /// 通过网络获取订阅地址的Title
         /// </summary>
@@ -307,14 +332,21 @@ namespace WkyFast.Service
 
                                     var addResult = WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, subscription.Device, savePath).Result;
 
+                                    var taskUrl = addResult?.Result?.Tasks?.FirstOrDefault()?.Url;
+                                    if (!string.IsNullOrWhiteSpace(taskUrl))
+                                    {
+                                        TaskUrlToSubscriptionName[taskUrl] = subject;
+                                    }
+
+
                                     if (addResult.SuccessCount > 0)
                                     {
-                                        subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now} );
+                                        subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now, Result = addResult.Result } );
                                         EasyLogManager.Logger.Info($"添加成功");
                                     }
                                     else if (addResult.DuplicateAddTaskCount > 0)
                                     {
-                                        subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now });
+                                        subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now, Result = addResult.Result });
                                         EasyLogManager.Logger.Info($"成功，任务已经存在，不再重复添加");
                                     }
                                     else
@@ -371,6 +403,17 @@ namespace WkyFast.Service
                     foreach (SubscriptionModel item in subscriptionModel)
                     {
                         SubscriptionModel.Add(item);
+
+                        //加载名称表
+                        foreach (var m in item.AlreadyAddedDownloadModel)
+                        {
+                            var taskUrl = m.Result?.Tasks?.FirstOrDefault()?.Url;
+                            if (!string.IsNullOrWhiteSpace(taskUrl))
+                            {
+                                TaskUrlToSubscriptionName[taskUrl] = m.Name;
+                            }
+                                
+                        }
                     }
                 }
 

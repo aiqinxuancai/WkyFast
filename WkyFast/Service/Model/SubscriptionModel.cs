@@ -16,6 +16,8 @@ namespace WkyFast.Service.Model.SubscriptionModel
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
     using WkyApiSharp.Service.Model;
+    using WkyApiSharp.Service.Model.BtCheck;
+    using WkyApiSharp.Service.Model.CreateTaskResult;
 
     public partial class SubscriptionModel : BaseNotificationModel
     {
@@ -104,6 +106,10 @@ namespace WkyFast.Service.Model.SubscriptionModel
 
         [JsonProperty("Time")]
         public DateTime Time { get; set; }
+
+        [JsonProperty("Result")]
+        public WkyApiCreateTaskResultModel Result { get; set; }
+        
     }
 
     public partial class SubscriptionModel
