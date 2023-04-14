@@ -14,7 +14,11 @@
         <converter:DownloadStatusContver x:Key="DownloadStatusContver"/>
         <converter:DownloadProgressContver x:Key="DownloadProgressContver"/>
         <converter:DownloadProgressVisibilityConverter x:Key="DownloadProgressVisibilityConverter"/>
-
+        <DropShadowEffect x:Key="MyDropShadowEffect"
+                  Color="#33000000"
+                  ShadowDepth="2"
+                  BlurRadius="5"
+                  Direction="135"/>
     </Page.Resources>
 
     <Grid>
@@ -68,10 +72,38 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border  CornerRadius="4" >
+                            <Border CornerRadius="4" >
+                                
+                                <Border.ToolTip >
+
+                                    <ToolTip Background="#00000000" BorderBrush="#00000000" ToolTipService.ShowOnDisabled="True" ToolTipService.HasDropShadow="True">
+                                        <ToolTip.Template>
+                                            <ControlTemplate TargetType="{x:Type ToolTip}">
+                                                <Border Background="White" CornerRadius="5" BorderThickness="1" BorderBrush="#20000000" >
+                                                    <!-- ToolTip内容 -->
+                                                    <Border CornerRadius="4" Padding="5,5,5,5" >
+                                                        <Border.Style>
+                                                            <Style TargetType="Border" >
+                                                                <Setter Property="Background" Value="#DDFFFFFF" />
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <StackPanel>
+                                                            <TextBlock Text="最近下载"></TextBlock>
+                                                            <TextBlock Text="{Binding LastSubscriptionContent}" TextWrapping="Wrap"></TextBlock>
+                                                        </StackPanel>
+
+
+
+                                                    </Border>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </ToolTip.Template>
+                                        
+                                    </ToolTip>
+                                    
+                                </Border.ToolTip>
                                 <Border.Style>
                                     <Style TargetType="Border" >
-
                                         <Setter Property="Background" Value="Transparent" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsSelected, RelativeSource= {RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">

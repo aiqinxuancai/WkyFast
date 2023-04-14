@@ -12,6 +12,7 @@ namespace WkyFast.Service.Model.SubscriptionModel
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Globalization;
+    using System.Linq;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
     using WkyApiSharp.Service.Model;
@@ -43,9 +44,6 @@ namespace WkyFast.Service.Model.SubscriptionModel
         [JsonProperty("IsFilterRegex")]
         public bool IsFilterRegex { get; set; }
 
-
-
-
         /// <summary>
         /// 任务总数
         /// </summary>
@@ -57,6 +55,37 @@ namespace WkyFast.Service.Model.SubscriptionModel
         /// </summary>
         [JsonProperty("TaskMatchCount")]
         public int TaskMatchCount { get; set; }
+
+
+        /// <summary>
+        /// 匹配任务总数
+        /// </summary>
+        [JsonIgnore]
+        public string LastSubscriptionContent { 
+            get 
+            {
+                if (AlreadyAddedDownloadModel.Count == 0)
+                {
+                    return "无";
+                }
+                else
+                {
+                    SubscriptionSubTaskModel last = AlreadyAddedDownloadModel.LastOrDefault();
+
+                    if (last.Time != DateTime.MinValue) 
+                    {
+                        return $"{last.Name}\n{last.Time.ToString("yyyy-MM-dd HH:mm:ss")}";
+                    }
+                    else
+                    {
+                        return $"{last.Name}";//未赋值时间
+
+                    }
+                    
+                }
+            } 
+        }
+
 
         /// <summary>
         /// 已经添加了下载的任务
@@ -72,6 +101,9 @@ namespace WkyFast.Service.Model.SubscriptionModel
 
         [JsonProperty("Name")]
         public string Name { get; set; }
+
+        [JsonProperty("Time")]
+        public DateTime Time { get; set; }
     }
 
     public partial class SubscriptionModel
