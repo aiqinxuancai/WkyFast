@@ -11,6 +11,7 @@ namespace WkyFast.Service.Model.SubscriptionModel
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.Globalization;
     using System.Linq;
     using Newtonsoft.Json;
@@ -59,6 +60,9 @@ namespace WkyFast.Service.Model.SubscriptionModel
         public int TaskMatchCount { get; set; }
 
 
+        [JsonIgnore]
+        private string _lastSubscriptionContent;
+
         /// <summary>
         /// 匹配任务总数
         /// </summary>
@@ -66,25 +70,7 @@ namespace WkyFast.Service.Model.SubscriptionModel
         public string LastSubscriptionContent { 
             get 
             {
-                if (AlreadyAddedDownloadModel.Count == 0)
-                {
-                    return "无";
-                }
-                else
-                {
-                    SubscriptionSubTaskModel last = AlreadyAddedDownloadModel.LastOrDefault();
-
-                    if (last.Time != DateTime.MinValue) 
-                    {
-                        return $"{last.Name}\n{last.Time.ToString("yyyy-MM-dd HH:mm:ss")}";
-                    }
-                    else
-                    {
-                        return $"{last.Name}";//未赋值时间
-
-                    }
-                    
-                }
+                return _lastSubscriptionContent;
             } 
         }
 
@@ -94,6 +80,43 @@ namespace WkyFast.Service.Model.SubscriptionModel
         /// </summary>
         [JsonProperty("AlreadyAddedDownloadModel")]
         public ObservableCollection<SubscriptionSubTaskModel> AlreadyAddedDownloadModel { get; set; } = new ObservableCollection<SubscriptionSubTaskModel> { };
+
+
+        public SubscriptionModel()
+        {
+            AlreadyAddedDownloadModel.CollectionChanged += AlreadyAddedDownloadModel_CollectionChanged;
+        }
+
+        private void AlreadyAddedDownloadModel_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+
+            //变化，需要刷新 LastSubscriptionContent
+
+            if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                if (AlreadyAddedDownloadModel.Count == 0)
+                {
+                    _lastSubscriptionContent = "无";
+                }
+                else
+                {
+                    SubscriptionSubTaskModel last = AlreadyAddedDownloadModel.LastOrDefault();
+
+                    if (last.Time != DateTime.MinValue)
+                    {
+                        _lastSubscriptionContent = $"{last.Name}\n{last.Time.ToString("yyyy-MM-dd HH:mm:ss")}";
+                    }
+                    else
+                    {
+                        _lastSubscriptionContent = $"{last.Name}";//未赋值时间
+
+                    }
+                    OnPropertyChanged("LastSubscriptionContent");
+                }
+            }
+
+            
+        }
     }
 
     public partial class SubscriptionSubTaskModel : BaseNotificationModel
