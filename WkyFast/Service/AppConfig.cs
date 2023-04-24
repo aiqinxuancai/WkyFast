@@ -79,6 +79,11 @@ namespace WkyFast.Service
 
         public string PushDeerKey { get; set; } = string.Empty;
 
+
+        public bool SubscriptionProxyOpen { get; set; } = false;
+
+        public string SubscriptionProxy { get; set; } = string.Empty;
+
         //获取
     }
 

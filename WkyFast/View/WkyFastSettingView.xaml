@@ -36,7 +36,14 @@
             <StackPanel Margin="0,10,0,0" Orientation="Horizontal" Cursor="IBeam">
                 <StackPanel>
                     <CheckBox Content="使用PushDeer推送任务完成" IsChecked="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.PushDeerOpen}" ></CheckBox>
-                    <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.PushDeerKey}" Cursor="IBeam" PlaceholderText="PushDeerKey" MinWidth="400"  />
+                    <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.PushDeerKey}" PlaceholderText="PushDeerKey" MinWidth="400"  />
+                </StackPanel>
+            </StackPanel>
+            
+            <StackPanel Margin="0,10,0,0" Orientation="Horizontal" Cursor="IBeam">
+                <StackPanel>
+                    <CheckBox Content="使用代理访问订阅" IsChecked="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.SubscriptionProxyOpen}" ></CheckBox>
+                    <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.SubscriptionProxy}" PlaceholderText="http://127.0.0.1:1080" MinWidth="400"  />
                 </StackPanel>
             </StackPanel>
             

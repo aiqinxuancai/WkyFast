@@ -18,6 +18,8 @@ using WkyFast.Service.Model.SubscriptionModel;
 using System.Text.RegularExpressions;
 using WkyApiSharp.Service.Model;
 using System.Collections;
+using System.Net.Http;
+using System.Net;
 
 namespace WkyFast.Service
 {
@@ -256,13 +258,35 @@ namespace WkyFast.Service
 
                 try
                 {
-                    reader = XmlReader.Create(url);
-                    feed = SyndicationFeed.Load(reader);
-                    reader.Close();
+
+                    if (AppConfig.Instance.ConfigData.SubscriptionProxyOpen && !string.IsNullOrEmpty(AppConfig.Instance.ConfigData.SubscriptionProxy))
+                    {
+                        var proxyUrl = AppConfig.Instance.ConfigData.SubscriptionProxy;
+                        var handler = new HttpClientHandler
+                        {
+                            UseProxy = true,
+                            Proxy = new WebProxy(proxyUrl)
+                        };
+                        var client = new HttpClient(handler);
+                        var flurlClient = new FlurlClient(client);
+                        var data = url
+                            .WithClient(flurlClient).GetStreamAsync().Result;
+
+                        reader = XmlReader.Create(data);
+                        feed = SyndicationFeed.Load(reader);
+                        reader.Close();
+                    }
+                    else
+                    {
+                        reader = XmlReader.Create(url);
+                        feed = SyndicationFeed.Load(reader);
+                        reader.Close();
+                    }
+                    
                 }
                 catch (Exception e)
                 {
-                    EasyLogManager.Logger.Info($"无法访问订阅：{url}");
+                    EasyLogManager.Logger.Error($"无法访问订阅：{url} \n {e}");
                     continue;
                 }
 

@@ -18,6 +18,10 @@ using System.Reactive.Linq;
 using WkyApiSharp.Events.Account;
 using WkyApiSharp.Events;
 using System.Reactive.Subjects;
+using System.Net.Http;
+using System.Net;
+using System.ServiceModel.Syndication;
+using System.Xml;
 
 namespace WkyFast.Service
 {
@@ -186,7 +190,24 @@ namespace WkyFast.Service
 
             try
             {
-                var data = await url.WithTimeout(15).GetBytesAsync();
+                byte[] data;
+                if (AppConfig.Instance.ConfigData.SubscriptionProxyOpen && !string.IsNullOrEmpty(AppConfig.Instance.ConfigData.SubscriptionProxy))
+                {
+                    var proxyUrl = AppConfig.Instance.ConfigData.SubscriptionProxy;
+                    var handler = new HttpClientHandler
+                    {
+                        UseProxy = true,
+                        Proxy = new WebProxy(proxyUrl)
+                    };
+                    var client = new HttpClient(handler);
+                    var flurlClient = new FlurlClient(client);
+                    data = url.WithClient(flurlClient).GetBytesAsync().Result;
+
+                }
+                else
+                {
+                    data = await url.WithTimeout(15).GetBytesAsync();
+                }
 
                 var bcCheck = await _api?.BtCheck(wkyDevice?.Device.Peerid, data);
                 Debug.WriteLine(bcCheck.ToString());
