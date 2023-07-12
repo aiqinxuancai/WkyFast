@@ -227,17 +227,53 @@ namespace WkyFast.Service
         {
             try
             {
-                XmlReader reader = XmlReader.Create(url);
-                SyndicationFeed feed = SyndicationFeed.Load(reader);
-                reader.Close();
-                EasyLogManager.Logger.Info($"获取订阅标题：{feed.Title.Text}");
-                return feed.Title.Text;
+                EasyLogManager.Logger.Info($"订阅地址：{url}");
+                XmlReader reader;
+                SyndicationFeed feed;
+
+                try
+                {
+
+                    if (AppConfig.Instance.ConfigData.SubscriptionProxyOpen && !string.IsNullOrEmpty(AppConfig.Instance.ConfigData.SubscriptionProxy))
+                    {
+                        var proxyUrl = AppConfig.Instance.ConfigData.SubscriptionProxy;
+                        var handler = new HttpClientHandler
+                        {
+                            UseProxy = true,
+                            Proxy = new WebProxy(proxyUrl)
+                        };
+                        var client = new HttpClient(handler);
+                        var flurlClient = new FlurlClient(client);
+                        var data = url
+                            .WithClient(flurlClient).GetStreamAsync().Result;
+
+                        reader = XmlReader.Create(data);
+                        feed = SyndicationFeed.Load(reader);
+                        reader.Close();
+                    }
+                    else
+                    {
+                        reader = XmlReader.Create(url);
+                        feed = SyndicationFeed.Load(reader);
+                        reader.Close();
+                    }
+                    EasyLogManager.Logger.Info($"获取订阅标题：{feed.Title.Text}");
+                    return feed.Title.Text;
+
+                }
+                catch (Exception e)
+                {
+                    EasyLogManager.Logger.Error($"无法访问订阅：{url} \n {e}");
+                }
+
+
             }
             catch (Exception e)
             {
                 EasyLogManager.Logger.Error($"获取订阅标题失败");
-                return "";
+                
             }
+            return "";
         }
 
         /// <summary>
