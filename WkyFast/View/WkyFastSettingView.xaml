@@ -8,7 +8,7 @@
       xmlns:utils="clr-namespace:WkyFast.Utils"
       mc:Ignorable="d" 
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="800" d:DesignWidth="800"
       Title="WkyFastSetting">
 
     <Grid>
@@ -16,9 +16,9 @@
 
             <StackPanel Margin="0,10,0,0" Orientation="Horizontal" >
                 <TextBlock Text="WkyFast当前版本" VerticalAlignment="Center" ></TextBlock>
-                <ui:Badge Appearance="Secondary" Content="{Binding Source={x:Static utils:ActionVersion.Version}}" />
+                <ui:Badge Appearance="Secondary" Content="{Binding Source={x:Static utils:ActionVersion.Version}}" Margin="5,0,0,0"/>
                 <TextBlock Text="最新版本" VerticalAlignment="Center" Margin="15,0,0,0" ></TextBlock>
-                <ui:Badge x:Name="BadgeNewVersion"  Appearance="Secondary" Content="{Binding Source={x:Static utils:ActionVersion.NowGithubVersion}}" MouseLeftButtonDown="BadgeNewVersion_MouseLeftButtonDown" />
+                <ui:Badge x:Name="BadgeNewVersion"  Appearance="Secondary" Content="{Binding Source={x:Static utils:ActionVersion.NowGithubVersion}}" MouseLeftButtonDown="BadgeNewVersion_MouseLeftButtonDown" Margin="5,0,0,0" />
             </StackPanel>
 
 

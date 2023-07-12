@@ -24,7 +24,7 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid>
+    <Grid Cursor="Hand">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="60"/>
             <ColumnDefinition Width="77*"/>
@@ -71,7 +71,7 @@
             </ui:NavigationStore.Items>
             <ui:NavigationStore.Footer>
                 <ui:NavigationItem Content="主页" Icon="Home24" Click="NavigationItem_Home_Click" />
-                <ui:NavigationItem Content="设置" Icon="Settings24" PageTag="settings" PageType="{x:Type view:WkyFastSettingView}" Cursor="Hand"/>
+                <ui:NavigationItem Content="设置" Icon="Settings24" PageTag="settings" PageType="{x:Type view:WkyFastSettingView}" Cursor="Hand" ></ui:NavigationItem>
             </ui:NavigationStore.Footer>
         </ui:NavigationStore>
 
