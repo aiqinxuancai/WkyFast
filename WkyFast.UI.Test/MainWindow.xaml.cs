@@ -100,10 +100,12 @@ namespace WkyFast.UI.Test
         {
             //+_snackbar   null    Wpf.Ui.Controls.Snackbar
 
-            var service = App.GetService<ISnackbarService>();
+            //var service = App.GetService<ISnackbarService>();
 
-            service.SetSnackbarPresenter(SnackbarPresenter);
-            service.Show(
+            SnackbarService snackbarService = new SnackbarService();
+            snackbarService.SetSnackbarPresenter(SnackbarPresenter);
+
+            snackbarService.Show(
                 "Don't Blame Yourself.",
                 "No Witcher's Ever Died In His Bed.",
                 _snackbarAppearance,
