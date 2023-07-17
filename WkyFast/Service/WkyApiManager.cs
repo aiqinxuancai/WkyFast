@@ -130,6 +130,18 @@ namespace WkyFast.Service
                 {
                     //_eventReceivedSubject.OnNext(r);
                 });
+
+
+            _api?.EventReceived
+                .OfType<DownloadSuccessEvent>()
+                .Subscribe(async r =>
+                {
+                    EasyLogManager.Logger.Info($"下载完成 {r.Task.Data.Name} {r.Task.Data.Path}");
+                    if (AppConfig.Instance.ConfigData.PushDeerOpen)
+                    {
+                        await PushDeer.SendPushDeer($"下载完成 {r.Task.Data.Name}", $"用时 {TimeHelper.SecondsToFormatString((int)r.Task.Data.DownTime)}");
+                    }
+                });
         }
 
 
