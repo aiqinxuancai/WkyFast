@@ -9,7 +9,7 @@
 <h2 align="center">WkyFast</h2>
 </p>
 <p align="center">
-<img src="https://visitor-badge.glitch.me/badge?page_id=githubwkyfast" alt="visitor badge"/>
+<img src="https://visitor.apptest.dev/?page_id=githubwkyfast" alt="visitor badge"/>
 <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/aiqinxuancai/WkyFast">
 </p>
 <p align="center" color="#6a737d">
