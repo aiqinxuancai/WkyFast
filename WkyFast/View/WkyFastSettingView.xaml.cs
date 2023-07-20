@@ -37,6 +37,12 @@ namespace WkyFast.View
                             AccountTextBlock.Text = r.Account;
                         });
 
+
+
+#if DEBUG
+        TestTurnServerPanel.Visibility = Visibility.Visible;
+#endif
+
         }
 
         private void AccountCardAction_Click(object sender, RoutedEventArgs e)
@@ -66,6 +72,11 @@ namespace WkyFast.View
         {
             //跳转至最新
             BrowserHelper.OpenUrlBrowser("https://github.com/aiqinxuancai/WkyFast/releases/latest");
+        }
+
+        private async void TestTurnServerButton_Click(object sender, RoutedEventArgs e)
+        {
+            await WkyApiManager.Instance.API.GetTurnServer(WkyApiManager.Instance.NowDevice.Device.DeviceSn);
         }
     }
 }

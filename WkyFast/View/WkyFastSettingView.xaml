@@ -78,6 +78,14 @@
                     <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.OSSAccessKeySecret}"></ui:TextBox>
                 </StackPanel>
             </StackPanel>
+
+            <StackPanel Margin="0,5,0,0" x:Name="TestTurnServerPanel" Visibility="Collapsed" >
+                <Label Content="TEST"></Label>
+                <StackPanel>
+                    <Button x:Name="TestTurnServerButton" Content="测试TurnServer" Click="TestTurnServerButton_Click"></Button>
+                </StackPanel>
+            </StackPanel>
+
         </StackPanel>
     </Grid>
 </Page>
