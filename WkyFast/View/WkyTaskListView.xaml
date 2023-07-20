@@ -22,7 +22,7 @@
                           GridLinesVisibility="Horizontal"
                           CanUserAddRows="False"
                           BorderBrush="Transparent"
-                          HorizontalScrollBarVisibility="Disabled"  LoadingRow="MainDataGrid_LoadingRow" Margin="0,40,0,0">
+                          HorizontalScrollBarVisibility="Disabled"  LoadingRow="MainDataGrid_LoadingRow" Margin="0,40,0,0" ContextMenuOpening="MainDataGrid_ContextMenuOpening">
 
             <DataGrid.HorizontalGridLinesBrush>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
@@ -31,7 +31,11 @@
                     <GradientStop Color="#00000000" Offset="1"/>
                 </LinearGradientBrush>
             </DataGrid.HorizontalGridLinesBrush>
-
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="TTT"  />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <DataGrid.CellStyle>
                 <!--Override Highlighting so that its easy to see what is selected even when the control is not focused-->
                 <Style TargetType="{x:Type DataGridCell}">
