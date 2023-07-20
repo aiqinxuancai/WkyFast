@@ -327,9 +327,12 @@ namespace WkyFast.View
                     return false;
                 });
 
+
                 var showStopMenu = selectedItems.Any(a =>
                 {
-                    if (a.Data.State == (int)TaskState.Completed)
+                    if (a.Data.State == (int)TaskState.Adding ||
+                        a.Data.State == (int)TaskState.PreparingAdd ||
+                        a.Data.State == (int)TaskState.Downloading)
                     {
                         return true;
                     }
@@ -344,10 +347,6 @@ namespace WkyFast.View
                     contextMenu.Items.Add(new Separator());
                 }
                 else if (showStopMenu)
-                {
-                    //已完成
-                }
-                else
                 {
                     MenuItem menuStop = new MenuItem() { Header = "暂停" };
                     menuStop.Click += MenuStop_Click;
