@@ -148,7 +148,7 @@ namespace WkyFast.View
 
                 foreach (var item in _selectedItems)
                 {
-                    if (item.Data.State == (int)TaskState.Completed)
+                    if (item.Data.State != (int)TaskState.Completed)
                     {
                         await WkyApiManager.Instance.API.PauseTask(WkyApiManager.Instance.NowDevice.PeerId, item.Data.GetOperationCode());
                     }
@@ -190,10 +190,7 @@ namespace WkyFast.View
                 {
                     foreach (var item in _selectedItems)
                     {
-                        if (item.Data.State == (int)TaskState.Completed)
-                        {
-                            await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, item.Data.GetOperationCode());
-                        }
+                        await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, item.Data.GetOperationCode());
                     }
 
                     WkyApiManager.Instance.API.UpdateTask();
@@ -240,10 +237,7 @@ namespace WkyFast.View
                 {
                     foreach (var item in _selectedItems)
                     {
-                        if (item.Data.State == (int)TaskState.Completed)
-                        {
-                            await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, item.Data.GetOperationCode(), true);
-                        }
+                        await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, item.Data.GetOperationCode(), true);
                     }
 
                     WkyApiManager.Instance.API.UpdateTask();
