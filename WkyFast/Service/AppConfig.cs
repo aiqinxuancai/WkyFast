@@ -84,7 +84,14 @@ namespace WkyFast.Service
 
         public string SubscriptionProxy { get; set; } = string.Empty;
 
-        //获取
+        /// <summary>
+        /// OpenAIKey 用于RSS为集中订阅时，使用OpenAI提取连接中的作品名称
+        /// </summary>
+        public string OpenAIKey { get; set; } = string.Empty;
+
+        public string OpenAIProxy { get; set; } = string.Empty;
+
+        public bool OpenAIOpen { get; set; } = false;
     }
 
     /// <summary>

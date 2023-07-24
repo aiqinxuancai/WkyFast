@@ -8,7 +8,7 @@
         xmlns:service="clr-namespace:WkyFast.Service"
         Style="{StaticResource UiWindow}"
         mc:Ignorable="d"
-        Title="添加任务" Height="280" Width="500" WindowStartupLocation="CenterOwner"  AllowDrop="True">
+        Title="添加任务" Height="320" Width="550" WindowStartupLocation="CenterOwner"  AllowDrop="True">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

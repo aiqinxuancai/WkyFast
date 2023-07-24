@@ -32,6 +32,13 @@ namespace WkyFast.Service.Model.SubscriptionModel
         [JsonProperty("Device")]
         public WkyDevice Device { get; set; }
 
+        [JsonProperty("AutoDir")]
+        public bool AutoDir { get; set; }
+
+
+        [JsonProperty("EpisodeTitleList")]
+        public List<string> EpisodeTitleList { get; set; } = new List<string>();
+
         /// <summary>
         /// 存储路径
         /// </summary>

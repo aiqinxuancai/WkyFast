@@ -56,8 +56,6 @@ namespace WkyFast.Service
             }
         }
 
-
-
         public ObservableCollection<SubscriptionModel> SubscriptionModel { get; set; } = new ObservableCollection<SubscriptionModel>();
 
         public Hashtable TaskUrlToSubscriptionName { get; set; } = new Hashtable();
@@ -279,7 +277,7 @@ namespace WkyFast.Service
         /// <summary>
         /// 检查一次订阅
         /// </summary>
-        private void CheckSubscription()
+        private async void CheckSubscription()
         {
             EasyLogManager.Logger.Info("检查订阅...");
             foreach (var subscription in SubscriptionModel)
@@ -378,14 +376,36 @@ namespace WkyFast.Service
                                         return;
                                     }
 
-                                    
+                                    // subscription.Path 为基础目录，一般来说是带有标题的如“/download/订阅标题”
                                     var savePath = basePaths[0] + (subscription.Path.StartsWith("/") ? "" : "/") + subscription.Path;
+                                    var episodeTitle = "";
+                                    if (subscription.AutoDir)
+                                    {
+                                        episodeTitle = subscription.EpisodeTitleList.FirstOrDefault(subject.Contains);
+                                        if (string.IsNullOrEmpty(episodeTitle) && AppConfig.Instance.ConfigData.OpenAIOpen)
+                                        {
+                                            EasyLogManager.Logger.Info($"获取剧集名称...");
+                                            //使用ChatGPT
+                                            episodeTitle = await ChatGPTTranslatorManager.GetEpisode(subject);
+
+                                            EasyLogManager.Logger.Info($"剧集名称：{episodeTitle}");
+                                            if (!string.IsNullOrEmpty(episodeTitle))
+                                            {
+                                                subscription.EpisodeTitleList.Add(episodeTitle);
+                                            }
+                                        }
+                                    }
 
                                     //如果是一个完整路径，则直接使用，否则使用旧逻辑
                                     bool isFullPath = basePaths.Any(a => subscription.Path.StartsWith(a));
                                     if (isFullPath)
                                     {
                                         savePath = subscription.Path;
+                                    }
+
+                                    if (!string.IsNullOrEmpty(episodeTitle))
+                                    {
+                                        savePath = savePath + "/" + episodeTitle;
                                     }
 
                                     EasyLogManager.Logger.Info($"添加下载{subject} {link} {savePath}");
@@ -491,7 +511,7 @@ namespace WkyFast.Service
 
         //存储订阅，读取加载订阅
 
-        public bool Add(string url, WkyDevice device, string path, string keyword = "", bool keywordIsRegex = false)
+        public bool Add(string url, WkyDevice device, string path, string keyword = "", bool keywordIsRegex = false, bool autoDir = false)
         {
             if (SubscriptionModel.ToList().Find( a => { return a.Url == url; }) != null)
             {
@@ -506,6 +526,7 @@ namespace WkyFast.Service
             model.IsFilterRegex = keywordIsRegex;
             model.Path = path;
             model.Device = device;
+            model.AutoDir = autoDir;
             EasyLogManager.Logger.Error($"添加订阅：{model.Url}");
 
             SubscriptionModel.Add(model);

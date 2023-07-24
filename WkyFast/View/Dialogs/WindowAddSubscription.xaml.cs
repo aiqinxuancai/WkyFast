@@ -119,6 +119,7 @@ namespace WkyFast.Dialogs
                     string regex = string.Empty;
                     bool regexEnable = false;
                     string path = string.Empty;
+                    bool autoDir = false;
 
                     this.Dispatcher.Invoke(() =>
                     {
@@ -126,6 +127,7 @@ namespace WkyFast.Dialogs
                         regex = RegexTextBox.Text;
                         regexEnable = RegexCheckBox.IsChecked == true ? true : false;
                         path = wkyPartition.Partition.Path + TextBoxPath.Text;
+                        autoDir = AutoDirSwitch.IsChecked == true ? true : false;
                     });
 
                     try
