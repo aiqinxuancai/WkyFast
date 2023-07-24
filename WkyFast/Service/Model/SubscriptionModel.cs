@@ -37,7 +37,7 @@ namespace WkyFast.Service.Model.SubscriptionModel
 
 
         [JsonProperty("EpisodeTitleList")]
-        public List<string> EpisodeTitleList { get; set; } = new List<string>();
+        public List<string> EpisodeTitleList { get; set; }
 
         /// <summary>
         /// 存储路径

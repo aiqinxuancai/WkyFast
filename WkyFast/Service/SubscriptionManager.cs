@@ -280,7 +280,10 @@ namespace WkyFast.Service
         private async void CheckSubscription()
         {
             EasyLogManager.Logger.Info("检查订阅...");
-            foreach (var subscription in SubscriptionModel)
+
+            var copyList = new List<SubscriptionModel>(SubscriptionModel);
+
+            foreach (var subscription in copyList)
             {
                 string url = subscription.Url;
                 
@@ -381,7 +384,11 @@ namespace WkyFast.Service
                                     var episodeTitle = "";
                                     if (subscription.AutoDir)
                                     {
-                                        episodeTitle = subscription.EpisodeTitleList.FirstOrDefault(subject.Contains);
+                                        if (subscription.EpisodeTitleList == null)
+                                        {
+                                            subscription.EpisodeTitleList = new List<string>();
+                                        }
+                                        episodeTitle = subscription.EpisodeTitleList.FirstOrDefault(a => subject.Contains(a));
                                         if (string.IsNullOrEmpty(episodeTitle) && AppConfig.Instance.ConfigData.OpenAIOpen)
                                         {
                                             EasyLogManager.Logger.Info($"获取剧集名称...");
@@ -405,7 +412,7 @@ namespace WkyFast.Service
 
                                     if (!string.IsNullOrEmpty(episodeTitle))
                                     {
-                                        savePath = savePath + "/" + episodeTitle;
+                                        savePath = savePath + "/" + PathHelper.RemoveInvalidChars(episodeTitle);
                                     }
 
                                     EasyLogManager.Logger.Info($"添加下载{subject} {link} {savePath}");

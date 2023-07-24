@@ -157,7 +157,7 @@ namespace WkyFast.Dialogs
 
 
 
-                        SubscriptionManager.Instance.Add(url, _device, path, regex, regexEnable);
+                        SubscriptionManager.Instance.Add(url, _device, path, regex, regexEnable, autoDir: autoDir);
 
                         EasyLogManager.Logger.Info($"订阅已添加：{title} {url}");
 

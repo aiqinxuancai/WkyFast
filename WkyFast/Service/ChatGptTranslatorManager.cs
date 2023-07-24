@@ -24,6 +24,8 @@ namespace WkyFast.Service
             1.不要添加解释。
             2.如果包含多种语言的作品名称，请使用第一个。
             3.请避免将字幕组名称及字幕名称等识别为标题。
+            4.不要对作品名称进行删减或翻译。
+            5.不要对作品名称中的字符进行转换。
             以下为需要提取的内容：
 
             """;
@@ -55,7 +57,7 @@ namespace WkyFast.Service
                     if (!string.IsNullOrEmpty( result.Response))
                     {
                         JObject root = JObject.Parse(result.Response);
-                        var title = string.IsNullOrEmpty((string)root["title"]) ? "" : result.Response;
+                        var title = (string)root["title"];
                         _cache[s] = title;
                         return title;
                     }
