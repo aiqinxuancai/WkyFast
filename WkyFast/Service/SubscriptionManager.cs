@@ -384,6 +384,7 @@ namespace WkyFast.Service
                                     var episodeTitle = "";
                                     if (subscription.AutoDir)
                                     {
+                                        EasyLogManager.Logger.Info($"使用自动目录分组");
                                         if (subscription.EpisodeTitleList == null)
                                         {
                                             subscription.EpisodeTitleList = new List<string>();

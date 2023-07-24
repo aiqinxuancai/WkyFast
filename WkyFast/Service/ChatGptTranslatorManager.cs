@@ -54,7 +54,7 @@ namespace WkyFast.Service
 
                     var result = await client.SendMessage(s);
 
-                    if (!string.IsNullOrEmpty( result.Response))
+                    if (!string.IsNullOrEmpty(result.Response))
                     {
                         JObject root = JObject.Parse(result.Response);
                         var title = (string)root["title"];
@@ -73,7 +73,7 @@ namespace WkyFast.Service
                 }
                 catch (Exception ex)
                 {
-                    //SimpleLogger.Instance.Error(ex.ToString());
+                    EasyLogManager.Logger.Error(ex.ToString());
                 }
             }
             return string.Empty;
