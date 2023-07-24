@@ -194,6 +194,7 @@ namespace WkyFast.View
                     }
 
                     WkyApiManager.Instance.API.UpdateTask();
+                    MainDataGrid.Dispatcher.Invoke(() => MainDataGrid.UnselectAll());
                 }
                 catch (Exception ex)
                 {
@@ -241,6 +242,7 @@ namespace WkyFast.View
                     }
 
                     WkyApiManager.Instance.API.UpdateTask();
+                    MainDataGrid.Dispatcher.Invoke(() => MainDataGrid.UnselectAll());
                 }
                 catch (Exception ex)
                 {
