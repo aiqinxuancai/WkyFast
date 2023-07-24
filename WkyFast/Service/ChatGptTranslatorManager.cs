@@ -59,10 +59,10 @@ namespace WkyFast.Service
                         JObject root = JObject.Parse(result.Response);
                         var title = (string)root["title"];
 
-                        if (title.Contains("/"))
-                        {
-                            title.Split("/")
-                        }
+                        //if (title.Contains("/"))
+                        //{
+                        //    title.Split("/");
+                        //}
 
 
                         _cache[s] = title;
