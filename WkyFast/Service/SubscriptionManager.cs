@@ -418,6 +418,7 @@ namespace WkyFast.Service
 
                                     EasyLogManager.Logger.Info($"添加下载{subject} {link} {savePath}");
 
+                                    //subject
                                     var addResult = WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, subscription.Device, savePath).Result;
 
                                     var taskUrl = addResult?.Result?.Tasks?.FirstOrDefault()?.Url;

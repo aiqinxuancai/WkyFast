@@ -188,7 +188,7 @@ namespace WkyFast.Service
         /// 从一个BT的URL添加到下载中（用于订阅的下载）
         /// </summary>
         /// <param name="url"></param>
-        public async Task<WkyDownloadResult> DownloadBtFileUrl(string url, WkyDevice device,  string path)
+        public async Task<WkyDownloadResult> DownloadBtFileUrl(string url, WkyDevice device,  string path, string taskName = "")
         {
             WkyDownloadResult downloadResult = new WkyDownloadResult();
             downloadResult.SuccessCount = 0;
@@ -225,7 +225,7 @@ namespace WkyFast.Service
                 Debug.WriteLine(bcCheck.ToString());
                 if (bcCheck.Rtn == 0)
                 {
-                    var result = await _api?.CreateTaskWithBtCheck(wkyDevice.Device.Peerid, path, bcCheck);
+                    var result = await _api?.CreateTaskWithBtCheck(wkyDevice.Device.Peerid, path, bcCheck, taskName);
                     if (result.Rtn == 0)
                     {
                         downloadResult.Result = result;
