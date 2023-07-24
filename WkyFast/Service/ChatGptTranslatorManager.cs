@@ -18,15 +18,15 @@ namespace WkyFast.Service
     internal class ChatGPTTranslatorManager
     {
         const string kSystemMessage = """
-            请从指定文本中返回作品名称，请返回如下JSON格式：
+            请从我提供的内容中告诉我这个作品的名称，请返回如下JSON格式：
             { "title": <string> }
             请注意：
             1.不要添加解释。
-            2.如果包含多种语言的作品名称，请使用第一个。
+            2.内容中可能包含多种语言的作品名称，通常可能会使用符号/进行分割，请返回第一种语言名称。
             3.请避免将字幕组名称及字幕名称等识别为标题。
-            4.不要对作品名称进行删减或翻译。
-            5.不要对作品名称中的字符进行转换。
-            以下为需要提取的内容：
+            4.不要对作品名称进行删减或翻译以及字符的转换。
+            5.作品名称不会包含包含[]【】等符号。
+            以下为内容：
 
             """;
 
@@ -58,6 +58,13 @@ namespace WkyFast.Service
                     {
                         JObject root = JObject.Parse(result.Response);
                         var title = (string)root["title"];
+
+                        if (title.Contains("/"))
+                        {
+                            title.Split("/")
+                        }
+
+
                         _cache[s] = title;
                         return title;
                     }
