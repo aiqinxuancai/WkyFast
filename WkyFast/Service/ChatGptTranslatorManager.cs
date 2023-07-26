@@ -41,6 +41,11 @@ namespace WkyFast.Service
         {
             var client = new ChatGPTClient(AppConfig.Instance.ConfigData.OpenAIKey, timeoutSeconds: 60, proxyUri: AppConfig.Instance.ConfigData.OpenAIProxy);
 
+            if (!string.IsNullOrEmpty(AppConfig.Instance.ConfigData.OpenAIHost))
+            {
+                client.Settings.OpenAIAPIBaseUri = AppConfig.Instance.ConfigData.OpenAIHost;
+            }
+
             if (client != null)
             {
                 try

@@ -92,6 +92,14 @@ namespace WkyFast.Service
         public string OpenAIProxy { get; set; } = string.Empty;
 
         public bool OpenAIOpen { get; set; } = false;
+
+
+        /// <summary>
+        /// 用于第三方转发服务的实现
+        /// </summary>
+        public string OpenAIHost { get; set; } = string.Empty;
+
+
     }
 
     /// <summary>

@@ -78,5 +78,15 @@ namespace WkyFast.View
         {
             await WkyApiManager.Instance.API.GetTurnServer(WkyApiManager.Instance.NowDevice.Device.DeviceSn);
         }
+
+        private async void LinkAIKEY_Click(object sender, RoutedEventArgs e)
+        {
+            BrowserHelper.OpenUrlBrowser("https://aikey.one/register?aff=qHFBWX");
+        }
+
+        private async void LinkAPI2D_Click(object sender, RoutedEventArgs e)
+        {
+            BrowserHelper.OpenUrlBrowser("https://api2d.com/r/211572");
+        }
     }
 }
