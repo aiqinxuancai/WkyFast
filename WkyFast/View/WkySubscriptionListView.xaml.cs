@@ -85,7 +85,7 @@ namespace WkyFast.View
                     MenuItem menuDelete = new MenuItem() { Header = "删除" };
                     menuDelete.Click += MenuDelete_Click;
 
-
+                    menu.Items.Add(menuReDownload);
                     menu.Items.Add(menuDelete);
                     DataGrid row = sender as DataGrid;
 
