@@ -61,11 +61,36 @@ namespace WkyFast
         private async void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ActionVersion.CheckVersion();
-
+            SubscriptionManager.Instance.OnSubscriptionProgressChanged += SubscriptionManager_OnSubscriptionProgressChanged;
 
 
             VisibilityAnimation.SetAnimationType(WkyLoginDialog, VisibilityAnimation.AnimationType.Fade);
             await LoginFunc();
+
+        }
+
+        private void SubscriptionManager_OnSubscriptionProgressChanged(int now, int max)
+        {
+
+            this.Dispatcher.Invoke(new Action(() =>
+            {
+                if (max > 0 && now != max)
+                {
+                    //进程中
+                    this.subscriptionProgressBar.Visibility = Visibility.Visible;
+                    this.subscriptionProgressBar.Value = now;
+                    this.subscriptionProgressBar.Maximum = max;
+                }
+                else
+                {
+                    this.subscriptionProgressBar.Visibility = Visibility.Hidden;
+                    this.subscriptionProgressBar.Value = 0;
+                    this.subscriptionProgressBar.Maximum = 1;
+                }
+
+
+            }));
+
 
         }
 

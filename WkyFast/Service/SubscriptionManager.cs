@@ -25,7 +25,8 @@ namespace WkyFast.Service
 {
     public class SubscriptionManager
     {
-        
+        public event Action<int, int> OnSubscriptionProgressChanged;
+
         private static SubscriptionManager instance = new SubscriptionManager();
 
         public static SubscriptionManager Instance
@@ -75,6 +76,7 @@ namespace WkyFast.Service
         {
             _tokenSource.Cancel();
         }
+
         //private void SubscriptionModel_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         //{
         //    Save();
@@ -291,13 +293,20 @@ namespace WkyFast.Service
             var copyList = new List<SubscriptionModel>(SubscriptionModel);
 
 
-            foreach (var subscription in copyList)
+            OnSubscriptionProgressChanged?.Invoke(0, copyList.Count);
+
+            for (int i = 0; i < copyList.Count; i++)
             {
                 lock (_look)
                 {
-                    CheckSubscriptionOne(subscription);
+                    CheckSubscriptionOne(copyList[i]);
                 }
+
+                OnSubscriptionProgressChanged?.Invoke(i, copyList.Count);
             }
+
+            OnSubscriptionProgressChanged?.Invoke(copyList.Count, copyList.Count);
+
             Subscribing = false;
         }
 

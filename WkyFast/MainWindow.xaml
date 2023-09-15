@@ -55,25 +55,52 @@
             </ui:TitleBar.Header>-->
         </ui:TitleBar>
 
-        <ui:NavigationStore
-            Grid.Column="0"
-            Grid.Row="1"
-            Frame="{Binding ElementName=MainFrame}"
-            SelectedPageIndex="0" >
-            <ui:NavigationStore.Items>
-                <ui:NavigationItem
-                    Content="任务"
-                    Icon="TextBulletListSquare20"
-                    PageTag="home"
-                    PageType="{x:Type view:WkyTaskListView}" Cursor="Hand"  />
-                <ui:NavigationItem Content="订阅" Icon="AppFolder24" PageTag="subscription" PageType="{x:Type view:WkySubscriptionListView}" Cursor="Hand"/>
-                <!--<ui:NavigationItem Content="Mail" Icon="Mail24" />-->
-            </ui:NavigationStore.Items>
-            <ui:NavigationStore.Footer>
-                <ui:NavigationItem Content="主页" Icon="Home24" Click="NavigationItem_Home_Click" />
-                <ui:NavigationItem Content="设置" Icon="Settings24" PageTag="settings" PageType="{x:Type view:WkyFastSettingView}" Cursor="Hand" ></ui:NavigationItem>
-            </ui:NavigationStore.Footer>
-        </ui:NavigationStore>
+        <Grid Grid.Column="0" Grid.Row="1">
+            <ProgressBar x:Name="subscriptionProgressBar"  Visibility="Hidden" Width="40" Height="8" VerticalAlignment="Top" Margin="0,65,0,0"></ProgressBar>
+
+            <ui:NavigationStore
+                Frame="{Binding ElementName=MainFrame}"
+                SelectedPageIndex="0" >
+                <ui:NavigationStore.Items>
+                    <ui:NavigationItem
+                                        Icon="TextBulletListSquare20"
+                                        PageTag="home"
+                                        PageType="{x:Type view:WkyTaskListView}" Cursor="Hand"  >
+                        <Grid>
+                            <TextBlock Text="任务"></TextBlock>
+                        </Grid>
+                    </ui:NavigationItem>
+                    <ui:NavigationItem  PageTag="subscription" PageType="{x:Type view:WkySubscriptionListView}" Cursor="Hand">
+                        <ui:NavigationItem.Icon>
+
+                            <ui:SymbolRegular>
+                                AppFolder24
+                            </ui:SymbolRegular>
+
+
+                        </ui:NavigationItem.Icon>
+                        <Grid>
+                            <TextBlock Text="订阅" HorizontalAlignment="Center"></TextBlock>
+                            
+                        </Grid>
+                    </ui:NavigationItem>
+                    <!--<ui:NavigationItem Content="Mail" Icon="Mail24" />-->
+                </ui:NavigationStore.Items>
+                <ui:NavigationStore.Footer>
+                    <ui:NavigationItem  Icon="Home24" Click="NavigationItem_Home_Click" >
+                        <Grid>
+                            <TextBlock Text="主页"></TextBlock>
+                        </Grid>
+                    </ui:NavigationItem>
+                    <ui:NavigationItem  Icon="Settings24" PageTag="settings" PageType="{x:Type view:WkyFastSettingView}" Cursor="Hand" >
+                        <Grid>
+                            <TextBlock Text="设置"></TextBlock>
+                        </Grid>
+                    </ui:NavigationItem>
+                </ui:NavigationStore.Footer>
+            </ui:NavigationStore>
+        </Grid>
+        
 
         <Frame
             x:Name="MainFrame"
