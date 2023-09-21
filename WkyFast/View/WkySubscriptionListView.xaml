@@ -85,6 +85,8 @@
                                                             </Style>
                                                         </Border.Style>
                                                         <StackPanel>
+                                                            <TextBlock Text="订阅地址"></TextBlock>
+                                                            <TextBlock Text="{Binding Url}" TextWrapping="Wrap"></TextBlock>
                                                             <TextBlock Text="最近下载"></TextBlock>
                                                             <TextBlock Text="{Binding LastSubscriptionContent}" TextWrapping="Wrap"></TextBlock>
                                                         </StackPanel>

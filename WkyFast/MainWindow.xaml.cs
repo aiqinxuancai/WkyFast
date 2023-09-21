@@ -30,6 +30,7 @@ using System.Threading;
 using WkyApiSharp.Events.Account;
 using System.Reactive.Linq;
 using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui.Controls;
 
 namespace WkyFast
 {
@@ -42,6 +43,7 @@ namespace WkyFast
 
         private CancellationTokenSource _tokenTaskListSource = new CancellationTokenSource();
 
+        private bool _needExit = false;
 
         public MainWindow()
         {
@@ -375,6 +377,35 @@ namespace WkyFast
         private void NavigationItem_Home_Click(object sender, RoutedEventArgs e)
         {
             BrowserHelper.OpenUrlBrowser("https://github.com/aiqinxuancai/WkyFast");
+        }
+
+        private void HomeButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            BrowserHelper.OpenUrlBrowser("https://github.com/aiqinxuancai/WkyFast");
+        }
+
+        private void TitleBar_CloseClicked(object sender, RoutedEventArgs e)
+        {
+            //自行处理事件，改为最小化
+        }
+
+        private void TaskbarExitMenu_Click(object sender, RoutedEventArgs e)
+        {
+            _needExit = true;
+            this.Close();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!_needExit)
+            {
+                e.Cancel = true;
+
+                // 自己处理
+                this.Hide();
+            }
+
+
         }
     }
 }

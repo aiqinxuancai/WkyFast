@@ -19,12 +19,19 @@
 
                 <TextBlock Text="设置" FontSize="28" VerticalAlignment="Center" ></TextBlock>
 
+                
+                
+                
                 <StackPanel Margin="0,10,0,0" Orientation="Horizontal" >
-                    <TextBlock Text="WkyFast当前版本" VerticalAlignment="Center" ></TextBlock>
+                    <TextBlock x:Name="HomePageTextBlock"  Text="WkyFast" VerticalAlignment="Center" Foreground="#FF4096E6" MouseLeftButtonDown="HomePageTextBlock_MouseLeftButtonDown"  ></TextBlock>
+                    <TextBlock Text="当前版本" VerticalAlignment="Center" ></TextBlock>
                     <TextBlock Text="{Binding Source={x:Static utils:ActionVersion.Version}}" Margin="5,0,0,0"/>
                     <TextBlock Text="最新版本" VerticalAlignment="Center" Margin="15,0,0,0" ></TextBlock>
-                    <TextBlock x:Name="BadgeNewVersion" Text="{Binding Source={x:Static utils:ActionVersion.NowGithubVersion}}" MouseLeftButtonDown="BadgeNewVersion_MouseLeftButtonDown" Margin="5,0,0,0" />
+                    <TextBlock x:Name="BadgeNewVersion" Text="{Binding Source={x:Static utils:ActionVersion.NowGithubVersion}}" MouseLeftButtonDown="BadgeNewVersion_MouseLeftButtonDown" Margin="5,0,0,0" Foreground="#FF4096E6" />
                 </StackPanel>
+
+
+
 
                 <StackPanel Margin="0,15,0,0">
                     <StackPanel>

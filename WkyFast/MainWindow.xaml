@@ -4,13 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
         xmlns:local="clr-namespace:WkyFast"
         xmlns:view="clr-namespace:WkyFast.View"
         mc:Ignorable="d"
         Style="{StaticResource UiWindow}"
         
         xmlns:tb="http://www.hardcodet.net/taskbar" xmlns:dialogs="clr-namespace:WkyFast.Dialogs"
-        Title="WkyFast" Height="600" Width="880" Icon="icon.ico" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded" Unloaded="MetroWindow_Unloaded" >
+        Title="WkyFast" Height="600" Width="880" Icon="icon.ico" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded" Unloaded="MetroWindow_Unloaded" Closing="Window_Closing" >
 
     <!--<Style TargetType="{x:Type Window}">
         <Setter Property="TextOptions.TextFormattingMode" Value="Display"></Setter>
@@ -34,7 +35,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ui:TitleBar Grid.Row="0" Grid.ColumnSpan="2" Icon="icon.ico" Title="WkyFast">
+        <ui:TitleBar x:Name="Bar" Grid.Row="0" Grid.ColumnSpan="2" Icon="icon.ico" Title="WkyFast"  CloseClicked="TitleBar_CloseClicked">
             <!--<ui:TitleBar.Header>
                 <StackPanel
                     Margin="0,0,12,0"
@@ -53,7 +54,9 @@
                         Icon="Bluetooth24" />
                 </StackPanel>
             </ui:TitleBar.Header>-->
+           
         </ui:TitleBar>
+
 
         <Grid Grid.Column="0" Grid.Row="1">
             <ProgressBar x:Name="subscriptionProgressBar"  Visibility="Hidden" Width="40" Height="8" VerticalAlignment="Top" Margin="0,65,0,0"></ProgressBar>
@@ -67,7 +70,7 @@
                                         PageTag="home"
                                         PageType="{x:Type view:WkyTaskListView}" Cursor="Hand"  >
                         <Grid>
-                            <TextBlock Text="任务"></TextBlock>
+                            <TextBlock FontSize="12" Text="任务"></TextBlock>
                         </Grid>
                     </ui:NavigationItem>
                     <ui:NavigationItem  PageTag="subscription" PageType="{x:Type view:WkySubscriptionListView}" Cursor="Hand">
@@ -80,21 +83,21 @@
 
                         </ui:NavigationItem.Icon>
                         <Grid>
-                            <TextBlock Text="订阅" HorizontalAlignment="Center"></TextBlock>
+                            <TextBlock FontSize="12" Text="订阅" HorizontalAlignment="Center"></TextBlock>
                             
                         </Grid>
                     </ui:NavigationItem>
                     <!--<ui:NavigationItem Content="Mail" Icon="Mail24" />-->
                 </ui:NavigationStore.Items>
                 <ui:NavigationStore.Footer>
-                    <ui:NavigationItem  Icon="Home24" Click="NavigationItem_Home_Click" >
+                    <!--<ui:NavigationItem  Icon="Home24" Click="NavigationItem_Home_Click" >
                         <Grid>
                             <TextBlock Text="主页"></TextBlock>
                         </Grid>
-                    </ui:NavigationItem>
+                    </ui:NavigationItem>-->
                     <ui:NavigationItem  Icon="Settings24" PageTag="settings" PageType="{x:Type view:WkyFastSettingView}" Cursor="Hand" >
                         <Grid>
-                            <TextBlock Text="设置"></TextBlock>
+                            <TextBlock FontSize="12" Text="设置"></TextBlock>
                         </Grid>
                     </ui:NavigationItem>
                 </ui:NavigationStore.Footer>
@@ -109,16 +112,34 @@
             Margin="0,0,0,0" />
 
 
+        <ui:NotifyIcon
+            Grid.Row="0"
+            FocusOnLeftClick="True"
+            
+            Icon="icon.ico"
+            MenuOnRightClick="True"
+            TooltipText="WkyFast">
+            <ui:NotifyIcon.Menu>
+                <ContextMenu>
+                    <MenuItem  Name="TaskbarExitMenu" Header="退出" Click="TaskbarExitMenu_Click"></MenuItem>
+                </ContextMenu>
+            </ui:NotifyIcon.Menu>
+        </ui:NotifyIcon>
 
-
-        <tb:TaskbarIcon x:Name="MainNotifyIcon"
+        <!--<tb:TaskbarIcon x:Name="MainNotifyIcon"
                     Visibility="Visible"
                     ToolTipText="WkyFast"
                     MenuActivation="LeftOrRightClick"
                     PopupActivation="DoubleClick" 
-                        LeftClickCommand=""
-                    IconSource="/icon.ico" TrayLeftMouseDown="MainNotifyIcon_TrayLeftMouseDown">
-        </tb:TaskbarIcon>
+                    LeftClickCommand=""
+                    IconSource="/icon.ico" 
+                        TrayLeftMouseDown="MainNotifyIcon_TrayLeftMouseDown">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem  Name="TaskbarExitMenu" Header="退出" Click="TaskbarExitMenu_Click"></MenuItem>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>-->
 
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid Margin="100,0,150,0">
@@ -133,7 +154,10 @@
 
             </Grid>
 
-
+            
+            <!--<Button Name="HomeButton" Margin="0,4,140,0" Width="24" Height="24">
+                <ui:SymbolIcon FontSize="24" Symbol="Home24" HorizontalAlignment="Right" VerticalAlignment="Top"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseDown="HomeButton_MouseDown"></ui:SymbolIcon>
+            </Button>-->
         </Grid>
         <StackPanel Orientation="Horizontal" Margin="10">
             <Border ClipToBounds="True" CornerRadius="4" >

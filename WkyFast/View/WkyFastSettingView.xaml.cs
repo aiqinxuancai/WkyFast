@@ -88,5 +88,10 @@ namespace WkyFast.View
         {
             BrowserHelper.OpenUrlBrowser("https://api2d.com/r/211572");
         }
+
+        private void HomePageTextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            BrowserHelper.OpenUrlBrowser("https://github.com/aiqinxuancai/WkyFast");
+        }
     }
 }
