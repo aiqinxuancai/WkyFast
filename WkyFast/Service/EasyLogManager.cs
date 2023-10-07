@@ -12,7 +12,11 @@ namespace WkyFast.Service
 {
     public class EasyLogManager
     {
-        private static string _logFilename = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".log";
+        private static string _appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+        private static string _logFilename = Path.Combine(_appDataPath, 
+            System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? "WkyFast", 
+            System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".log") ;
 
         public static SimpleLogger Logger { set; get; }
 
