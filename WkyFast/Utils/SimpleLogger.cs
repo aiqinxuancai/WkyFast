@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,10 @@ namespace WkyFast.Utils
         public SimpleLogger()
         {
             datetimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
-            logFilename = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + FILE_EXT;
+
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string appName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? "WkyFast";
+            string logFilename = Path.Combine(appDataPath, appName, appName + FILE_EXT);
 
             // Log file header line
             string logHeader = logFilename + " is created.";
