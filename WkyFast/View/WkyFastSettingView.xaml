@@ -51,7 +51,7 @@
                             <ColumnDefinition Width="60"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="744" Grid.Column="0">
-                            <StackPanel Cursor="IBeam">
+                            <StackPanel>
                                 <TextBlock Text="使用PushDeer推送任务完成"></TextBlock>
                                 <ui:TextBox Margin="0,10,0,0" Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.PushDeerKey}" PlaceholderText="PushDeerKey" MinWidth="400"  />
                             </StackPanel>
