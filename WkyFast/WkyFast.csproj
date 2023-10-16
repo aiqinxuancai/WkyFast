@@ -51,9 +51,11 @@
     <PackageReference Include="ChatGPTSharp" Version="1.1.4" />
     <!--<PackageReference Include="MahApps.Metro" Version="2.4.9" />-->
     <PackageReference Include="MahApps.Metro.IconPacks.MaterialLight" Version="4.11.0" />
+    <PackageReference Include="MemoryPack" Version="1.9.16" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.0.3" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
+    <PackageReference Include="TiktokenSharp" Version="1.0.7" />
     <PackageReference Include="WPF-UI" Version="2.1.0" />
   </ItemGroup>
 

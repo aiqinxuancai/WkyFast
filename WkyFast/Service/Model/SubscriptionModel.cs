@@ -14,6 +14,7 @@ namespace WkyFast.Service.Model.SubscriptionModel
     using System.Collections.Specialized;
     using System.Globalization;
     using System.Linq;
+    using MemoryPack;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
     using WkyApiSharp.Service.Model;

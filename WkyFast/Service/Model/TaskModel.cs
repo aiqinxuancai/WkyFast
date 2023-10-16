@@ -22,6 +22,9 @@ namespace WkyFast.Service.Model
 
         }
 
+        /// <summary>
+        /// 绑定的是此代码来显示名字
+        /// </summary>
         public string ShowName { 
             get 
             { 

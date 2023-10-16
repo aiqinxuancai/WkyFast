@@ -59,6 +59,10 @@ namespace WkyFast.Service
 
         public ObservableCollection<SubscriptionModel> SubscriptionModel { get; set; } = new ObservableCollection<SubscriptionModel>();
 
+        /// <summary>
+        /// 由每次加载SubscriptionModel时，进行初始化，本身不存储
+        /// TODO 存储所有的订阅下载 使用MemoryPack
+        /// </summary>
         public Hashtable TaskUrlToSubscriptionName { get; set; } = new Hashtable();
 
         public bool Subscribing { get; set; } = false;
