@@ -20,6 +20,7 @@ using WkyApiSharp.Service.Model;
 using System.Collections;
 using System.Net.Http;
 using System.Net;
+using MemoryPack;
 
 namespace WkyFast.Service
 {
@@ -63,7 +64,7 @@ namespace WkyFast.Service
         /// 由每次加载SubscriptionModel时，进行初始化，本身不存储
         /// TODO 存储所有的订阅下载 使用MemoryPack
         /// </summary>
-        public Hashtable TaskUrlToSubscriptionName { get; set; } = new Hashtable();
+        public Dictionary<string, string> TaskUrlToSubscriptionName { get; set; } = new ();
 
         public bool Subscribing { get; set; } = false;
 
@@ -485,6 +486,8 @@ namespace WkyFast.Service
                     }
                 }
 
+
+
                 //foreach (SyndicationElementExtension extension in item.ElementExtensions)
                 //{
                 //    XElement ele = extension.GetObject<XElement>();
@@ -504,17 +507,61 @@ namespace WkyFast.Service
 
             }
             Save();
+            
+        }
+
+        public void LoadTrueName()
+        {
+            string fileName = @$"UrlNameTable.bin";
+            TaskUrlToSubscriptionName = new Dictionary<string, string>();
+
+            if (File.Exists(fileName))
+            {
+                var fileContent = File.ReadAllBytes(fileName);
+                var val = MemoryPackSerializer.Deserialize<Dictionary<string, string>>(fileContent);
+
+                if (val != null)
+                {
+                    TaskUrlToSubscriptionName = val;
+                }
+
+            }
         }
 
 
+        public void SaveTrueName()
+        {
+            string fileName = @$"UrlNameTable.bin";
 
+            var bin = MemoryPackSerializer.Serialize(TaskUrlToSubscriptionName);
+
+            try
+            {
+                File.WriteAllBytes(fileName, bin);
+            }
+            catch (Exception ex)
+            {
+                EasyLogManager.Logger.Error(ex);
+            }
+
+
+
+
+        }
 
         public void Load()
         {
             lock (_look)
             {
+
+                LoadTrueName();
+
                 string fileName = @$"Subscription_{_user}.json";
                 Debug.WriteLine($"准备载入{fileName}");
+
+                //名称URL
+                //载入TaskUrlToSubscriptionName
+
                 if (File.Exists(fileName))
                 {
                     SubscriptionModel.Clear();
@@ -541,6 +588,12 @@ namespace WkyFast.Service
                     }
 
                 }
+
+                SaveTrueName();
+
+
+
+
             }
         }
 
@@ -550,9 +603,21 @@ namespace WkyFast.Service
             lock (_look)
             {
                 Debug.WriteLine("保存订阅");
-                string fileName = @$"Subscription_{_user}.json";
-                var content = JsonConvert.SerializeObject(SubscriptionModel);
-                File.WriteAllText(fileName, content);
+
+                try
+                {
+
+                    string fileName = @$"Subscription_{_user}.json";
+                    var content = JsonConvert.SerializeObject(SubscriptionModel);
+                    File.WriteAllText(fileName, content);
+                }
+                catch (Exception ex)
+                {
+                    EasyLogManager.Logger.Error(ex);
+                }
+
+                SaveTrueName();
+
             }
 
         }
