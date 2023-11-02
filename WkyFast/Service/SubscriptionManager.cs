@@ -615,9 +615,14 @@ namespace WkyFast.Service
                 {
                     EasyLogManager.Logger.Error(ex);
                 }
-
-                SaveTrueName();
-
+                try
+                {
+                    SaveTrueName();
+                }
+                catch (Exception ex)
+                {
+                    EasyLogManager.Logger.Error(ex);
+                }
             }
 
         }
