@@ -7,12 +7,13 @@ using System.Threading;
 using System.IO;
 using System.Diagnostics;
 using WkyFast.Utils;
+using System.Diagnostics.Eventing.Reader;
 
 namespace WkyFast.Service
 {
     public class EasyLogManager
     {
-        private static string _logFilename = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".log";
+        private static string _logFilename = "";
 
         public static SimpleLogger Logger { set; get; }
 
@@ -21,6 +22,17 @@ namespace WkyFast.Service
         /// </summary>
         static EasyLogManager ()
         {
+            string machineName = Environment.MachineName;
+            if (!string.IsNullOrWhiteSpace(machineName))
+            {
+                _logFilename = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + "-" + machineName + ".log";
+            } 
+            else 
+            {
+                _logFilename = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".log";
+            }
+            
+
             if (File.Exists(_logFilename))
             {
                 FileInfo finfo = new FileInfo(_logFilename);
