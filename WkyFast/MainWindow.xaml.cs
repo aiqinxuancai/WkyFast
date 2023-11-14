@@ -67,6 +67,7 @@ namespace WkyFast
 
 
             VisibilityAnimation.SetAnimationType(WkyLoginDialog, VisibilityAnimation.AnimationType.Fade);
+            GAHelper.Instance.Login();
             await LoginFunc();
 
         }

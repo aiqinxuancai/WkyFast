@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WkyFast.Service;
 using Wpf.Ui.Common;
 using Wpf.Ui.Contracts;
 using Wpf.Ui.Controls;
@@ -89,8 +90,9 @@ namespace WkyFast.UI.Test
             InitializeComponent();
 
             //Loaded += (_, _) => RootNavigation.Navigate(typeof(DashboardPage));
+            GAHelper.Instance.Login();
 
-            
+
         }
 
         private ControlAppearance _snackbarAppearance = ControlAppearance.Secondary;

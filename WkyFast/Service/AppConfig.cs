@@ -99,7 +99,8 @@ namespace WkyFast.Service
         /// </summary>
         public string OpenAIHost { get; set; } = string.Empty;
 
-
+        //当前客户端ID
+        public string ClientId { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -126,6 +127,8 @@ namespace WkyFast.Service
         public void InitDefault() //载入默认配置
         {
             ConfigData.LastDeviceId = string.Empty;
+            ConfigData.ClientId = Guid.NewGuid().ToString();
+
         }
 
 
@@ -140,8 +143,14 @@ namespace WkyFast.Service
                     Debug.WriteLine($"默认初始化");
                     InitDefault();
                     Save();
-                    return false;
                 }
+
+                if (string.IsNullOrWhiteSpace(ConfigData.ClientId))
+                {
+                    ConfigData.ClientId = Guid.NewGuid().ToString();
+                    Save();
+                }
+
                 lock (_lock)
                 {
                     var fileContent = File.ReadAllText(_configPath);
@@ -149,6 +158,8 @@ namespace WkyFast.Service
                     ConfigData = appData;
                     ConfigData.PropertyChanged += AppConfigData_PropertyChanged;
                 }
+
+
 
                 return true;
             }

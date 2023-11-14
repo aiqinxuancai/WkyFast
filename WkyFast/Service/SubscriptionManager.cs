@@ -21,6 +21,7 @@ using System.Collections;
 using System.Net.Http;
 using System.Net;
 using MemoryPack;
+using Flurl.Http.Configuration;
 
 namespace WkyFast.Service
 {
@@ -338,6 +339,8 @@ namespace WkyFast.Service
                     };
                     var client = new HttpClient(handler);
                     var flurlClient = new FlurlClient(client);
+
+
                     var data = url
                         .WithClient(flurlClient).GetStreamAsync().Result;
 
