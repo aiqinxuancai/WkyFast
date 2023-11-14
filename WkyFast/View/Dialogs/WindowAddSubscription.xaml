@@ -1,13 +1,19 @@
-﻿<Window x:Class="WkyFast.Dialogs.WindowAddSubscription"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WkyFast.Dialogs"
-        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        Style="{StaticResource UiWindow}"
-        mc:Ignorable="d"
-        Title="添加订阅" Height="380" Width="550" WindowStartupLocation="CenterOwner"   AllowDrop="True" Loaded="MetroWindow_Loaded" >
+﻿<Window
+    x:Class="WkyFast.Dialogs.WindowAddSubscription"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WkyFast.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="添加订阅"
+    Width="550"
+    Height="380"
+    AllowDrop="True"
+    Loaded="MetroWindow_Loaded"
+    Style="{StaticResource UiWindow}"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -17,71 +23,140 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="46*"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="46*" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="60" />
+            <RowDefinition Height="40" />
         </Grid.RowDefinitions>
-        
-        <ui:TitleBar Grid.Row="0" Grid.ColumnSpan="2" Title="添加订阅"/>
-        
-        <Border Margin="10,0,10,10" CornerRadius="4" Grid.RowSpan="1" Grid.Row="1" >
-            <ui:TextBox Text=""  
-                     Grid.Row="1" 
-                     x:Name="UrlTextBox"  
-                     Background="Transparent" 
-                     AllowDrop="True" 
-                     BorderBrush="#00CCCCCC" 
-                     VerticalAlignment="Stretch" 
-                     TextWrapping="Wrap" PlaceholderText="订阅地址" ></ui:TextBox >
-        </Border>
-        <Border Margin="10,0,10,6"  CornerRadius="4"  Grid.RowSpan="1" Grid.Row="2"  >
-            <Grid>
-                <ui:TextBox Text="" x:Name="RegexTextBox"  
-                     Background="Transparent" 
-                     AllowDrop="True" 
-                     BorderBrush="#00CCCCCC"  VerticalAlignment="Center" Margin="0,0,68,0" PlaceholderText="包含关键字" />
 
-                <CheckBox  x:Name="RegexCheckBox"  HorizontalAlignment="Right" VerticalAlignment="Center" Content="正则" Margin="0,0,5,0" ></CheckBox>
+        <ui:TitleBar
+            Title="添加订阅"
+            Grid.Row="0"
+            Grid.ColumnSpan="2" />
+
+        <Border
+            Grid.Row="1"
+            Grid.RowSpan="1"
+            Margin="10,0,10,10"
+            CornerRadius="4">
+            <ui:TextBox
+                x:Name="UrlTextBox"
+                Grid.Row="1"
+                VerticalAlignment="Stretch"
+                AllowDrop="True"
+                Background="Transparent"
+                BorderBrush="#00CCCCCC"
+                PlaceholderText="订阅地址"
+                Text=""
+                TextWrapping="Wrap" />
+        </Border>
+        <Border
+            Grid.Row="2"
+            Grid.RowSpan="1"
+            Margin="10,0,10,6"
+            CornerRadius="4">
+            <Grid>
+                <ui:TextBox
+                    x:Name="RegexTextBox"
+                    Margin="0,0,68,0"
+                    VerticalAlignment="Center"
+                    AllowDrop="True"
+                    Background="Transparent"
+                    BorderBrush="#00CCCCCC"
+                    PlaceholderText="包含关键字"
+                    Text="" />
+
+                <CheckBox
+                    x:Name="RegexCheckBox"
+                    Margin="0,0,5,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Content="正则" />
             </Grid>
 
         </Border>
-        <Border Margin="10,0,10,6"  CornerRadius="4"  Grid.RowSpan="1" Grid.Row="3"  >
+        <Border
+            Grid.Row="3"
+            Grid.RowSpan="1"
+            Margin="10,0,10,6"
+            CornerRadius="4">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140"/>
-                    <ColumnDefinition Width="8"/>
-                    <ColumnDefinition Width="100*"/>
+                    <ColumnDefinition Width="140" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="100*" />
                 </Grid.ColumnDefinitions>
-                <ComboBox Grid.Column="0" 
-                          Height="30"
-                          Padding="10,5,10,5"
-                          DisplayMemberPath="Description" 
-                          x:Name="ComboBoxPartition" SelectionChanged="ComboBoxPartition_SelectionChanged"  />
-                <ui:TextBox Grid.Column="2" x:Name="TextBoxPath" Padding="10,5,10,5" ClearButtonEnabled="False" TextChanged="TextBoxPath_TextChanged" PlaceholderText="保存目录"/>
+                <ComboBox
+                    x:Name="ComboBoxPartition"
+                    Grid.Column="0"
+                    Height="30"
+                    Padding="10,5,10,5"
+                    DisplayMemberPath="Description"
+                    SelectionChanged="ComboBoxPartition_SelectionChanged" />
+                <ui:TextBox
+                    x:Name="TextBoxPath"
+                    Grid.Column="2"
+                    Padding="10,5,10,5"
+                    ClearButtonEnabled="False"
+                    PlaceholderText="保存目录"
+                    TextChanged="TextBoxPath_TextChanged" />
             </Grid>
 
         </Border>
-        <Border Margin="10,0,10,10"  Grid.RowSpan="1" Grid.Row="4" >
+        <Border
+            Grid.Row="4"
+            Grid.RowSpan="1"
+            Margin="10,0,10,10">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="60"></ColumnDefinition>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="60" />
                 </Grid.ColumnDefinitions>
-                <StackPanel HorizontalAlignment="Left" Grid.Column="0" VerticalAlignment="Center" >
-                    <TextBlock Text="开启智能目录分组" FontSize="14"  Margin="8,0,0,0"></TextBlock>
-                    <TextBlock Text="如订阅中存在多部剧集，在下载时自动存储在不同文件夹，比如Mikan的个人订阅" FontSize="12"  Margin="8,0,0,0" Foreground="#99000000"></TextBlock>
-                    <TextBlock Text="需要先在设置中填写OpenAIKey才可使用" FontSize="12"  Margin="8,0,0,0" Foreground="#99000000"></TextBlock>
+                <StackPanel
+                    Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        FontSize="14"
+                        Text="开启智能目录分组" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        FontSize="12"
+                        Foreground="#99000000"
+                        Text="如订阅中存在多部剧集，在下载时自动存储在不同文件夹，比如Mikan的个人订阅" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        FontSize="12"
+                        Foreground="#99000000"
+                        Text="需要先在设置中填写OpenAIKey才可使用" />
                 </StackPanel>
-                <ui:ToggleSwitch x:Name="AutoDirSwitch" Grid.Column="1"  HorizontalAlignment="Right"></ui:ToggleSwitch  >
+                <ui:ToggleSwitch
+                    x:Name="AutoDirSwitch"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right" />
             </Grid>
         </Border>
-        <Border Margin="10,0,10,10"  Grid.RowSpan="1" Grid.Row="5" >
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="ConfirmButton" Style="{StaticResource AQButtonGreen}" Content="确定" Width="80" Click="ConfirmButton_Click" ></Button>
-                <Button x:Name="CancelButton" Style="{StaticResource AQButtonDefault}" Content="取消" Width="80" Margin="10,0,0,0" Click="CancelButton_Click" ></Button>
+        <Border
+            Grid.Row="5"
+            Grid.RowSpan="1"
+            Margin="10,0,10,10">
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button
+                    x:Name="ConfirmButton"
+                    Width="80"
+                    Click="ConfirmButton_Click"
+                    Content="确定"
+                    Style="{StaticResource AQButtonGreen}" />
+                <Button
+                    x:Name="CancelButton"
+                    Width="80"
+                    Margin="10,0,0,0"
+                    Click="CancelButton_Click"
+                    Content="取消"
+                    Style="{StaticResource AQButtonDefault}" />
             </StackPanel>
         </Border>
 

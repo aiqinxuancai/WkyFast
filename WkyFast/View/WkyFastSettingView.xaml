@@ -1,33 +1,51 @@
-﻿<Page x:Class="WkyFast.View.WkyFastSettingView"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:WkyFast.View"
-      xmlns:service="clr-namespace:WkyFast.Service"
-      xmlns:utils="clr-namespace:WkyFast.Utils"
-      mc:Ignorable="d" 
-      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-      d:DesignHeight="800" d:DesignWidth="800"
-      Title="WkyFastSetting">
+﻿<Page
+    x:Class="WkyFast.View.WkyFastSettingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WkyFast.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:service="clr-namespace:WkyFast.Service"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:utils="clr-namespace:WkyFast.Utils"
+    Title="WkyFastSetting"
+    d:DesignHeight="800"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
 
     <Grid>
         <ScrollViewer>
-            
-            
+
+
             <StackPanel Margin="6,6,6,6">
 
-                <TextBlock Text="设置" FontSize="28" VerticalAlignment="Center" ></TextBlock>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="28"
+                    Text="设置" />
 
-                
-                
-                
-                <StackPanel Margin="0,10,0,0" Orientation="Horizontal" >
-                    <TextBlock x:Name="HomePageTextBlock"  Text="WkyFast" VerticalAlignment="Center" Foreground="#FF006ABE" MouseLeftButtonDown="HomePageTextBlock_MouseLeftButtonDown"  ></TextBlock>
-                    <TextBlock Text=" 当前版本" VerticalAlignment="Center" ></TextBlock>
-                    <TextBlock Text="{Binding Source={x:Static utils:ActionVersion.Version}}" Margin="2,0,0,0"/>
-                    <TextBlock Text="最新版本" VerticalAlignment="Center" Margin="10,0,0,0" ></TextBlock>
-                    <TextBlock x:Name="BadgeNewVersion" Text="{Binding Source={x:Static utils:ActionVersion.NowGithubVersion}}" MouseLeftButtonDown="BadgeNewVersion_MouseLeftButtonDown" Margin="2,0,0,0" Foreground="#FF006ABE" />
+
+
+
+                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                    <TextBlock
+                        x:Name="HomePageTextBlock"
+                        VerticalAlignment="Center"
+                        Foreground="#FF006ABE"
+                        MouseLeftButtonDown="HomePageTextBlock_MouseLeftButtonDown"
+                        Text="WkyFast" />
+                    <TextBlock VerticalAlignment="Center" Text=" 当前版本" />
+                    <TextBlock Margin="2,0,0,0" Text="{Binding Source={x:Static utils:ActionVersion.Version}}" />
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="最新版本" />
+                    <TextBlock
+                        x:Name="BadgeNewVersion"
+                        Margin="2,0,0,0"
+                        Foreground="#FF006ABE"
+                        MouseLeftButtonDown="BadgeNewVersion_MouseLeftButtonDown"
+                        Text="{Binding Source={x:Static utils:ActionVersion.NowGithubVersion}}" />
                 </StackPanel>
 
 
@@ -35,83 +53,122 @@
 
                 <StackPanel Margin="0,15,0,0">
                     <StackPanel>
-                        <ui:CardAction x:Name="AccountCardAction" Icon="InprivateAccount24" Click="AccountCardAction_Click"  >
+                        <ui:CardAction
+                            x:Name="AccountCardAction"
+                            Click="AccountCardAction_Click"
+                            Icon="InprivateAccount24">
                             <StackPanel>
-                                <TextBlock FontSize="13" FontWeight="Medium" Text="已登录账号" />
-                                <TextBlock x:Name="AccountTextBlock" FontSize="12" Text="xxx@xxx.me" />
+                                <TextBlock
+                                    FontSize="13"
+                                    FontWeight="Medium"
+                                    Text="已登录账号" />
+                                <TextBlock
+                                    x:Name="AccountTextBlock"
+                                    FontSize="12"
+                                    Text="xxx@xxx.me" />
                             </StackPanel>
                         </ui:CardAction>
                     </StackPanel>
                 </StackPanel>
 
-                <ui:Card Margin="0,10,0,0" >
+                <ui:Card Margin="0,10,0,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition Width="60"></ColumnDefinition>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="60" />
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="744" Grid.Column="0">
+                        <StackPanel
+                            Grid.Column="0"
+                            Width="744"
+                            HorizontalAlignment="Left"
+                            Orientation="Horizontal">
                             <StackPanel>
-                                <TextBlock Text="使用PushDeer推送任务完成"></TextBlock>
-                                <ui:TextBox Margin="0,10,0,0" Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.PushDeerKey}" PlaceholderText="PushDeerKey" MinWidth="400"  />
+                                <TextBlock Text="使用PushDeer推送任务完成" />
+                                <ui:TextBox
+                                    MinWidth="400"
+                                    Margin="0,10,0,0"
+                                    PlaceholderText="PushDeerKey"
+                                    Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.PushDeerKey}" />
                             </StackPanel>
                         </StackPanel>
-                        <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.PushDeerOpen}"></ui:ToggleSwitch>
+                        <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.PushDeerOpen}" />
                     </Grid>
                 </ui:Card>
 
-                <ui:Card Margin="0,10,0,0" >
+                <ui:Card Margin="0,10,0,0">
 
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition Width="60"></ColumnDefinition>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="60" />
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" >
+                        <StackPanel Orientation="Horizontal">
                             <StackPanel>
-                                <TextBlock Text="使用使用代理访问订阅推送任务完成"></TextBlock>
-                                <ui:TextBox Margin="0,10,0,0" Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.SubscriptionProxy}" PlaceholderText="http://127.0.0.1:1080" MinWidth="400"  />
+                                <TextBlock Text="使用使用代理访问订阅推送任务完成" />
+                                <ui:TextBox
+                                    MinWidth="400"
+                                    Margin="0,10,0,0"
+                                    PlaceholderText="http://127.0.0.1:1080"
+                                    Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.SubscriptionProxy}" />
                             </StackPanel>
                         </StackPanel>
-                        <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.SubscriptionProxyOpen}"></ui:ToggleSwitch>
+                        <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.SubscriptionProxyOpen}" />
                     </Grid>
-    
+
                 </ui:Card>
 
-                <ui:Card Margin="0,10,0,0" >
+                <ui:Card Margin="0,10,0,0">
 
-                    <Grid >
+                    <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition Width="60"></ColumnDefinition>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="60" />
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal"  >
+                        <StackPanel Orientation="Horizontal">
                             <StackPanel>
-                                <Label Content="AI功能" Foreground="#FF393939" FontSize="16" />
-                                <Label Content="使用ChatGPT来提取剧集名称"></Label>
+                                <Label
+                                    Content="AI功能"
+                                    FontSize="16"
+                                    Foreground="#FF393939" />
+                                <Label Content="使用ChatGPT来提取剧集名称" />
 
-                                <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.OpenAIKey}" PlaceholderText="OpenAIKey" MinWidth="400"  ></ui:TextBox>
-                                <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.OpenAIProxy}" PlaceholderText="代理（可选）" MinWidth="400" Margin="0,10,0,0"  ></ui:TextBox>
+                                <ui:TextBox
+                                    MinWidth="400"
+                                    PlaceholderText="OpenAIKey"
+                                    Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.OpenAIKey}" />
+                                <ui:TextBox
+                                    MinWidth="400"
+                                    Margin="0,10,0,0"
+                                    PlaceholderText="代理（可选）"
+                                    Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.OpenAIProxy}" />
 
-                                <Label Content="使用第三方转发服务的Host"  Margin="0,10,0,0" ></Label>
-                                <ui:TextBox Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.OpenAIHost}" PlaceholderText="https://api.openai.com/" MinWidth="400" ></ui:TextBox>
+                                <Label Margin="0,10,0,0" Content="使用第三方转发服务的Host" />
+                                <ui:TextBox
+                                    MinWidth="400"
+                                    PlaceholderText="https://api.openai.com/"
+                                    Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.OpenAIHost}" />
 
-                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0" >
-                                    <ui:Hyperlink x:Name="LinkAIKEY" Content="https://aikey.one/" Click="LinkAIKEY_Click"></ui:Hyperlink>
-                                    <ui:Hyperlink  x:Name="LinkAPI2D" Content="https://api2d.com/" Click="LinkAPI2D_Click"></ui:Hyperlink>
+                                <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
+                                    <ui:Hyperlink
+                                        x:Name="LinkAIKEY"
+                                        Click="LinkAIKEY_Click"
+                                        Content="https://aikey.one/" />
+                                    <ui:Hyperlink
+                                        x:Name="LinkAPI2D"
+                                        Click="LinkAPI2D_Click"
+                                        Content="https://api2d.com/" />
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>
-                        
-                        <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.OpenAIOpen}"></ui:ToggleSwitch>
+
+                        <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.OpenAIOpen}" />
                     </Grid>
 
                 </ui:Card>
-                
-                
-                <StackPanel Margin="0,10,0,0" >
-                          </StackPanel>
-                
+
+
+                <StackPanel Margin="0,10,0,0" />
+
                 <!--<StackPanel Margin="0,10,0,0" Orientation="Horizontal">
                     <CheckBox Content="订阅列表同步到阿里云OSS（未实现）" IsChecked="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.OSSSynchronizeOpen}" ></CheckBox>
                 </StackPanel>
@@ -144,15 +201,21 @@
                     </StackPanel>
                 </StackPanel>-->
 
-                <StackPanel Margin="0,5,0,0" x:Name="TestTurnServerPanel" Visibility="Collapsed" >
-                    <Label Content="TEST"></Label>
+                <StackPanel
+                    x:Name="TestTurnServerPanel"
+                    Margin="0,5,0,0"
+                    Visibility="Collapsed">
+                    <Label Content="TEST" />
                     <StackPanel>
-                        <Button x:Name="TestTurnServerButton" Content="测试TurnServer" Click="TestTurnServerButton_Click"></Button>
+                        <Button
+                            x:Name="TestTurnServerButton"
+                            Click="TestTurnServerButton_Click"
+                            Content="测试TurnServer" />
                     </StackPanel>
                 </StackPanel>
 
             </StackPanel>
         </ScrollViewer>
-        
+
     </Grid>
 </Page>

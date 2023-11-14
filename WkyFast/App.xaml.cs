@@ -37,6 +37,9 @@ namespace WkyFast
 
         App()
         {
+            //TODO 检查多开
+
+
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             DispatcherUnhandledException += Current_DispatcherUnhandledException;
         }
