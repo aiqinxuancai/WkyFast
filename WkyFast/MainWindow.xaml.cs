@@ -67,7 +67,10 @@ namespace WkyFast
 
 
             VisibilityAnimation.SetAnimationType(WkyLoginDialog, VisibilityAnimation.AnimationType.Fade);
-            GAHelper.Instance.Login();
+            GAHelper.Instance.RequestPageView($"启动到主界面{ActionVersion.Version}");
+            
+
+            
             await LoginFunc();
 
         }
@@ -145,6 +148,7 @@ namespace WkyFast
                 .OfType<UpdateDeviceResultEvent>()
                 .Subscribe(async r =>
                 {
+                    GAHelper.Instance.Login();
                     Debug.WriteLine("设备更新完毕");
                     if (r.IsSuccess)
                     {
