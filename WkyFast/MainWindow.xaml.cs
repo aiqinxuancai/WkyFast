@@ -408,6 +408,8 @@ namespace WkyFast
 
                 // 自己处理
                 this.Hide();
+                //弹出提示
+                //MyNotifyIcon.
             }
 
 

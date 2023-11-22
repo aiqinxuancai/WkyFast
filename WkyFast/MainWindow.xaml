@@ -143,6 +143,7 @@
 
 
         <ui:NotifyIcon
+            x:Name="MyNotifyIcon"
             Grid.Row="0"
             FocusOnLeftClick="True"
             Icon="icon.ico"
