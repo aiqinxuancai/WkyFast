@@ -145,11 +145,7 @@ namespace WkyFast.Service
                     Save();
                 }
 
-                if (string.IsNullOrWhiteSpace(ConfigData.ClientId))
-                {
-                    ConfigData.ClientId = Guid.NewGuid().ToString();
-                    Save();
-                }
+
 
                 lock (_lock)
                 {
@@ -159,7 +155,11 @@ namespace WkyFast.Service
                     ConfigData.PropertyChanged += AppConfigData_PropertyChanged;
                 }
 
-
+                if (string.IsNullOrWhiteSpace(ConfigData.ClientId))
+                {
+                    ConfigData.ClientId = Guid.NewGuid().ToString();
+                    Save();
+                }
 
                 return true;
             }

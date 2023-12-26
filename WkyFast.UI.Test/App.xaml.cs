@@ -8,8 +8,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Wpf.Ui.Contracts;
-using Wpf.Ui.Services;
+using Wpf.Ui;
 
 namespace WkyFast.UI.Test
 {

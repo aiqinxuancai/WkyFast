@@ -65,14 +65,10 @@ namespace WkyFast
             ActionVersion.CheckVersion();
             SubscriptionManager.Instance.OnSubscriptionProgressChanged += SubscriptionManager_OnSubscriptionProgressChanged;
 
-
             VisibilityAnimation.SetAnimationType(WkyLoginDialog, VisibilityAnimation.AnimationType.Fade);
             GAHelper.Instance.RequestPageView($"启动到主界面{ActionVersion.Version}");
-            
-
-            
+           
             await LoginFunc();
-
         }
 
         private void SubscriptionManager_OnSubscriptionProgressChanged(int now, int max)

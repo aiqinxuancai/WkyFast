@@ -1,16 +1,27 @@
-﻿<ui:FluentWindow x:Class="WkyFast.UI.Test.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WkyFast.UI.Test"
-        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-        mc:Ignorable="d"
-                     ExtendsContentIntoTitleBar="True"
+﻿<ui:FluentWindow
+    x:Class="WkyFast.UI.Test.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WkyFast.UI.Test"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="MainWindow"
+    Width="800"
+    Height="450"
+    ExtendsContentIntoTitleBar="True"
     WindowBackdropType="Mica"
     WindowCornerPreference="Default"
     WindowStartupLocation="CenterOwner"
-        Title="MainWindow" Height="450" Width="800">
+    mc:Ignorable="d">
+    <ui:FluentWindow.Resources>
+        <ResourceDictionary>
+            <StackPanel x:Key="DialogContent">
+                <TextBlock Text="Lorem ipsum dolor sit amet, adipisicing elit." TextWrapping="Wrap" />
+                <CheckBox Content="Upload your content to the cloud." />
+            </StackPanel>
+        </ResourceDictionary>
+    </ui:FluentWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -26,21 +37,25 @@
 
 
         <StackPanel Grid.Row="1">
-
-            <ui:Button x:Name="SnackbarBtn" Content="Snackbar"  Click="SnackbarBtn_Click" ></ui:Button>
-
-            <ui:Button x:Name="DialogBtn" Content="Dialog" Click="DialogBtn_Click" ></ui:Button>
+            <ui:Button
+                x:Name="SnackbarBtn"
+                Click="SnackbarBtn_Click"
+                Content="Snackbar"
+                Icon="Home12" />
+            <ui:Button
+                x:Name="DialogBtn"
+                Appearance="Primary"
+                Click="DialogBtn_Click"
+                Content="Dialog" />
         </StackPanel>
 
 
         <Grid Grid.Row="0" Grid.RowSpan="4">
-            <ui:SnackbarPresenter Name="SnackbarPresenter">
+            <ui:SnackbarPresenter Name="SnackbarPresenter" />
 
-            </ui:SnackbarPresenter>
-
-            <ContentPresenter Name="DialogPresenter">
-
-            </ContentPresenter>
+            <ContentPresenter Name="DialogPresenter" />
         </Grid>
+
+
     </Grid>
 </ui:FluentWindow>

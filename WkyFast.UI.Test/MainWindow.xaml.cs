@@ -15,10 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WkyFast.Service;
-using Wpf.Ui.Common;
-using Wpf.Ui.Contracts;
+using Wpf.Ui;
 using Wpf.Ui.Controls;
-using Wpf.Ui.Services;
 
 namespace WkyFast.UI.Test
 {
@@ -85,7 +83,7 @@ namespace WkyFast.UI.Test
 
 
 
-            Wpf.Ui.Appearance.Watcher.Watch(this);
+            //Wpf.Ui.Appearance.Watcher.Watch(this);
 
             InitializeComponent();
 
