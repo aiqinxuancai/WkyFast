@@ -87,6 +87,8 @@ namespace WkyFast.Service
                         if (Connected)
                         {
                             var tasks = await _client.TellAllAsync();
+                            //ErrorCode	"12"	string
+                            //ErrorMessage    "InfoHash 1a4845e8b614a6011b5a1ccc850aa66083ab40b9 is already registered."  string
 
                             MainWindow.Instance.Dispatcher.Invoke(() =>
                             {

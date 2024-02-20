@@ -523,7 +523,10 @@ namespace WkyFast.Service
 
                 LoadTrueName();
 
-                string fileName = @$"Subscription_{1}.json";
+                var rpc = Aria2ApiManager.Instance.ConnectedRpc;
+                var uri = new Uri(rpc);
+
+                string fileName = @$"Subscription_{uri.Host}.json";
                 Debug.WriteLine($"准备载入{fileName}");
 
                 //名称URL
@@ -573,7 +576,9 @@ namespace WkyFast.Service
 
                 try
                 {
-                    string fileName = @$"Subscription_{1}.json";
+                    var rpc = Aria2ApiManager.Instance.ConnectedRpc;
+                    var uri = new Uri(rpc);
+                    string fileName = @$"Subscription_{uri.Host}.json";
                     var content = JsonConvert.SerializeObject(SubscriptionModel);
                     File.WriteAllText(fileName, content);
                 }
