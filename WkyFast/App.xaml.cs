@@ -20,7 +20,7 @@ namespace WkyFast
     {
         static App()
         {
-            TimeHelper.SecondsToFormatString(99);
+            //TimeHelper.SecondsToFormatString(99);
 
             TextOptions.TextFormattingModeProperty.OverrideMetadata(typeof(Window),
                 new FrameworkPropertyMetadata(TextFormattingMode.Display, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.Inherits));
