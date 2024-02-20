@@ -75,9 +75,9 @@
                     </Grid>
 
                     <StackPanel Grid.Column="0" Margin="2,2">
-                        <TextBlock Text="{Binding ShowName}">
+                        <TextBlock Text="{Binding SubscriptionName}">
                             <TextBlock.ToolTip>
-                                <TextBlock Text="{Binding Data.Name}" TextWrapping="WrapWithOverflow" />
+                                <TextBlock Text="{Binding ShowName}" TextWrapping="WrapWithOverflow" />
                             </TextBlock.ToolTip>
                         </TextBlock>
                         <StackPanel VerticalAlignment="Center" Orientation="Horizontal">

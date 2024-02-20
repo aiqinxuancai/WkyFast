@@ -187,8 +187,9 @@ namespace WkyFast.Service
             {
                 var result = await _client.AddTorrentAsync(data, options: config, position: 0);
                 Debug.WriteLine($"DownloadBtFileUrl结果：{result}");
-
+                
                 downloadResult.isSuccessed = IsGid(result);
+                downloadResult.Gid = result;
             }
             else
             {
@@ -214,7 +215,7 @@ namespace WkyFast.Service
 
             WkyDownloadResult downloadResult = new WkyDownloadResult();
             downloadResult.isSuccessed = IsGid(result);
-
+            downloadResult.Gid = result;
 
 
             return downloadResult;
@@ -233,7 +234,7 @@ namespace WkyFast.Service
 
             WkyDownloadResult downloadResult = new WkyDownloadResult();
             downloadResult.isSuccessed = IsGid(result);
-
+            downloadResult.Gid = result;
 
 
             return downloadResult;
