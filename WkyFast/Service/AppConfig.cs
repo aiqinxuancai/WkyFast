@@ -19,33 +19,10 @@ namespace WkyFast.Service
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        //public void OnPropertyChanged([CallerMemberName] string PropertyName = "")
-        //{
-        //    PropertyChangedEventArgs propertyChangedEventArgs = new PropertyChangedEventArgs(PropertyName);
-        //    PropertyChanged(this, propertyChangedEventArgs);
-        //    AppConfig.Instance.Save();
-        //}
-
-        /// <summary>
-        /// 最后使用的设备ID
-        /// </summary>
-        public string LastDeviceId { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// 最后增加订阅的路径
-        ///// </summary>
-        //public string LastAddSubscriptionPath { get; set; } = string.Empty;
-
-
-        /// <summary>
-        /// 设备默认选择下载的分区对应表 
-        /// 【设备ID->分区路径】
-        /// </summary>
-        public Dictionary<string, string> AddTaskSavePartitionDict { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// 分区路径->存储路径
-        /// 【分区路径->存储路径】
+        /// 【RPC URL->存储路径】
         /// </summary>
         public Dictionary<string, string> AddTaskSavePathDict { get; set; } = new Dictionary<string, string>();
 
@@ -101,6 +78,11 @@ namespace WkyFast.Service
 
         //当前客户端ID
         public string ClientId { get; set; } = string.Empty;
+
+
+        public string Aria2Rpc { get; set; } = string.Empty;
+
+        public string Aria2Token { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -126,9 +108,7 @@ namespace WkyFast.Service
 
         public void InitDefault() //载入默认配置
         {
-            ConfigData.LastDeviceId = string.Empty;
             ConfigData.ClientId = Guid.NewGuid().ToString();
-
         }
 
 
@@ -171,14 +151,20 @@ namespace WkyFast.Service
                 return false;
             }
         }
+
         private void AppConfigData_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
+            if (e.PropertyName == "Aria2Rpc" || e.PropertyName == "Aria2Token")
+            {
+                //UpdateRPC
+                Aria2ApiManager.Instance.UpdateRpc();
+            }
+
             Save();
         }
 
         public void Save()
         {
-
             try
             {
                 lock (_lock)

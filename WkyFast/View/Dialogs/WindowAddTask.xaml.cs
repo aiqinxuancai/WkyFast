@@ -8,15 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using WkyApiSharp.Service.Model;
-using WkyApiSharp.Service.Model.GetUsbInfo;
 using WkyFast.Service;
 using WkyFast.Utils;
 
@@ -32,11 +24,6 @@ namespace WkyFast.Dialogs
             InitializeComponent();
             IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
             Win11Style.LoadWin11Style(hWnd);
-
-            this.ComboBoxPartition.ItemsSource = WkyApiManager.Instance.NowDevice.Partitions;
-
-
-            LoadDefaultPartitionSelected();
             LoadDefaultPathSelected();
         }
 
@@ -49,48 +36,17 @@ namespace WkyFast.Dialogs
         }
 
 
-        private void LoadDefaultPartitionSelected()
-        {
-            try 
-            {
-                if (AppConfig.Instance.ConfigData.AddTaskSavePartitionDict.TryGetValue(WkyApiManager.Instance.NowDevice.DeviceId, out var partitionpath))
-                {
-                    //寻找
-                    var p = WkyApiManager.Instance.NowDevice.Partitions.FirstOrDefault(a => a.Partition.Path == partitionpath);
-
-                    if (p != null)
-                    {
-                        this.ComboBoxPartition.SelectedIndex = WkyApiManager.Instance.NowDevice.Partitions.IndexOf(p);
-                    }
-                    else
-                    {
-                        this.ComboBoxPartition.SelectedIndex = 0;
-                    }
-                }
-                else
-                {
-                    this.ComboBoxPartition.SelectedIndex = 0;
-                }
-            } 
-            catch (Exception ex)
-            {
-                
-            }
-
-        }
         private void LoadDefaultPathSelected()
         {
             try
             {
-                WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
-
-                if (AppConfig.Instance.ConfigData.AddTaskSavePathDict.TryGetValue(wkyPartition.Partition.Path, out var path))
+                if (AppConfig.Instance.ConfigData.AddTaskSavePathDict.TryGetValue(AppConfig.Instance.ConfigData.Aria2Rpc, out var path))
                 {
                     this.TextBoxPath.Text = path;
                 }
                 else
                 {
-                    this.TextBoxPath.Text = "/onecloud/tddownload";
+                    this.TextBoxPath.Text = "/downloads";
                 }
             }
             catch (Exception ex) 
@@ -114,14 +70,12 @@ namespace WkyFast.Dialogs
             var files = UrlTextBox.Text.Split("\r\n");
             files = files.Where(a => !string.IsNullOrWhiteSpace(a)).ToArray();
             int count = 0;
-            WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
-
 
             foreach (var file in files)
             {
                 try
                 {
-                    var result = await WkyApiManager.Instance.DownloadUrl(file, wkyPartition.Partition.Path + TextBoxPath.Text);
+                    var result = await Aria2ApiManager.Instance.DownloadUrl(file, TextBoxPath.Text);
                     if (result.SuccessCount > 0)
                     {
                         EasyLogManager.Logger.Info($"任务已添加：{file}");
@@ -178,7 +132,7 @@ namespace WkyFast.Dialogs
                 // Note that you can have more than one file.
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
+  
 
                 int count = 0;
                 foreach (var file in files)
@@ -192,7 +146,7 @@ namespace WkyFast.Dialogs
 
                     try
                     {
-                        var result = await WkyApiManager.Instance.DownloadBtFile(file, wkyPartition.Partition.Path + TextBoxPath.Text);
+                        var result = await Aria2ApiManager.Instance.DownloadBtFile(file, TextBoxPath.Text);
                         if (result.SuccessCount > 0)
                         {
                             EasyLogManager.Logger.Info($"任务已添加：{file}");
@@ -234,21 +188,11 @@ namespace WkyFast.Dialogs
             e.Handled = true;
         }
 
-        private void ComboBoxPartition_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-       
-            
-            WkyPartition wkyPartition = (WkyPartition)((ComboBox)e.Source).SelectedItem;
-            //当前选择的设备ID
-            AppConfig.Instance.ConfigData.AddTaskSavePartitionDict[AppConfig.Instance.ConfigData.LastDeviceId] = wkyPartition.Partition.Path;
-            AppConfig.Instance.Save();
-        }
 
         private void TextBoxPath_TextChanged(object sender, TextChangedEventArgs e)
         {
-            WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
             //当前选择的设备ID
-            AppConfig.Instance.ConfigData.AddTaskSavePathDict[wkyPartition.Partition.Path] = TextBoxPath.Text;
+            AppConfig.Instance.ConfigData.AddTaskSavePathDict[AppConfig.Instance.ConfigData.Aria2Rpc] = TextBoxPath.Text;
             AppConfig.Instance.Save();
         }
     }

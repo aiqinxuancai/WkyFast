@@ -133,15 +133,8 @@ namespace WkyFast.View
 
         private void SubscriptionButton_Click(object sender, RoutedEventArgs e)
         {
-            if (WkyApiManager.Instance.NowDevice != null)
-            {
-                WindowAddSubscription.Show(Application.Current.MainWindow);
-            }
-            else
-            {
-                MainWindow.Instance.ShowSnackbar("无法添加订阅", $"当前没有选中任何设备");
-            }
-            
+            WindowAddSubscription.Show(Application.Current.MainWindow);
+
         }
     }
 }

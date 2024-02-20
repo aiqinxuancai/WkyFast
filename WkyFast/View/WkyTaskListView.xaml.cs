@@ -15,8 +15,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WkyApiSharp.Events.Account;
-using WkyApiSharp.Service.Model;
 using WkyFast.Dialogs;
 using WkyFast.Service;
 using WkyFast.Service.Model;
@@ -38,23 +36,21 @@ namespace WkyFast.View
         {
             InitializeComponent();
 
-
-            //主动刷新？
-
             this.ViewModel = viewModel;
-            this.ViewModel = WkyApiManager.Instance.TaskList;
-            //WkySubscriptionListView.ViewModel = SubscriptionManager.Instance.SubscriptionModel; //订阅列表绑定
-            //WkyTaskListView.ViewModel = WkyApiManager.Instance.TaskList; //任务列表绑定
+            this.ViewModel = Aria2ApiManager.Instance.TaskList;
 
-            WkyApiManager.Instance.API?.EventReceived
+            Aria2ApiManager.Instance.EventReceived
                 .OfType<UpdateDeviceResultEvent>()
-                .Subscribe(async r => {
-
+                .Subscribe(async r =>
+                {
                     if (r.IsSuccess)
                     {
                         this.AddTaskButton.IsEnabled = true;
                     }
-
+                    else
+                    {
+                        this.AddTaskButton.IsEnabled = false;
+                    }
                 });
 
         }
@@ -104,7 +100,7 @@ namespace WkyFast.View
                 var title = "";
                 foreach (var item in _selectedItems)
                 {
-                    title += item.Data.Name;
+                    title += item.Data.Bittorrent.Info.Name;
                     if (item != _selectedItems.Last())
                     {
                         title += "\n";
@@ -125,14 +121,13 @@ namespace WkyFast.View
             {
                 foreach (var item in _selectedItems)
                 {
-                    if (item.Data.State == (int)TaskState.Pause ||
-                            item.Data.State == (int)TaskState.LackResources ||
-                            item.Data.State == (int)TaskState.DiskError)
+                    if (item.Data.Status == Aria2ApiManager.KARIA2_STATUS_PAUSED ||
+                            item.Data.Status == Aria2ApiManager.KARIA2_STATUS_ERROR)
                     {
-                        await WkyApiManager.Instance.API.StartTask(WkyApiManager.Instance.NowDevice.PeerId, item.Data.GetOperationCode());
+                        await Aria2ApiManager.Instance.StartTask(item.Data.Gid);
                     }
                 }
-                WkyApiManager.Instance.API.UpdateTask();
+                Aria2ApiManager.Instance.UpdateTask();
 
             }
             catch (Exception ex)
@@ -148,13 +143,13 @@ namespace WkyFast.View
 
                 foreach (var item in _selectedItems)
                 {
-                    if (item.Data.State != (int)TaskState.Completed)
+                    if (item.Data.Status != Aria2ApiManager.KARIA2_STATUS_COMPLETE)
                     {
-                        await WkyApiManager.Instance.API.PauseTask(WkyApiManager.Instance.NowDevice.PeerId, item.Data.GetOperationCode());
+                        await Aria2ApiManager.Instance.StopTask(item.Data.Gid);
                     }
                 }
 
-                WkyApiManager.Instance.API.UpdateTask();
+                Aria2ApiManager.Instance.UpdateTask();
 
             }
             catch (Exception ex)
@@ -168,7 +163,7 @@ namespace WkyFast.View
             var title = "";
             foreach (var item in _selectedItems)
             {
-                title += item.Data.Name;
+                title += item.Data.Bittorrent.Info.Name;
                 if (item != _selectedItems.Last())
                 {
                     title += "\n";
@@ -190,10 +185,10 @@ namespace WkyFast.View
                 {
                     foreach (var item in _selectedItems)
                     {
-                        await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, item.Data.GetOperationCode());
+                        await Aria2ApiManager.Instance.DeleteFile(item.Data.Gid);
                     }
 
-                    WkyApiManager.Instance.API.UpdateTask();
+                    Aria2ApiManager.Instance.UpdateTask();
                     MainDataGrid.Dispatcher.Invoke(() => MainDataGrid.UnselectAll());
                 }
                 catch (Exception ex)
@@ -213,7 +208,7 @@ namespace WkyFast.View
             var title = "";
             foreach (var item in _selectedItems)
             {
-                title += item.Data.Name;
+                title += item.Data.Following; //TODO
                 if (item != _selectedItems.Last())
                 {
                     title += "\n";
@@ -238,10 +233,10 @@ namespace WkyFast.View
                 {
                     foreach (var item in _selectedItems)
                     {
-                        await WkyApiManager.Instance.API.DeleteTask(WkyApiManager.Instance.NowDevice.PeerId, item.Data.GetOperationCode(), true);
+                        await Aria2ApiManager.Instance.DeleteFile(item.Data.Gid);
                     }
 
-                    WkyApiManager.Instance.API.UpdateTask();
+                    //TODO 更新列表 Aria2ApiManager.Instance.API.UpdateTask();
                     MainDataGrid.Dispatcher.Invoke(() => MainDataGrid.UnselectAll());
                 }
                 catch (Exception ex)
@@ -263,9 +258,9 @@ namespace WkyFast.View
                 var url = "";
                 foreach (var item in _selectedItems)
                 {
-                    url += item.Data.Url;
-                    if (item != _selectedItems.Last())
-                    {
+                    foreach (var file in item.Data.Files)
+                    { 
+                        url += file.Path;
                         url += "\n";
                     }
                 }
@@ -281,14 +276,7 @@ namespace WkyFast.View
 
         private void AddTaskButton_Click(object sender, RoutedEventArgs e)
         {
-            if (WkyApiManager.Instance.NowDevice != null)
-            {
-                WindowAddTask.Show(Application.Current.MainWindow);
-            }
-            else
-            {
-                MainWindow.Instance.ShowSnackbar("无法添加任务", $"当前没有选中任何设备");
-            }
+            WindowAddTask.Show(Application.Current.MainWindow);
         }
 
         private void MainDataGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
@@ -314,24 +302,24 @@ namespace WkyFast.View
             {
                 var showRestartMenu = selectedItems.Any(a =>
                 {
-                    if (a.Data.State == (int)TaskState.Pause ||
-                        a.Data.State == (int)TaskState.LackResources ||
-                        a.Data.State == (int)TaskState.DiskError)
-                    {
-                        return true;
-                    }
+                    //if (a.Data.Status == (int)TaskState.Pause ||
+                    //    a.Data.State == (int)TaskState.LackResources ||
+                    //    a.Data.State == (int)TaskState.DiskError)
+                    //{
+                    //    return true;
+                    //}
                     return false;
                 });
 
 
                 var showStopMenu = selectedItems.Any(a =>
                 {
-                    if (a.Data.State == (int)TaskState.Adding ||
-                        a.Data.State == (int)TaskState.PreparingAdd ||
-                        a.Data.State == (int)TaskState.Downloading)
-                    {
-                        return true;
-                    }
+                    //if (a.Data.State == (int)TaskState.Adding ||
+                    //    a.Data.State == (int)TaskState.PreparingAdd ||
+                    //    a.Data.State == (int)TaskState.Downloading)
+                    //{
+                    //    return true;
+                    //}
                     return false;
                 });
 

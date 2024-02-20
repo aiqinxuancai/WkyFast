@@ -17,9 +17,6 @@ namespace WkyFast.Service.Model.SubscriptionModel
     using MemoryPack;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
-    using WkyApiSharp.Service.Model;
-    using WkyApiSharp.Service.Model.BtCheck;
-    using WkyApiSharp.Service.Model.CreateTaskResult;
 
     public partial class SubscriptionModel : BaseNotificationModel
     {
@@ -28,10 +25,6 @@ namespace WkyFast.Service.Model.SubscriptionModel
         /// </summary>
         [JsonProperty("Url")]
         public string Url { get; set; }
-
-
-        [JsonProperty("Device")]
-        public WkyDevice Device { get; set; }
 
         [JsonProperty("AutoDir")]
         public bool AutoDir { get; set; }
@@ -137,9 +130,6 @@ namespace WkyFast.Service.Model.SubscriptionModel
 
         [JsonProperty("Time")]
         public DateTime Time { get; set; }
-
-        [JsonProperty("Result")]
-        public WkyApiCreateTaskResultModel Result { get; set; }
         
     }
 

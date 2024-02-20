@@ -6,14 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using WkyApiSharp.Service.Model;
 using WkyFast.Service;
 using WkyFast.Utils;
 
@@ -24,18 +17,11 @@ namespace WkyFast.Dialogs
     /// </summary>
     public partial class WindowAddSubscription : Window
     {
-        private WkyDevice? _device;
-
         public WindowAddSubscription()
         {
             InitializeComponent();
             IntPtr hWnd = new WindowInteropHelper(GetWindow(this)).EnsureHandle();
             Win11Style.LoadWin11Style(hWnd);
-
-            _device = WkyApiManager.Instance.NowDevice;
-
-            this.ComboBoxPartition.ItemsSource = _device?.Partitions;
-            LoadDefaultPartitionSelected();
             LoadDefaultPathSelected();
         }
 
@@ -46,41 +32,24 @@ namespace WkyFast.Dialogs
             dialog.ShowDialog();
         }
 
-
-        private void LoadDefaultPartitionSelected()
+        private void LoadDefaultPathSelected()
         {
-            if (AppConfig.Instance.ConfigData.AddSubscriptionSavePartitionDict.TryGetValue(_device.DeviceId, out var partitionpath))
+            try
             {
-                //寻找
-                var p = _device.Partitions.FirstOrDefault(a => a.Partition.Path == partitionpath);
-
-                if (p != null)
+                if (AppConfig.Instance.ConfigData.AddTaskSavePathDict.TryGetValue(AppConfig.Instance.ConfigData.Aria2Rpc, out var path))
                 {
-                    this.ComboBoxPartition.SelectedIndex = _device.Partitions.IndexOf(p);
+                    this.TextBoxPath.Text = path;
                 }
                 else
                 {
-                    this.ComboBoxPartition.SelectedIndex = 0;
+                    this.TextBoxPath.Text = "/downloads";
                 }
             }
-            else
+            catch (Exception ex)
             {
-                this.ComboBoxPartition.SelectedIndex = 0;
+                EasyLogManager.Logger.Error(ex);
             }
 
-        }
-        private void LoadDefaultPathSelected()
-        {
-            WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
-
-            if (AppConfig.Instance.ConfigData.AddSubscriptionSavePathDict.TryGetValue(wkyPartition.Partition.Path, out var path))
-            {
-                this.TextBoxPath.Text = path;
-            }
-            else
-            {
-                this.TextBoxPath.Text = "/onecloud/tddownload";
-            }
         }
 
 
@@ -111,9 +80,6 @@ namespace WkyFast.Dialogs
             //TODO 支持选择设备和磁盘？？
             try
             {
-                //var progressView = await this.ShowProgressAsync("请稍后", "正在检查订阅...");
-                WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
-
                 await Task.Run(() => {
                     string url = string.Empty;
                     string regex = string.Empty;
@@ -126,7 +92,7 @@ namespace WkyFast.Dialogs
                         url = UrlTextBox.Text;
                         regex = RegexTextBox.Text;
                         regexEnable = RegexCheckBox.IsChecked == true ? true : false;
-                        path = wkyPartition.Partition.Path + TextBoxPath.Text;
+                        path = TextBoxPath.Text;
                         autoDir = AutoDirSwitch.IsChecked == true ? true : false;
                     });
 
@@ -148,16 +114,16 @@ namespace WkyFast.Dialogs
                     {
                         if (string.IsNullOrEmpty(title))
                         {
-                            path = wkyPartition.Partition.Path + TextBoxPath.Text;
+                            path = TextBoxPath.Text;
                         }
                         else
                         {
-                            path = wkyPartition.Partition.Path + TextBoxPath.Text + (TextBoxPath.Text.EndsWith("/") ? "" : "/") + title;
+                            path = TextBoxPath.Text + (TextBoxPath.Text.EndsWith("/") ? "" : "/") + title;
                         }
 
 
 
-                        SubscriptionManager.Instance.Add(url, _device, path, regex, regexEnable, autoDir: autoDir);
+                        SubscriptionManager.Instance.Add(url, path, regex, regexEnable, autoDir: autoDir);
 
                         EasyLogManager.Logger.Info($"订阅已添加：{title} {url}");
 
@@ -184,21 +150,11 @@ namespace WkyFast.Dialogs
             this.Close();
         }
 
-        private void ComboBoxPartition_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-
-            WkyPartition wkyPartition = (WkyPartition)((ComboBox)e.Source).SelectedItem;
-            //当前选择的设备ID
-            AppConfig.Instance.ConfigData.AddSubscriptionSavePartitionDict[AppConfig.Instance.ConfigData.LastDeviceId] = wkyPartition.Partition.Path;
-            AppConfig.Instance.Save();
-        }
 
         private void TextBoxPath_TextChanged(object sender, TextChangedEventArgs e)
         {
-            WkyPartition wkyPartition = (WkyPartition)ComboBoxPartition.SelectedItem;
             //当前选择的设备ID
-            AppConfig.Instance.ConfigData.AddSubscriptionSavePathDict[wkyPartition.Partition.Path] = TextBoxPath.Text;
+            AppConfig.Instance.ConfigData.AddSubscriptionSavePathDict[AppConfig.Instance.ConfigData.Aria2Rpc] = TextBoxPath.Text;
             AppConfig.Instance.Save();
         }
 

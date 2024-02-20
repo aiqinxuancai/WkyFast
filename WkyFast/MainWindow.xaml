@@ -11,8 +11,8 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:view="clr-namespace:WkyFast.View"
     Title="WkyFast"
-    Width="880"
-    Height="600"
+    Width="1000"
+    Height="640"
     Closing="Window_Closing"
     Icon="icon.ico"
     Loaded="MetroWindow_Loaded"
@@ -178,7 +178,7 @@
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="2">
-            <Grid Margin="100,0,150,0">
+            <!--<Grid Margin="100,0,150,0">
                 <StackPanel Margin="10" Orientation="Horizontal">
                     <ComboBox
                         x:Name="DeviceComboBox"
@@ -189,7 +189,7 @@
                         SelectionChanged="DeviceComboBox_SelectionChanged" />
                 </StackPanel>
 
-            </Grid>
+            </Grid>-->
 
 
             <!--<Button Name="HomeButton" Margin="0,4,140,0" Width="24" Height="24">
@@ -210,13 +210,13 @@
         </Grid>-->
 
 
-        <dialogs:LoginDialog
+        <!--<dialogs:LoginDialog
             x:Name="WkyLoginDialog"
             Grid.Row="0"
             Grid.RowSpan="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Visibility="Collapsed" />
+            Visibility="Collapsed" />-->
 
         <ui:Dialog
             x:Name="RootDialog"

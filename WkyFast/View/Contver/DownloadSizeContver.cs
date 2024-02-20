@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using WkyApiSharp.Service.Model;
 using WkyFast.Utils;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
@@ -198,10 +197,10 @@ namespace WkyFast.View.Contver
         {
             if (values.Length == 2)
             {
-                if ((long)values[0] == 0 && (long)values[1] == (long)TaskState.Completed)
-                {
-                    return Visibility.Visible;
-                }
+                //if ((long)values[0] == 0 && (long)values[1] == (long)TaskState.Completed) //TODO
+                //{
+                //    return Visibility.Visible;
+                //}
             }
 
             return Visibility.Collapsed;
@@ -218,7 +217,6 @@ namespace WkyFast.View.Contver
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class BoolVisibilityConverter : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null || (bool)value == false )

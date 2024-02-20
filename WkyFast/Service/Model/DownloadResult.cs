@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WkyApiSharp.Service.Model.BtCheck;
-using WkyApiSharp.Service.Model.CreateTaskResult;
 
 namespace WkyFast.Service.Model
 {
@@ -21,10 +19,6 @@ namespace WkyFast.Service.Model
 
         //已经存在的数量
         public int DuplicateAddTaskCount { get; set; }
-
-
-        public WkyApiCreateTaskResultModel Result { get; set; }
-        
 
     }
 }

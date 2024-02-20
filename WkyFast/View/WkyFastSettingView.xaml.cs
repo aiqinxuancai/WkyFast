@@ -13,7 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WkyApiSharp.Events.Account;
 using WkyFast.Service;
 using WkyFast.Utils;
 
@@ -28,20 +27,14 @@ namespace WkyFast.View
         {
             InitializeComponent();
 
-            AccountTextBlock.Text = WkyApiManager.Instance.API.User;
+            //AccountTextBlock.Text = Aria2ApiManager.Instance.API.User;
 
-            WkyApiManager.Instance.API.EventReceived
-                        .OfType<LoginResultEvent>()
-                        .Subscribe(async r =>
-                        {
-                            AccountTextBlock.Text = r.Account;
-                        });
-
-
-
-#if DEBUG
-        TestTurnServerPanel.Visibility = Visibility.Visible;
-#endif
+            //Aria2ApiManager.Instance.API.EventReceived
+            //            .OfType<LoginResultEvent>()
+            //            .Subscribe(async r =>
+            //            {
+            //                AccountTextBlock.Text = r.Account;
+            //            });
 
         }
 
@@ -54,19 +47,12 @@ namespace WkyFast.View
 
             MainWindow.Instance.ShowMessageBox("提示", "是否登出账号？", () => {
                 MainWindow.Instance.ReLoginFunc();
-                this.AccountTextBlock.Text = "-";
+        
             }, () => {
                 //没有操作
             });
         }
 
-        public void OnLoginResult(LoginResultEvent e)
-        {
-            if (e.IsSuccess)
-            {
-                this.AccountTextBlock.Text = e.Account;
-            }
-        }
 
         private void BadgeNewVersion_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -74,10 +60,6 @@ namespace WkyFast.View
             BrowserHelper.OpenUrlBrowser("https://github.com/aiqinxuancai/WkyFast/releases/latest");
         }
 
-        private async void TestTurnServerButton_Click(object sender, RoutedEventArgs e)
-        {
-            await WkyApiManager.Instance.API.GetTurnServer(WkyApiManager.Instance.NowDevice.Device.DeviceSn);
-        }
 
         private async void LinkAIKEY_Click(object sender, RoutedEventArgs e)
         {

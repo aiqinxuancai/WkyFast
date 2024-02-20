@@ -16,12 +16,9 @@ using System.Collections.ObjectModel;
 using WkyFast.Utils;
 using WkyFast.Service.Model.SubscriptionModel;
 using System.Text.RegularExpressions;
-using WkyApiSharp.Service.Model;
-using System.Collections;
 using System.Net.Http;
 using System.Net;
 using MemoryPack;
-using Flurl.Http.Configuration;
 
 namespace WkyFast.Service
 {
@@ -208,27 +205,27 @@ namespace WkyFast.Service
         }
 
 
-        public string GetSubscriptionName(string downloadName)
-        {
-            foreach (var sub in SubscriptionModel)
-            {
-                foreach (var model in sub.AlreadyAddedDownloadModel)
-                {
-                    if (model.Result != null && model.Result.Tasks.Count() > 0)
-                    {
-                        foreach (var task in model.Result.Tasks)
-                        {
-                            if (task.Name == downloadName)
-                            {
-                                return model.Name;
-                            }
-                        }
+        //public string GetSubscriptionName(string downloadName)
+        //{
+        //    foreach (var sub in SubscriptionModel)
+        //    {
+        //        foreach (var model in sub.AlreadyAddedDownloadModel)
+        //        {
+        //            if (model.Result != null && model.Result.Tasks.Count() > 0)
+        //            {
+        //                foreach (var task in model.Result.Tasks)
+        //                {
+        //                    if (task.Name == downloadName)
+        //                    {
+        //                        return model.Name;
+        //                    }
+        //                }
                         
-                    }
-                }
-            }
-            return "";
-        }
+        //            }
+        //        }
+        //    }
+        //    return "";
+        //}
 
         /// <summary>
         /// 通过网络获取订阅地址的Title
@@ -248,17 +245,16 @@ namespace WkyFast.Service
                     if (AppConfig.Instance.ConfigData.SubscriptionProxyOpen && !string.IsNullOrEmpty(AppConfig.Instance.ConfigData.SubscriptionProxy))
                     {
                         var proxyUrl = AppConfig.Instance.ConfigData.SubscriptionProxy;
-                        var handler = new HttpClientHandler
-                        {
-                            UseProxy = true,
-                            Proxy = new WebProxy(proxyUrl)
-                        };
-                        var client = new HttpClient(handler);
-                        var flurlClient = new FlurlClient(client);
-                        var data = url
-                            .WithClient(flurlClient).GetStreamAsync().Result;
 
-                        reader = XmlReader.Create(data);
+                        var proxy = new WebProxy(proxyUrl);
+                        var handler = new HttpClientHandler() { Proxy = proxy };
+                        var client = new HttpClient(handler);
+
+                        // 注意这里的GET请求的地址需要替换为你需要请求的地址
+                        var response = client.GetAsync(url).Result;
+
+
+                        reader = XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
                         feed = SyndicationFeed.Load(reader);
                         reader.Close();
                     }
@@ -332,19 +328,16 @@ namespace WkyFast.Service
                 if (AppConfig.Instance.ConfigData.SubscriptionProxyOpen && !string.IsNullOrEmpty(AppConfig.Instance.ConfigData.SubscriptionProxy))
                 {
                     var proxyUrl = AppConfig.Instance.ConfigData.SubscriptionProxy;
-                    var handler = new HttpClientHandler
-                    {
-                        UseProxy = true,
-                        Proxy = new WebProxy(proxyUrl)
-                    };
+
+                    var proxy = new WebProxy(proxyUrl);
+                    var handler = new HttpClientHandler() { Proxy = proxy };
                     var client = new HttpClient(handler);
-                    var flurlClient = new FlurlClient(client);
+
+                    // 注意这里的GET请求的地址需要替换为你需要请求的地址
+                    var response = client.GetAsync(url).Result;
 
 
-                    var data = url
-                        .WithClient(flurlClient).GetStreamAsync().Result;
-
-                    reader = XmlReader.Create(data);
+                    reader = XmlReader.Create(response.Content.ReadAsStreamAsync().Result);
                     feed = SyndicationFeed.Load(reader);
                     reader.Close();
                 }
@@ -405,18 +398,7 @@ namespace WkyFast.Service
                         {
                             try
                             {
-                                //TODO 开始下载
-
-                                var basePaths = WkyApiManager.Instance.GetUsbInfoDefPath();
-
-                                if (basePaths.Count == 0)
-                                {
-                                    EasyLogManager.Logger.Error($"添加失败，没有获取到存储设备");
-                                    return;
-                                }
-
-                                // subscription.Path 为基础目录，一般来说是带有标题的如“/download/订阅标题”
-                                var savePath = basePaths[0] + (subscription.Path.StartsWith("/") ? "" : "/") + subscription.Path;
+                                var savePath = (subscription.Path.StartsWith("/") ? "" : "/") + subscription.Path;
                                 var episodeTitle = "";
                                 if (subscription.AutoDir)
                                 {
@@ -440,13 +422,6 @@ namespace WkyFast.Service
                                     }
                                 }
 
-                                //如果是一个完整路径，则直接使用，否则使用旧逻辑
-                                bool isFullPath = basePaths.Any(a => subscription.Path.StartsWith(a));
-                                if (isFullPath)
-                                {
-                                    savePath = subscription.Path;
-                                }
-
                                 if (!string.IsNullOrEmpty(episodeTitle))
                                 {
                                     savePath = savePath + "/" + PathHelper.RemoveInvalidChars(episodeTitle);
@@ -455,9 +430,9 @@ namespace WkyFast.Service
                                 EasyLogManager.Logger.Info($"添加下载{subject} {link} {savePath}");
 
                                 //subject
-                                var addResult = WkyApiManager.Instance.DownloadBtFileUrl(downloadUrl, subscription.Device, savePath).Result;
+                                var addResult = Aria2ApiManager.Instance.DownloadBtFileUrl(downloadUrl, savePath).Result;
 
-                                var taskUrl = addResult?.Result?.Tasks?.FirstOrDefault()?.Url;
+                                var taskUrl = downloadUrl; //TODo
                                 if (!string.IsNullOrWhiteSpace(taskUrl))
                                 {
                                     TaskUrlToSubscriptionName[taskUrl] = subject;
@@ -466,12 +441,12 @@ namespace WkyFast.Service
 
                                 if (addResult.SuccessCount > 0)
                                 {
-                                    subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now, Result = addResult.Result });
+                                    subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now});
                                     EasyLogManager.Logger.Info($"添加成功");
                                 }
                                 else if (addResult.DuplicateAddTaskCount > 0)
                                 {
-                                    subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now, Result = addResult.Result });
+                                    subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now });
                                     EasyLogManager.Logger.Info($"成功，任务已经存在，不再重复添加");
                                 }
                                 else
@@ -580,7 +555,7 @@ namespace WkyFast.Service
                             //加载名称表
                             foreach (var m in item.AlreadyAddedDownloadModel)
                             {
-                                var taskUrl = m.Result?.Tasks?.FirstOrDefault()?.Url;
+                                var taskUrl = m.Url;
                                 if (!string.IsNullOrWhiteSpace(taskUrl))
                                 {
                                     TaskUrlToSubscriptionName[taskUrl] = m.Name;
@@ -632,7 +607,7 @@ namespace WkyFast.Service
 
         //存储订阅，读取加载订阅
 
-        public bool Add(string url, WkyDevice device, string path, string keyword = "", bool keywordIsRegex = false, bool autoDir = false)
+        public bool Add(string url, string path, string keyword = "", bool keywordIsRegex = false, bool autoDir = false)
         {
             if (SubscriptionModel.ToList().Find( a => { return a.Url == url; }) != null)
             {
@@ -646,7 +621,6 @@ namespace WkyFast.Service
             model.Filter = keyword;
             model.IsFilterRegex = keywordIsRegex;
             model.Path = path;
-            model.Device = device;
             model.AutoDir = autoDir;
             EasyLogManager.Logger.Error($"添加订阅：{model.Url}");
 

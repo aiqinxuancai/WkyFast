@@ -63,17 +63,9 @@
             Margin="10,0,10,10">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140" />
-                    <ColumnDefinition Width="8" />
                     <ColumnDefinition Width="100*" />
                 </Grid.ColumnDefinitions>
-                <ComboBox
-                    x:Name="ComboBoxPartition"
-                    Grid.Column="0"
-                    Height="30"
-                    Padding="10,5,10,5"
-                    DisplayMemberPath="Description"
-                    SelectionChanged="ComboBoxPartition_SelectionChanged" />
+
                 <ui:TextBox
                     x:Name="TextBoxPath"
                     Grid.Column="2"
