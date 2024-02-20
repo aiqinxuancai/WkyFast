@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Net;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using Flurl.Http;
+using System.Linq;
 
 
 namespace WkyFast.Service
@@ -108,10 +109,15 @@ namespace WkyFast.Service
                                     }
                                 }
 
+                                tasks = tasks.OrderByDescending(a => a.Status == KARIA2_STATUS_ACTIVE).ToArray();
+
+
                                 for (int i = 0; i < tasks.Count; i++)
                                 {
                                     TaskList[i].Data = tasks[i];
                                 }
+
+                        
 
                             });
                         }
