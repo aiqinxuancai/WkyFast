@@ -21,7 +21,7 @@ namespace WkyFast.Service.Model
         {
             get
             {
-                return false;//SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.Url);
+                return SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.Gid);
             }
 
         }
@@ -32,7 +32,6 @@ namespace WkyFast.Service.Model
         public string ShowName {
             get
             {
-
                 if (Data != null)
                 {
                     if (Data.Bittorrent != null)
@@ -42,8 +41,6 @@ namespace WkyFast.Service.Model
                         {
                             name = Data.InfoHash + ".torrent";
                         }
-
-
                         return name;
                     } 
                     else if (Data.Files != null && Data.Files.Count > 0)
@@ -55,58 +52,27 @@ namespace WkyFast.Service.Model
 
                 return "";//SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.Url);
             }
-            //get 
-            //{ 
-            //    if (FromSubscription)
-            //    {
-            //        if (SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.Url))
-            //        {
-            //            var name = (string)SubscriptionManager.Instance.TaskUrlToSubscriptionName[Data.Url];
-            //            if (!string.IsNullOrWhiteSpace(name))
-            //            {
-            //                return name;
-            //            }
-            //        }
-            //        return Data.Name;
-
-            //    }
-            //    else
-            //    {
-            //        return Data.Name;
-            //    }
-
-
-            //} 
         }
 
         public string SubscriptionName
         {
             get
             {
-                return "";//SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.Url);
+                if (FromSubscription)
+                {
+                    var name = (string)SubscriptionManager.Instance.TaskUrlToSubscriptionName[Data.Gid];
+                    if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        return name;
+                    }
+                    return ShowName;
+
+                }
+                else
+                {
+                    return ShowName;
+                }
             }
-            //get
-            //{
-            //    if (FromSubscription)
-            //    {
-            //        if (SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.Name))
-            //        {
-            //            var name = (string)SubscriptionManager.Instance.TaskUrlToSubscriptionName[Data.Name];
-            //            if (!string.IsNullOrWhiteSpace(name))
-            //            {
-            //                return name;
-            //            }
-            //        }
-            //        return Data.Name;
-
-            //    }
-            //    else
-            //    {
-            //        return Data.Name;
-            //    }
-
-
-            //}
         }
 
     

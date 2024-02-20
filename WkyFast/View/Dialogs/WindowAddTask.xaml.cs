@@ -76,7 +76,7 @@ namespace WkyFast.Dialogs
                 try
                 {
                     var result = await Aria2ApiManager.Instance.DownloadUrl(file, TextBoxPath.Text);
-                    if (result.SuccessCount > 0)
+                    if (result.isSuccessed)
                     {
                         EasyLogManager.Logger.Info($"任务已添加：{file}");
                         count++;
@@ -147,7 +147,7 @@ namespace WkyFast.Dialogs
                     try
                     {
                         var result = await Aria2ApiManager.Instance.DownloadBtFile(file, TextBoxPath.Text);
-                        if (result.SuccessCount > 0)
+                        if (result.isSuccessed)
                         {
                             EasyLogManager.Logger.Info($"任务已添加：{file}");
                             count ++;

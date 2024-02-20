@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -145,11 +146,11 @@ namespace WkyFast.View.Contver
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || (long)value == 0 || (long)value == 10000)
+            if ((string)value == Aria2ApiManager.KARIA2_STATUS_ACTIVE)
             {
-                return Visibility.Hidden;
+                return Visibility.Visible;
             }
-            return Visibility.Visible;
+            return Visibility.Hidden;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -201,6 +202,43 @@ namespace WkyFast.View.Contver
             throw new NotImplementedException();
         }
     }
+
+
+    [ValueConversion(typeof(uint), typeof(double))]
+    public class DownloadSizeToProgressConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Length == 2)
+            {
+                double v1 = (long)values[0];
+                double v2 = (long)values[1];
+
+                if (v2 == 0)
+                {
+                    return 0d;
+                }
+                double result = (double)(v1 / v2 * 10000);
+
+                if (result > 0 && result  < 10000)
+                {
+
+                }
+
+                return result;
+            }
+
+            return 0d;
+        }
+
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    
 
 
     [ValueConversion(typeof(bool), typeof(Visibility))]

@@ -20,6 +20,7 @@
         <converter:DownloadStatusBrushContver x:Key="DownloadStatusBrushContver" />
         <converter:ExistVisibilityConverter x:Key="ExistVisibilityConverter" />
         <converter:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
+        <converter:DownloadSizeToProgressConverter x:Key="DownloadSizeToProgressConverter" />
 
 
 
@@ -61,8 +62,15 @@
                             Foreground="#CC57C3F1"
                             Maximum="10000"
                             Style="{StaticResource FlatProgressBarNoBorder}"
-                            Visibility="{Binding Data.CompletedLength, Converter={StaticResource DownloadProgressVisibilityConverter}}"
-                            Value="{Binding Data.CompletedLength}" />
+                            Visibility="{Binding Data.Status, Converter={StaticResource DownloadProgressVisibilityConverter}}">
+                            <ProgressBar.Value>
+                                <MultiBinding Converter="{StaticResource DownloadSizeToProgressConverter}">
+                                    <Binding Path="Data.CompletedLength" />
+                                    <Binding Path="Data.TotalLength" />
+                                </MultiBinding>
+                            </ProgressBar.Value>
+                        </ProgressBar>
+
                         <!--<CustomProgressBar></CustomProgressBar>-->
                     </Grid>
 
@@ -138,7 +146,7 @@
                                 CornerRadius="4">
                                 <Border.Visibility>
                                     <MultiBinding Converter="{StaticResource ExistVisibilityConverter}">
-                                        <Binding Path="Data.Exist" />
+                                        <Binding Path="Data.Status" />
                                         <Binding Path="Data.Status" />
                                     </MultiBinding>
                                 </Border.Visibility>

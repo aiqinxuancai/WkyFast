@@ -9,6 +9,10 @@ using WkyFast.Service.Model;
 using Aria2NET;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
+using System.Net.Http;
+using System.Net;
+using static Org.BouncyCastle.Math.EC.ECCurve;
+using Flurl.Http;
 
 
 namespace WkyFast.Service
@@ -28,7 +32,15 @@ namespace WkyFast.Service
 
         private Aria2NetClient _client ;
 
+        private DateTime _lastRpcUpdateTime;
+        private TimeSpan _debounceDelay = TimeSpan.FromSeconds(2);  // Set your own delay
+
+
         public IObservable<Aria2Event> EventReceived => _eventReceivedSubject.AsObservable();
+
+        public bool Connected;
+        public string ConnectedRpc;
+
 
         private readonly Subject<Aria2Event> _eventReceivedSubject = new();
 
@@ -48,8 +60,6 @@ namespace WkyFast.Service
         Aria2ApiManager()
         {
             try {
-                //_client = new Aria2NetClient(AppConfig.Instance.ConfigData.Aria2Rpc, AppConfig.Instance.ConfigData.Aria2Token);
-
                 UpdateRpc();
             }
             catch (Exception ex)
@@ -70,43 +80,48 @@ namespace WkyFast.Service
             Task.Run(async () =>
             {
 
-                var a = _client.GetGlobalOptionAsync().Result;
-
                 while (true)
                 {
-
-                    var tasks = await _client.TellAllAsync();
-
-                    MainWindow.Instance.Dispatcher.Invoke(() =>
+                    try
                     {
-                        //TODO 更顺滑的更新任务
-                        if (tasks.Count - TaskList.Count > 0)
+                        if (Connected)
                         {
-                            while (tasks.Count - TaskList.Count > 0)
+                            var tasks = await _client.TellAllAsync();
+
+                            MainWindow.Instance.Dispatcher.Invoke(() =>
                             {
-                                TaskList.Add(new TaskModel());
-                            }
-                        }
-                        else if (tasks.Count - TaskList.Count < 0)
-                        {
-                            while (tasks.Count - TaskList.Count < 0)
-                            {
-                                TaskList.RemoveAt(TaskList.Count - 1);
-                            }
-                        }
+                                //TODO 更顺滑的更新任务
+                                if (tasks.Count - TaskList.Count > 0)
+                                {
+                                    while (tasks.Count - TaskList.Count > 0)
+                                    {
+                                        TaskList.Add(new TaskModel());
+                                    }
+                                }
+                                else if (tasks.Count - TaskList.Count < 0)
+                                {
+                                    while (tasks.Count - TaskList.Count < 0)
+                                    {
+                                        TaskList.RemoveAt(TaskList.Count - 1);
+                                    }
+                                }
 
-                        for (int i = 0; i < tasks.Count; i++)
-                        {
-                            TaskList[i].Data = tasks[i];
+                                for (int i = 0; i < tasks.Count; i++)
+                                {
+                                    TaskList[i].Data = tasks[i];
+                                }
+
+                            });
                         }
+                        
+                    }
+                    catch (Exception ex)
+                    {
 
-                    });
-
+                    }
                     await Task.Delay(5000);
 
                 }
-
-
             });
 
 
@@ -138,24 +153,48 @@ namespace WkyFast.Service
         /// <param name="url"></param>
         public async Task<WkyDownloadResult> DownloadBtFileUrl(string url, string path, string taskName = "")
         {
+            //先下载BT文件
 
-            var result = await _client.AddUriAsync(new List<String>
+            byte[] data = { };
+
+            if (AppConfig.Instance.ConfigData.SubscriptionProxyOpen && !string.IsNullOrEmpty(AppConfig.Instance.ConfigData.SubscriptionProxy))
             {
-                url
-            },
-            new Dictionary<String, Object>
+                var proxyUrl = AppConfig.Instance.ConfigData.SubscriptionProxy;
+
+                var proxy = new WebProxy(proxyUrl);
+                var handler = new HttpClientHandler() { Proxy = proxy };
+                var client = new HttpClient(handler);
+
+                // 注意这里的GET请求的地址需要替换为你需要请求的地址
+                var response = client.GetAsync(url).Result;
+
+                data = await response.Content.ReadAsByteArrayAsync();
+
+               
+            } 
+            else
+            {
+                data = await url.GetBytesAsync();
+            }
+
+            var config = new Dictionary<String, Object>
             {
                 { "dir", System.IO.Path.Combine(path, taskName)}
-            }, 0);
-
-
-            Debug.WriteLine($"DownloadBtFileUrl结果：{result}");
+            };
 
             WkyDownloadResult downloadResult = new WkyDownloadResult();
-            downloadResult.SuccessCount = 1;
+            if (data.Length > 0)
+            {
+                var result = await _client.AddTorrentAsync(data, options: config, position: 0);
+                Debug.WriteLine($"DownloadBtFileUrl结果：{result}");
 
-            
-            
+                downloadResult.isSuccessed = IsGid(result);
+            }
+            else
+            {
+                downloadResult.isSuccessed = false;
+            }
+
             return downloadResult;
         }
 
@@ -174,7 +213,7 @@ namespace WkyFast.Service
             Debug.WriteLine($"DownloadBtFileUrl结果：{result}");
 
             WkyDownloadResult downloadResult = new WkyDownloadResult();
-            downloadResult.SuccessCount = 1;
+            downloadResult.isSuccessed = IsGid(result);
 
 
 
@@ -188,12 +227,15 @@ namespace WkyFast.Service
                        { "dir", savePath}
                     };
 
-            var result = await _client.AddTorrentAsync(File.ReadAllBytes(filePath), options: config);
+            var result = await _client.AddTorrentAsync(File.ReadAllBytes(filePath), options: config, position: 0);
 
             Debug.WriteLine($"DownloadBtFile结果：{result}");
 
             WkyDownloadResult downloadResult = new WkyDownloadResult();
-            downloadResult.SuccessCount = 1;
+            downloadResult.isSuccessed = IsGid(result);
+
+
+
             return downloadResult;
         }
 
@@ -223,27 +265,54 @@ namespace WkyFast.Service
         {
             try
             {
-                _client = new Aria2NetClient(AppConfig.Instance.ConfigData.Aria2Rpc, AppConfig.Instance.ConfigData.Aria2Token);
+                // If last update time was within the delay, ignore this update
+                if (DateTime.Now - _lastRpcUpdateTime < _debounceDelay)
+                    return false;
 
+                _lastRpcUpdateTime = DateTime.Now;
+
+                var rpc = AppConfig.Instance.ConfigData.Aria2Rpc;
+                var token = AppConfig.Instance.ConfigData.Aria2Token;
+
+                _client = new Aria2NetClient(rpc, token);
 
                 var result = await _client.GetGlobalOptionAsync();
 
                 if (result.Count > 0)
                 {
+                    Connected = true;
+                    ConnectedRpc = rpc;
                     _eventReceivedSubject.OnNext(new LoginResultEvent(true));
+
                     return true;
                 }
                 else
                 {
+                    Connected = false;
+                    ConnectedRpc = "";
                     _eventReceivedSubject.OnNext(new LoginResultEvent(false));
+
                     return false;
                 }
 
             }
             catch (Exception ex)
             {
-
                 Debug.WriteLine(ex);
+            }
+            return false;
+        }
+
+        private static bool IsGid(string gid)
+        {
+            if (string.IsNullOrWhiteSpace(gid))
+            {
+                return false;
+            }
+            //2089b05ecca3d829
+            if (gid.Length == 16)
+            {
+                return true;
             }
             return false;
         }

@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using System.Net.Http;
 using System.Net;
 using MemoryPack;
+using System.Reactive.Linq;
 
 namespace WkyFast.Service
 {
@@ -36,25 +37,7 @@ namespace WkyFast.Service
             }
         }
 
-        private string _user;
-
         private CancellationTokenSource _tokenSource = new CancellationTokenSource();
-
-
-        /// <summary>
-        /// 来自账户，根据不同账户订阅不同？
-        /// </summary>
-        public string User {
-            get
-            {
-                return _user;
-            }
-            set
-            {
-                _user = value;
-
-            }
-        }
 
         public ObservableCollection<SubscriptionModel> SubscriptionModel { get; set; } = new ObservableCollection<SubscriptionModel>();
 
@@ -73,6 +56,20 @@ namespace WkyFast.Service
         {
             SubscriptionModel = new ObservableCollection<SubscriptionModel>();
             //SubscriptionModel.CollectionChanged += SubscriptionModel_CollectionChanged;
+
+            Aria2ApiManager.Instance.EventReceived
+                .OfType<LoginResultEvent>()
+                .Subscribe(async r =>
+                {
+                    if (r.IsSuccess)
+                    {
+                        Restart();
+                    }
+                    else
+                    {
+                        //this.AddTaskButton.IsEnabled = false;
+                    }
+                });
         }
 
         ~SubscriptionManager()
@@ -427,32 +424,24 @@ namespace WkyFast.Service
                                     savePath = savePath + "/" + PathHelper.RemoveInvalidChars(episodeTitle);
                                 }
 
-                                EasyLogManager.Logger.Info($"添加下载{subject} {link} {savePath}");
+                                EasyLogManager.Logger.Info($"添加下载{subject} {link.Uri} {savePath}");
 
                                 //subject
-                                var addResult = Aria2ApiManager.Instance.DownloadBtFileUrl(downloadUrl, savePath).Result;
+                                var aria2Result = Aria2ApiManager.Instance.DownloadBtFileUrl(downloadUrl, savePath).Result;
 
-                                var taskUrl = downloadUrl; //TODo
-                                if (!string.IsNullOrWhiteSpace(taskUrl))
+                                if (aria2Result.isSuccessed)
                                 {
-                                    TaskUrlToSubscriptionName[taskUrl] = subject;
+                                    TaskUrlToSubscriptionName[aria2Result.Gid] = subject;
                                 }
 
-
-                                if (addResult.SuccessCount > 0)
+                                if (aria2Result.isSuccessed)
                                 {
                                     subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now});
                                     EasyLogManager.Logger.Info($"添加成功");
                                 }
-                                else if (addResult.DuplicateAddTaskCount > 0)
-                                {
-                                    subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now });
-                                    EasyLogManager.Logger.Info($"成功，任务已经存在，不再重复添加");
-                                }
                                 else
                                 {
                                     EasyLogManager.Logger.Error($"添加失败");
-                                    //下载失败
                                 }
                             }
                             catch (Exception ex)
@@ -534,7 +523,7 @@ namespace WkyFast.Service
 
                 LoadTrueName();
 
-                string fileName = @$"Subscription_{_user}.json";
+                string fileName = @$"Subscription_{1}.json";
                 Debug.WriteLine($"准备载入{fileName}");
 
                 //名称URL
@@ -584,8 +573,7 @@ namespace WkyFast.Service
 
                 try
                 {
-
-                    string fileName = @$"Subscription_{_user}.json";
+                    string fileName = @$"Subscription_{1}.json";
                     var content = JsonConvert.SerializeObject(SubscriptionModel);
                     File.WriteAllText(fileName, content);
                 }
