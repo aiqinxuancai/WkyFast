@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using WkyFast.Service;
 using WkyFast.Utils;
 using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
@@ -46,17 +47,25 @@ namespace WkyFast.View.Contver
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             
-            return (long)value switch
+            return value switch
             {
-                0 => "添加中",
-                8 => "等待中",
-                9 => "已暂停",
-                1 => "下载中",
-                11 => "已完成",
-                12 => "缺少资源",
-                14 => "准备添加中",
-                38 => "磁盘写入异常",
+                Aria2ApiManager.KARIA2_STATUS_ACTIVE => "下载中",
+                Aria2ApiManager.KARIA2_STATUS_WAITING => "等待中",
+                Aria2ApiManager.KARIA2_STATUS_PAUSED => "已暂停",
+                Aria2ApiManager.KARIA2_STATUS_ERROR => "错误",
+                Aria2ApiManager.KARIA2_STATUS_COMPLETE => "已完成",
+                Aria2ApiManager.KARIA2_STATUS_REMOVED => "已删除",
                 _ => value,
+
+
+                //0 => "添加中",
+                //8 => "等待中",
+                //9 => "已暂停",
+                //1 => "下载中",
+                //11 => "已完成",
+                //12 => "缺少资源",
+                //14 => "准备添加中",
+                //38 => "磁盘写入异常",
             };
         }
 
@@ -73,16 +82,15 @@ namespace WkyFast.View.Contver
         {
             //ColorConverter colorConverter = new ColorConverter();
 
-            var color = (long)value switch
+            var color = value switch
             {
-                0 => (Color)ColorConverter.ConvertFromString("#2d8cf0"), //"添加中", //蓝色
-                8 =>  (Color)ColorConverter.ConvertFromString("#2d8cf0"),//"等待中", //蓝色
-                9 => (Color)ColorConverter.ConvertFromString("#ff9900"),//"已暂停", //橙色
-                1 => (Color)ColorConverter.ConvertFromString("#2d8cf0"),//"下载中", //蓝色
-                11 => (Color)ColorConverter.ConvertFromString("#19be6b"), //已完成 //绿色
-                12 => (Color)ColorConverter.ConvertFromString("#ed4014"),//"缺少资源", //红色
-                14 => (Color)ColorConverter.ConvertFromString("#2d8cf0"),//"准备添加中", //蓝色
-                38 => (Color)ColorConverter.ConvertFromString("#ed4014"),//"磁盘写入异常", //红色
+                Aria2ApiManager.KARIA2_STATUS_ACTIVE => (Color)ColorConverter.ConvertFromString("#2d8cf0"), //"添加中", //蓝色
+                Aria2ApiManager.KARIA2_STATUS_WAITING => (Color)ColorConverter.ConvertFromString("#2d8cf0"),//"等待中", //蓝色
+                Aria2ApiManager.KARIA2_STATUS_PAUSED => (Color)ColorConverter.ConvertFromString("#ff9900"),//"已暂停", //橙色
+                Aria2ApiManager.KARIA2_STATUS_ERROR => (Color)ColorConverter.ConvertFromString("#ed4014"),//"缺少资源", //红色
+                Aria2ApiManager.KARIA2_STATUS_COMPLETE => (Color)ColorConverter.ConvertFromString("#19be6b"), //已完成 //绿色
+                //Aria2ApiManager.KARIA2_STATUS_REMOVED => "removed",
+
                 _ => (Color)ColorConverter.ConvertFromString("#f8f8f9"), //value, //灰色
             };
 
@@ -118,25 +126,7 @@ namespace WkyFast.View.Contver
             double progress = 0;
             if (values.Length == 2)
             {
-
-                if (values[0] is string)
-                {
-                    progress = long.Parse((string)values[0]) / 10000d;
-                }
-                else if (values[0] is long)
-                {
-                    progress = (long)values[0] / 10000d;
-                }
-
-                if (values[1] is string)
-                {
-                    fullSize = (long)(progress * long.Parse((string)values[1]));
-                }
-                else if (values[1] is long)
-                {
-                    fullSize = (long)(progress * (long)values[1]);
-                }
-                
+                fullSize = (long)values[0];
             }
 
 
@@ -175,10 +165,9 @@ namespace WkyFast.View.Contver
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (long)value switch
+            return value switch
             {
-                0 => Visibility.Visible,
-                1 => Visibility.Visible,
+                Aria2ApiManager.KARIA2_STATUS_ACTIVE => Visibility.Visible,
                 _ => Visibility.Collapsed
             };
         }

@@ -32,6 +32,27 @@ namespace WkyFast.Service.Model
         public string ShowName {
             get
             {
+
+                if (Data != null)
+                {
+                    if (Data.Bittorrent != null)
+                    {
+                        var name = Data.Bittorrent.Info?.Name!;
+                        if (string.IsNullOrWhiteSpace(name))
+                        {
+                            name = Data.InfoHash + ".torrent";
+                        }
+
+
+                        return name;
+                    } 
+                    else if (Data.Files != null && Data.Files.Count > 0)
+                    {
+                        return Data.Files[0].Uris.FirstOrDefault().Uri;
+                    }
+                    return Data.Gid;
+                }
+
                 return "";//SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.Url);
             }
             //get 

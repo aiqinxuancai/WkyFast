@@ -53,7 +53,7 @@
 
                 <StackPanel Margin="0,15,0,0">
                     <StackPanel>
-                        <ui:CardAction x:Name="AccountCardAction" Click="AccountCardAction_Click">
+                        <ui:Card x:Name="AccountCardAction">
                             <StackPanel>
                                 <ui:TextBox
                                     MinWidth="400"
@@ -66,7 +66,7 @@
                                     PlaceholderText="Token"
                                     Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.Aria2Token}" />
                             </StackPanel>
-                        </ui:CardAction>
+                        </ui:Card>
                     </StackPanel>
                 </StackPanel>
 

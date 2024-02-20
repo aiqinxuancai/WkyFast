@@ -48,7 +48,9 @@ namespace WkyFast.Service
         Aria2ApiManager()
         {
             try {
-                _client = new Aria2NetClient(AppConfig.Instance.ConfigData.Aria2Rpc, AppConfig.Instance.ConfigData.Aria2Token);
+                //_client = new Aria2NetClient(AppConfig.Instance.ConfigData.Aria2Rpc, AppConfig.Instance.ConfigData.Aria2Token);
+
+                UpdateRpc();
             }
             catch (Exception ex)
             {
@@ -241,7 +243,7 @@ namespace WkyFast.Service
             catch (Exception ex)
             {
 
-
+                Debug.WriteLine(ex);
             }
             return false;
         }

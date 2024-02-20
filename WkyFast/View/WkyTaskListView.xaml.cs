@@ -40,7 +40,7 @@ namespace WkyFast.View
             this.ViewModel = Aria2ApiManager.Instance.TaskList;
 
             Aria2ApiManager.Instance.EventReceived
-                .OfType<UpdateDeviceResultEvent>()
+                .OfType<LoginResultEvent>()
                 .Subscribe(async r =>
                 {
                     if (r.IsSuccess)

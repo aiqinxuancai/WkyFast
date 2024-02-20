@@ -61,8 +61,8 @@
                             Foreground="#CC57C3F1"
                             Maximum="10000"
                             Style="{StaticResource FlatProgressBarNoBorder}"
-                            Visibility="{Binding Data.Progress, Converter={StaticResource DownloadProgressVisibilityConverter}}"
-                            Value="{Binding Data.Progress}" />
+                            Visibility="{Binding Data.CompletedLength, Converter={StaticResource DownloadProgressVisibilityConverter}}"
+                            Value="{Binding Data.CompletedLength}" />
                         <!--<CustomProgressBar></CustomProgressBar>-->
                     </Grid>
 
@@ -76,13 +76,13 @@
                             <Border
                                 Height="18"
                                 MinWidth="40"
-                                Background="{Binding Data.State, Converter={StaticResource DownloadStatusBrushContver}}"
+                                Background="{Binding Data.Status, Converter={StaticResource DownloadStatusBrushContver}}"
                                 CornerRadius="4">
                                 <TextBlock
                                     Margin="4,0,4,0"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{Binding Data.State, Converter={StaticResource DownloadStatusContver}}">
+                                    Text="{Binding Data.Status, Converter={StaticResource DownloadStatusContver}}">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Foreground" Value="#FFFFFF" />
@@ -139,7 +139,7 @@
                                 <Border.Visibility>
                                     <MultiBinding Converter="{StaticResource ExistVisibilityConverter}">
                                         <Binding Path="Data.Exist" />
-                                        <Binding Path="Data.State" />
+                                        <Binding Path="Data.Status" />
                                     </MultiBinding>
                                 </Border.Visibility>
                                 <TextBlock
@@ -164,33 +164,33 @@
                             <TextBlock Margin="5,0,0,0" VerticalAlignment="Center">
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{StaticResource DownloadProgressContver}">
-                                        <Binding Path="Data.Progress" />
-                                        <Binding Path="Data.Size" />
+                                        <Binding Path="Data.CompletedLength" />
+                                        <Binding Path="Data.TotalLength" />
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
                             <TextBlock
                                 VerticalAlignment="Center"
                                 Text="/"
-                                Visibility="{Binding Data.State, Converter={StaticResource DownloadSpeedVisibilityConverter}}" />
+                                Visibility="{Binding Data.Status, Converter={StaticResource DownloadSpeedVisibilityConverter}}" />
                             <TextBlock
                                 VerticalAlignment="Center"
-                                Text="{Binding Data.Size, Converter={StaticResource DownloadSizeContver}}"
-                                Visibility="{Binding Data.State, Converter={StaticResource DownloadSpeedVisibilityConverter}}" />
+                                Text="{Binding Data.TotalLength, Converter={StaticResource DownloadSizeContver}}"
+                                Visibility="{Binding Data.Status, Converter={StaticResource DownloadSpeedVisibilityConverter}}" />
                             <TextBlock
                                 VerticalAlignment="Center"
                                 Text="  "
-                                Visibility="{Binding Data.State, Converter={StaticResource DownloadSpeedVisibilityConverter}}" />
+                                Visibility="{Binding Data.Status, Converter={StaticResource DownloadSpeedVisibilityConverter}}" />
 
 
                             <TextBlock
                                 VerticalAlignment="Center"
-                                Text="{Binding Data.Speed, Converter={StaticResource DownloadSizeContver}}"
-                                Visibility="{Binding Data.State, Converter={StaticResource DownloadSpeedVisibilityConverter}}" />
+                                Text="{Binding Data.DownloadSpeed, Converter={StaticResource DownloadSizeContver}}"
+                                Visibility="{Binding Data.Status, Converter={StaticResource DownloadSpeedVisibilityConverter}}" />
                             <TextBlock
                                 VerticalAlignment="Center"
                                 Text="/S"
-                                Visibility="{Binding Data.State, Converter={StaticResource DownloadSpeedVisibilityConverter}}" />
+                                Visibility="{Binding Data.Status, Converter={StaticResource DownloadSpeedVisibilityConverter}}" />
                         </StackPanel>
                     </StackPanel>
                     <!--<StackPanel Margin="2,2"  Grid.Column="1">

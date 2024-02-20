@@ -38,22 +38,6 @@ namespace WkyFast.View
 
         }
 
-        private void AccountCardAction_Click(object sender, RoutedEventArgs e)
-        {
-            //询问登出
-            //if (MessageBox.Show("是否登出账号？", "提示", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            //{
-            //}
-
-            MainWindow.Instance.ShowMessageBox("提示", "是否登出账号？", () => {
-                MainWindow.Instance.ReLoginFunc();
-        
-            }, () => {
-                //没有操作
-            });
-        }
-
-
         private void BadgeNewVersion_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             //跳转至最新
