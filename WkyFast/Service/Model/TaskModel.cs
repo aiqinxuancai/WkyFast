@@ -22,9 +22,17 @@ namespace WkyFast.Service.Model
         {
             get
             {
-                var result = SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.Gid) ||
-                    SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.InfoHash!);
-                return result;
+                if (!string.IsNullOrWhiteSpace(Data.Gid) && 
+                    SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.Gid))
+                {
+                    return true;
+                }
+                if (!string.IsNullOrWhiteSpace(Data.InfoHash) && 
+                    SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.InfoHash))
+                {
+                    return true;
+                }
+                return false;
             }
 
         }

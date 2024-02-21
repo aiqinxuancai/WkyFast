@@ -17,7 +17,7 @@ namespace WkyFast.Utils
 
         public const string Build = "{BUILD}";
 
-        public const string Url = "https://api.github.com/repos/aiqinxuancai/WkyFast/releases/latest";
+        public const string Url = "https://api.github.com/repos/aiqinxuancai/WkyFast/releases";
 
 
         //检测最后的build，如果不符合，则
@@ -36,20 +36,32 @@ namespace WkyFast.Utils
 
                 if (!string.IsNullOrWhiteSpace(result))
                 {
-                    JObject root = JObject.Parse(result);
-                    if (root.ContainsKey("tag_name"))
+                    JArray root = JArray.Parse(result);
+
+                    foreach (JObject item in root)
                     {
-                        string tagName = root["tag_name"].ToString();
+                        if (!item.ContainsKey("draft") || (bool)item["draft"] == true)
+                            continue;
+                        if (!item.ContainsKey("prerelease") || (bool)item["prerelease"] == true)
+                            continue;
 
-                        NowGithubVersion = tagName;
 
-                        if (Version != tagName)
+                        if (item.ContainsKey("tag_name"))
                         {
-                            //新版本
-                            HasNewVersion = true;
+                            string tagName = item["tag_name"].ToString();
+                            NowGithubVersion = tagName;
+                            if (Version != tagName)
+                            {
+                                //新版本
+                                HasNewVersion = true;
+                            }
+
                         }
+                        break;
 
                     }
+
+
 
 
                 }
