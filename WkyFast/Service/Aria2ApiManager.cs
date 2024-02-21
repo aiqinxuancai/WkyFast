@@ -14,12 +14,23 @@ using System.Net;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using Flurl.Http;
 using System.Linq;
+using System.Timers;
 
 
 namespace WkyFast.Service
 {
+    public enum LinkStatus
+    {
+        Linking,
+        Error,
+        Success
+    }
+
     public class Aria2ApiManager
     {
+
+
+
         public const string KARIA2_STATUS_ACTIVE = "active";
         public const string KARIA2_STATUS_WAITING = "waiting";
         public const string KARIA2_STATUS_PAUSED = "paused";
@@ -33,18 +44,18 @@ namespace WkyFast.Service
 
         private Aria2NetClient _client ;
 
-        private DateTime _lastRpcUpdateTime;
-        private TimeSpan _debounceDelay = TimeSpan.FromSeconds(2);  // Set your own delay
-
 
         public IObservable<Aria2Event> EventReceived => _eventReceivedSubject.AsObservable();
 
         public bool Connected;
         public string ConnectedRpc;
-
+        private Timer _debounceTimer;
+        private readonly object _locker = new object();
 
         private readonly Subject<Aria2Event> _eventReceivedSubject = new();
 
+
+        private static object _lockForUpdateTask = new object();
 
         public static Aria2ApiManager Instance
         {
@@ -60,7 +71,13 @@ namespace WkyFast.Service
 
         Aria2ApiManager()
         {
-            try {
+
+        }
+
+        public void Init()
+        {
+            try
+            {
                 UpdateRpc();
             }
             catch (Exception ex)
@@ -69,7 +86,8 @@ namespace WkyFast.Service
             }
             SetupEvent();
         }
-       
+
+
         private void SetupEvent()
         {
             //TODO 安装事件监听 更新列表
@@ -87,39 +105,7 @@ namespace WkyFast.Service
                     {
                         if (Connected)
                         {
-                            var tasks = await _client.TellAllAsync();
-                            //ErrorCode	"12"	string
-                            //ErrorMessage    "InfoHash 1a4845e8b614a6011b5a1ccc850aa66083ab40b9 is already registered."  string
-
-                            MainWindow.Instance.Dispatcher.Invoke(() =>
-                            {
-                                //TODO 更顺滑的更新任务
-                                if (tasks.Count - TaskList.Count > 0)
-                                {
-                                    while (tasks.Count - TaskList.Count > 0)
-                                    {
-                                        TaskList.Add(new TaskModel());
-                                    }
-                                }
-                                else if (tasks.Count - TaskList.Count < 0)
-                                {
-                                    while (tasks.Count - TaskList.Count < 0)
-                                    {
-                                        TaskList.RemoveAt(TaskList.Count - 1);
-                                    }
-                                }
-
-                                tasks = tasks.OrderByDescending(a => a.Status == KARIA2_STATUS_ACTIVE).ToArray();
-
-
-                                for (int i = 0; i < tasks.Count; i++)
-                                {
-                                    TaskList[i].Data = tasks[i];
-                                }
-
-                        
-
-                            });
+                            await UpdateTask();
                         }
                         
                     }
@@ -132,6 +118,7 @@ namespace WkyFast.Service
                 }
             });
 
+            //任务下载完成
 
             
 
@@ -251,35 +238,86 @@ namespace WkyFast.Service
         public async Task<bool> DeleteFile(string gid)
         {
             var result = await _client.RemoveAsync(gid);
-
-            return true;
+            return IsGid(result);
         }
 
+        /// <summary>
+        /// 执行一次更新任务
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         internal async Task<bool> UpdateTask()
         {
-            throw new NotImplementedException();
+            var tasks = await _client.TellAllAsync();
+
+            lock (_lockForUpdateTask)
+            {
+                MainWindow.Instance.Dispatcher.Invoke(() =>
+                {
+                    //TODO 更顺滑的更新任务
+                    if (tasks.Count - TaskList.Count > 0)
+                    {
+                        while (tasks.Count - TaskList.Count > 0)
+                        {
+                            TaskList.Add(new TaskModel());
+                        }
+                    }
+                    else if (tasks.Count - TaskList.Count < 0)
+                    {
+                        while (tasks.Count - TaskList.Count < 0)
+                        {
+                            TaskList.RemoveAt(TaskList.Count - 1);
+                        }
+                    }
+
+                    tasks = tasks.OrderByDescending(a => a.Status == KARIA2_STATUS_ACTIVE).ToArray();
+                    for (int i = 0; i < tasks.Count; i++)
+                    {
+                        TaskList[i].Data = tasks[i];
+                    }
+                });
+            }
+            
+            return tasks.Count() > 0;
         }
 
-        internal async Task<bool> StartTask(string gid)
+        internal async Task<bool> UnpauseTask(string gid)
         {
-            throw new NotImplementedException();
+            var result = await _client.UnpauseAsync(gid);
+            return IsGid(result);
         }
 
-        internal async Task<bool> StopTask(string gid)
+        internal async Task<bool> PauseTask(string gid)
         {
-            throw new NotImplementedException();
+            var result = await _client.PauseAsync(gid);
+            return IsGid(result);
         }
+
+        internal void UpdateRpcDebounce()
+        {
+            lock (_locker)
+            {
+                // Dispose previous timer
+                _debounceTimer?.Dispose();
+
+                // Create a new timer that delays for 1 second
+                _debounceTimer = new Timer(2000);
+
+                // After 1 second, execute the method
+                _debounceTimer.Elapsed += (s, e) => UpdateRpc();
+                _debounceTimer.AutoReset = false; // Make sure the timer runs only once
+
+                _debounceTimer.Start();
+            }
+        }
+
 
         internal async Task<bool> UpdateRpc()
         {
             try
             {
-                // If last update time was within the delay, ignore this update
-                if (DateTime.Now - _lastRpcUpdateTime < _debounceDelay)
-                    return false;
-
-                _lastRpcUpdateTime = DateTime.Now;
-
+                _eventReceivedSubject.OnNext(new LoginStartEvent());
+                
                 var rpc = AppConfig.Instance.ConfigData.Aria2Rpc;
                 var token = AppConfig.Instance.ConfigData.Aria2Token;
 
@@ -308,6 +346,9 @@ namespace WkyFast.Service
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+                Connected = false;
+                ConnectedRpc = "";
+                _eventReceivedSubject.OnNext(new LoginResultEvent(false));
             }
             return false;
         }

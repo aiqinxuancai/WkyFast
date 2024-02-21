@@ -83,6 +83,19 @@ namespace WkyFast.Service
         public string Aria2Rpc { get; set; } = string.Empty;
 
         public string Aria2Token { get; set; } = string.Empty;
+
+
+        public string Aria2RpcHost
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(Aria2Rpc) && Uri.TryCreate(Aria2Rpc, new UriCreationOptions(), out Uri? result))
+                {
+                    return result.Host;
+                }
+                return "";
+            }
+        }
     }
 
     /// <summary>

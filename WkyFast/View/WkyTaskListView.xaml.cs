@@ -100,7 +100,7 @@ namespace WkyFast.View
                 var title = "";
                 foreach (var item in _selectedItems)
                 {
-                    title += item.Data.Bittorrent.Info.Name;
+                    title += item.SubscriptionName;
                     if (item != _selectedItems.Last())
                     {
                         title += "\n";
@@ -124,7 +124,7 @@ namespace WkyFast.View
                     if (item.Data.Status == Aria2ApiManager.KARIA2_STATUS_PAUSED ||
                             item.Data.Status == Aria2ApiManager.KARIA2_STATUS_ERROR)
                     {
-                        await Aria2ApiManager.Instance.StartTask(item.Data.Gid);
+                        await Aria2ApiManager.Instance.UnpauseTask(item.Data.Gid);
                     }
                 }
                 Aria2ApiManager.Instance.UpdateTask();
@@ -145,7 +145,7 @@ namespace WkyFast.View
                 {
                     if (item.Data.Status != Aria2ApiManager.KARIA2_STATUS_COMPLETE)
                     {
-                        await Aria2ApiManager.Instance.StopTask(item.Data.Gid);
+                        await Aria2ApiManager.Instance.PauseTask(item.Data.Gid);
                     }
                 }
 
@@ -163,7 +163,7 @@ namespace WkyFast.View
             var title = "";
             foreach (var item in _selectedItems)
             {
-                title += item.Data.Bittorrent.Info.Name;
+                title += item.SubscriptionName;
                 if (item != _selectedItems.Last())
                 {
                     title += "\n";
@@ -208,7 +208,7 @@ namespace WkyFast.View
             var title = "";
             foreach (var item in _selectedItems)
             {
-                title += item.Data.Following; //TODO
+                title += item.SubscriptionName; //TODO
                 if (item != _selectedItems.Last())
                 {
                     title += "\n";
@@ -254,7 +254,6 @@ namespace WkyFast.View
         {
             try
             {
-
                 var url = "";
                 foreach (var item in _selectedItems)
                 {
@@ -300,26 +299,25 @@ namespace WkyFast.View
 
             if (selectedItems.Count > 0)
             {
+                //展示继续下载
                 var showRestartMenu = selectedItems.Any(a =>
                 {
-                    //if (a.Data.Status == (int)TaskState.Pause ||
-                    //    a.Data.State == (int)TaskState.LackResources ||
-                    //    a.Data.State == (int)TaskState.DiskError)
-                    //{
-                    //    return true;
-                    //}
+                    if (a.Data.Status == Aria2ApiManager.KARIA2_STATUS_PAUSED ||
+                        a.Data.Status == Aria2ApiManager.KARIA2_STATUS_ERROR)
+                    {
+                        return true;
+                    }
                     return false;
                 });
 
 
                 var showStopMenu = selectedItems.Any(a =>
                 {
-                    //if (a.Data.State == (int)TaskState.Adding ||
-                    //    a.Data.State == (int)TaskState.PreparingAdd ||
-                    //    a.Data.State == (int)TaskState.Downloading)
-                    //{
-                    //    return true;
-                    //}
+                    if (a.Data.Status == Aria2ApiManager.KARIA2_STATUS_WAITING ||
+                        a.Data.Status == Aria2ApiManager.KARIA2_STATUS_ACTIVE)
+                    {
+                        return true;
+                    }
                     return false;
                 });
 
@@ -351,9 +349,9 @@ namespace WkyFast.View
                 menuDelete.Click += MenuDelete_Click;
                 contextMenu.Items.Add(menuDelete);
 
-                MenuItem menuDeleteFile = new MenuItem() { Header = $"删除任务及文件({selectedItems.Count})" };
-                menuDeleteFile.Click += MenuDeleteFile_Click;
-                contextMenu.Items.Add(menuDeleteFile);
+                //MenuItem menuDeleteFile = new MenuItem() { Header = $"删除任务及文件({selectedItems.Count})" };
+                //menuDeleteFile.Click += MenuDeleteFile_Click;
+                //contextMenu.Items.Add(menuDeleteFile);
 
                 DataGrid row = sender as DataGrid;
                 row.ContextMenu = contextMenu;

@@ -36,11 +36,16 @@ namespace WkyFast.Service.Model
         public override Events Type { get; set; } = Events.LoginResultEvent;
     }
 
+    public record LoginStartEvent : Aria2Event
+    {
+        public override Events Type { get; set; } = Events.LoginStartEvent;
+    }
+
 
     public enum Events
     {
         /// <summary>
-        /// 登录成功结果
+        /// 验证RPC成功
         /// </summary>
         [Description("LoginResultEvent")]
         [EnumMember(Value = "LoginResultEvent")]
@@ -48,11 +53,11 @@ namespace WkyFast.Service.Model
 
 
         /// <summary>
-        /// 设备信息更新结果
+        /// 开始验证RPC
         /// </summary>
-        [Description("UpdateDeviceResultEvent")]
-        [EnumMember(Value = "UpdateDeviceResultEvent")]
-        UpdateDeviceResultEvent,
+        [Description("LoginStartEvent")]
+        [EnumMember(Value = "LoginStartEvent")]
+        LoginStartEvent,
 
 
         /// <summary>
@@ -61,24 +66,5 @@ namespace WkyFast.Service.Model
         [Description("DownloadSuccessEvent")]
         [EnumMember(Value = "DownloadSuccessEvent")]
         DownloadSuccessEvent,
-
-
-        /// <summary>
-        /// 任务列表更新
-        /// </summary>
-        [Description("UpdateTaskListEvent")]
-        [EnumMember(Value = "UpdateTaskListEvent")]
-        UpdateTaskListEvent,
-
-
-        /// <summary>
-        /// UpdateUsbInfo
-        /// </summary>
-        [Description("UpdateUsbInfoEvent")]
-        [EnumMember(Value = "UpdateUsbInfoEvent")]
-        UpdateUsbInfoEvent,
-
-
-
     }
 }

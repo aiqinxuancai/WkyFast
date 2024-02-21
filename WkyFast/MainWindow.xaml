@@ -6,6 +6,7 @@
     xmlns:dialogs="clr-namespace:WkyFast.Dialogs"
     xmlns:local="clr-namespace:WkyFast"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:service="clr-namespace:WkyFast.Service"
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -178,8 +179,8 @@
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="2">
-            <!--<Grid Margin="100,0,150,0">
-                <StackPanel Margin="10" Orientation="Horizontal">
+            <Grid Margin="100,0,150,0">
+                <!--<StackPanel Margin="10" Orientation="Horizontal">
                     <ComboBox
                         x:Name="DeviceComboBox"
                         Width="180"
@@ -187,9 +188,46 @@
                         Padding="10,5,10,5"
                         DisplayMemberPath="Device.DeviceName"
                         SelectionChanged="DeviceComboBox_SelectionChanged" />
-                </StackPanel>
+                </StackPanel>-->
 
-            </Grid>-->
+                <StackPanel
+                    Margin="10"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+
+                    <Border
+                        x:Name="LinkStatusBorder"
+                        Height="20"
+                        MinWidth="40"
+                        Margin="5,0,0,0"
+                        Background="Transparent"
+                        CornerRadius="4"
+                        UseLayoutRounding="False">
+                        <Grid>
+
+                            <ProgressBar
+                                x:Name="LinkStatusProgressBar"
+                                Width="{Binding ElementName=Aria2RpcHostTextBlock, Path=ActualWidth}"
+                                Height="4"
+                                VerticalAlignment="Bottom"
+                                BorderBrush="Transparent"
+                                BorderThickness="0"
+                                IsIndeterminate="True" />
+
+                            <TextBlock
+                                x:Name="Aria2RpcHostTextBlock"
+                                Margin="5,0,5,0"
+                                VerticalAlignment="Center"
+                                Foreground="White"
+                                Text="{Binding Source={x:Static service:AppConfig.Instance}, Path=ConfigData.Aria2RpcHost}" />
+
+                        </Grid>
+
+                    </Border>
+
+
+                </StackPanel>
+            </Grid>
 
 
             <!--<Button Name="HomeButton" Margin="0,4,140,0" Width="24" Height="24">

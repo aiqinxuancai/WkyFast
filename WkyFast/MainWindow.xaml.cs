@@ -27,6 +27,8 @@ using WkyFast.Dialogs;
 using System.Threading;
 using Wpf.Ui.Mvvm.Contracts;
 using Wpf.Ui.Controls;
+using System.Reactive.Linq;
+using WkyFast.Service.Model;
 
 namespace WkyFast
 {
@@ -56,13 +58,37 @@ namespace WkyFast
 
         }
 
-        private async void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ActionVersion.CheckVersion();
             SubscriptionManager.Instance.OnSubscriptionProgressChanged += SubscriptionManager_OnSubscriptionProgressChanged;
             GAHelper.Instance.RequestPageView($"启动到主界面{ActionVersion.Version}");
-           
-            //await LoginFunc();
+
+
+            Aria2ApiManager.Instance.EventReceived
+                .OfType<LoginStartEvent>()
+                .Subscribe(async r =>
+                {
+                    UpdateConnectionStatus(LinkStatus.Linking);
+                });
+
+
+            Aria2ApiManager.Instance.EventReceived
+                .OfType<LoginResultEvent>()
+                .Subscribe(async r =>
+                {
+                    if (r.IsSuccess)
+                    {
+                        UpdateConnectionStatus(LinkStatus.Success);
+                    }
+                    else
+                    {
+                        UpdateConnectionStatus(LinkStatus.Error);
+                    }
+                });
+
+            //开始连接
+            Aria2ApiManager.Instance.Init();
         }
 
         private void SubscriptionManager_OnSubscriptionProgressChanged(int now, int max)
@@ -148,8 +174,41 @@ namespace WkyFast
                 //弹出提示
                 //MyNotifyIcon.
             }
-
-
         }
+
+        //更新连接状态
+        private void UpdateConnectionStatus(LinkStatus status)
+        {
+            //连接失败
+            //连接中
+            //连接成功
+
+            SolidColorBrush myBrush = new SolidColorBrush();
+
+            switch (status)
+            {
+                case LinkStatus.Linking:
+                    LinkStatusProgressBar.IsIndeterminate = true;
+                    LinkStatusProgressBar.Visibility = Visibility.Visible;
+                    myBrush.Color = (Color)ColorConverter.ConvertFromString("#2db7f5");
+                    LinkStatusBorder.Background = myBrush;
+                    break;
+                case LinkStatus.Error:
+                    LinkStatusProgressBar.IsIndeterminate = false;
+                    LinkStatusProgressBar.Visibility = Visibility.Collapsed;
+                    myBrush.Color = (Color)ColorConverter.ConvertFromString("#ffed4014");
+                    LinkStatusBorder.Background = myBrush;
+                    break;
+                case LinkStatus.Success:
+                    LinkStatusProgressBar.IsIndeterminate = false;
+                    LinkStatusProgressBar.Visibility = Visibility.Collapsed;
+                    myBrush.Color = (Color)ColorConverter.ConvertFromString("#ff19be6b");
+                    LinkStatusBorder.Background = myBrush;
+                    break;
+
+            }
+            
+        }
+
     }
 }

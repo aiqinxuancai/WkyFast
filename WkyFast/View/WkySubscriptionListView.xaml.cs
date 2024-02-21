@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,6 +10,17 @@ using WkyFast.Dialogs;
 using WkyFast.Service;
 using WkyFast.Service.Model;
 using WkyFast.Service.Model.SubscriptionModel;
+using System;
+using System.Diagnostics;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+
 
 namespace WkyFast.View
 {
@@ -27,9 +39,22 @@ namespace WkyFast.View
 
 
             //主动刷新？
-
             this.ViewModel = viewModel;
             this.ViewModel = SubscriptionManager.Instance.SubscriptionModel; //订阅列表绑定
+
+            Aria2ApiManager.Instance.EventReceived
+                .OfType<LoginResultEvent>()
+                .Subscribe(async r =>
+                {
+                    if (r.IsSuccess)
+                    {
+                        this.SubscriptionButton.IsEnabled = true;
+                    }
+                    else
+                    {
+                        this.SubscriptionButton.IsEnabled = false;
+                    }
+                });
         }
 
 
