@@ -18,6 +18,17 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '8.0.x'
+
+      - name: Determine Pre-release Status
+        id: prerelease
+        run: |
+          $ref = "${{ github.ref }}"
+          if ($ref -like "*alpha*") {
+            echo "##[set-output name=status;]true"
+          } else {
+            echo "##[set-output name=status;]false"
+          }
+        shell: powershell
       - name: Echo tag
         run: echo The tag is ${{ github.event.inputs.tag }}
       - name: Clean
@@ -43,4 +54,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "WkyFast.zip"
+          prerelease: ${{ steps.prerelease.outputs.status }}
           token: ${{ secrets.GITHUB_TOKEN }}
