@@ -12,5 +12,9 @@ namespace WkyFast.Service.Model
         public bool isSuccessed { get; set; }
 
         public string Gid { get; set; }
+
+
+        public string InfoHash { get; set; }
+        
     }
 }

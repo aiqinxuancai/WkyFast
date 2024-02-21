@@ -28,9 +28,6 @@ namespace WkyFast.Service
 
     public class Aria2ApiManager
     {
-
-
-
         public const string KARIA2_STATUS_ACTIVE = "active";
         public const string KARIA2_STATUS_WAITING = "waiting";
         public const string KARIA2_STATUS_PAUSED = "paused";
@@ -171,9 +168,9 @@ namespace WkyFast.Service
                 }
 
                 var config = new Dictionary<String, Object>
-            {
-                { "dir", System.IO.Path.Combine(path, taskName)}
-            };
+                {
+                    { "dir", System.IO.Path.Combine(path, taskName)}
+                };
 
                 WkyDownloadResult downloadResult = new WkyDownloadResult();
                 if (data.Length > 0)
@@ -199,18 +196,19 @@ namespace WkyFast.Service
                 };
 
                 WkyDownloadResult downloadResult = new WkyDownloadResult();
-                if (data.Length > 0)
-                {
-                    var result = await _client.AddUriAsync(new List<string> { url }, options: config, position: 0);
-                    Debug.WriteLine($"DownloadBtFileUrl结果#2：{result}");
+                var result = await _client.AddUriAsync(new List<string> { url }, options: config, position: 0);
+                Debug.WriteLine($"DownloadBtFileUrl结果#2：{result}");
 
-                    downloadResult.isSuccessed = IsGid(result);
-                    downloadResult.Gid = result;
-                }
-                else
+                await Task.Delay(1000);
+                var statusResult = await _client.TellStatusAsync(result);
+                if (statusResult.Bittorrent != null)
                 {
-                    downloadResult.isSuccessed = false;
+                    Debug.WriteLine($"写入Hash：{statusResult.InfoHash}");
+                    downloadResult.InfoHash = statusResult.InfoHash;
                 }
+
+                downloadResult.isSuccessed = IsGid(result);
+                downloadResult.Gid = result;
 
                 return downloadResult;
             }

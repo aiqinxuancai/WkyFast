@@ -22,7 +22,9 @@ namespace WkyFast.Service.Model
         {
             get
             {
-                return SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.Gid);
+                var result = SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.Gid) ||
+                    SubscriptionManager.Instance.TaskUrlToSubscriptionName.ContainsKey(Data.InfoHash!);
+                return result;
             }
 
         }
@@ -68,6 +70,13 @@ namespace WkyFast.Service.Model
                     {
                         return name;
                     }
+
+                    name = (string)SubscriptionManager.Instance.TaskUrlToSubscriptionName[Data.InfoHash!];
+                    if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        return name;
+                    }
+
                     return ShowName;
 
                 }

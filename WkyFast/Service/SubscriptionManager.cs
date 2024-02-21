@@ -404,6 +404,10 @@ namespace WkyFast.Service
                                 if (aria2Result.isSuccessed)
                                 {
                                     TaskUrlToSubscriptionName[aria2Result.Gid] = subject;
+                                    if (!string.IsNullOrWhiteSpace(aria2Result.InfoHash))
+                                    {
+                                        TaskUrlToSubscriptionName[aria2Result.InfoHash] = subject;
+                                    }
                                 }
 
                                 if (aria2Result.isSuccessed)
@@ -436,6 +440,10 @@ namespace WkyFast.Service
                                 if (aria2Result.isSuccessed)
                                 {
                                     TaskUrlToSubscriptionName[aria2Result.Gid] = subject;
+                                    if (!string.IsNullOrWhiteSpace(aria2Result.InfoHash))
+                                    {
+                                        TaskUrlToSubscriptionName[aria2Result.InfoHash] = subject;
+                                    }
                                 }
 
                                 if (aria2Result.isSuccessed)
