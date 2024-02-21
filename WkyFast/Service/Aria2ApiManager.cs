@@ -235,11 +235,6 @@ namespace WkyFast.Service
             return downloadResult;
         }
 
-        public async Task<bool> DeleteFile(string gid)
-        {
-            var result = await _client.RemoveAsync(gid);
-            return IsGid(result);
-        }
 
         /// <summary>
         /// 执行一次更新任务
@@ -280,17 +275,66 @@ namespace WkyFast.Service
             
             return tasks.Count() > 0;
         }
+        public async Task<bool> DeleteFile(string gid)
+        {
+            try
+            {
+                Debug.WriteLine($"删除任务：{gid}");
+                var result = await _client.ForceRemoveAsync(gid);
+                return IsGid(result);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> RemoveDownloadResult(string gid)
+        {
+            try
+            {
+                Debug.WriteLine($"删除下载结果：{gid}");
+                await _client.RemoveDownloadResultAsync(gid);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return false;
+            }
+        }
+
+        
 
         internal async Task<bool> UnpauseTask(string gid)
         {
-            var result = await _client.UnpauseAsync(gid);
-            return IsGid(result);
+            try
+            {
+                var result = await _client.UnpauseAsync(gid);
+                return IsGid(result);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return false;
+            }
+
         }
 
         internal async Task<bool> PauseTask(string gid)
         {
-            var result = await _client.PauseAsync(gid);
-            return IsGid(result);
+            try
+            {
+                var result = await _client.PauseAsync(gid);
+                return IsGid(result);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return false;
+            }
+
         }
 
         internal void UpdateRpcDebounce()

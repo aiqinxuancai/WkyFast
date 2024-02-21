@@ -185,7 +185,17 @@ namespace WkyFast.View
                 {
                     foreach (var item in _selectedItems)
                     {
-                        await Aria2ApiManager.Instance.DeleteFile(item.Data.Gid);
+                        if (item.Data.Status == Aria2ApiManager.KARIA2_STATUS_ERROR ||
+                        item.Data.Status == Aria2ApiManager.KARIA2_STATUS_REMOVED ||
+                        item.Data.Status == Aria2ApiManager.KARIA2_STATUS_COMPLETE)
+                        {
+                            await Aria2ApiManager.Instance.RemoveDownloadResult(item.Data.Gid); 
+                        }
+                        else
+                        {
+                            await Aria2ApiManager.Instance.DeleteFile(item.Data.Gid);
+                            await Aria2ApiManager.Instance.RemoveDownloadResult(item.Data.Gid);
+                        }
                     }
 
                     Aria2ApiManager.Instance.UpdateTask();
