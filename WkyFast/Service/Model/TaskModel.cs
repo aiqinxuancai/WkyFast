@@ -1,6 +1,7 @@
 ﻿using Aria2NET;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,7 +47,8 @@ namespace WkyFast.Service.Model
                     }
                     else if (Data.Files != null && Data.Files.Count > 0)
                     {
-                        return Data.Files[0].Uris.FirstOrDefault().Uri;
+                        var uri = Data?.Files?[0]?.Uris?.FirstOrDefault()?.Uri;
+                        return Path.GetFileName(uri);
                     }
                     return Data.Gid;
                 }
@@ -124,6 +126,32 @@ namespace WkyFast.Service.Model
                         _ => "未知错误"
                     };
                     return message;
+                }
+
+                return "";
+            }
+        }
+
+        public string Link
+        {
+            get
+            {
+                if (Data != null && Data.Bittorrent != null)
+                {
+                    var link = $"magnet:?xt=urn:btih:{Data.InfoHash}";
+                    return link;
+                }
+                else
+                {
+                    try
+                    {
+                        var link = Data!.Files.First().Uris.First().Uri.ToString();
+                        return link;
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }
 
                 return "";

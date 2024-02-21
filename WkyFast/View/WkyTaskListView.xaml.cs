@@ -267,11 +267,8 @@ namespace WkyFast.View
                 var url = "";
                 foreach (var item in _selectedItems)
                 {
-                    foreach (var file in item.Data.Files)
-                    { 
-                        url += file.Path;
-                        url += "\n";
-                    }
+                    url += item.Link;
+                    url += "\n";
                 }
                 Clipboard.SetDataObject(url);
                 MainWindow.Instance.ShowSnackbar("已复制链接", $"{url}");

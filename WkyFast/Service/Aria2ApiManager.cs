@@ -374,7 +374,7 @@ namespace WkyFast.Service
                     Connected = true;
                     ConnectedRpc = rpc;
                     _eventReceivedSubject.OnNext(new LoginResultEvent(true));
-
+                    UpdateTask();
                     return true;
                 }
                 else
