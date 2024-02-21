@@ -152,46 +152,70 @@ namespace WkyFast.Service
 
             byte[] data = { };
 
-            if (AppConfig.Instance.ConfigData.SubscriptionProxyOpen && !string.IsNullOrEmpty(AppConfig.Instance.ConfigData.SubscriptionProxy))
+            if (url.StartsWith("http"))
             {
-                var proxyUrl = AppConfig.Instance.ConfigData.SubscriptionProxy;
+                if (AppConfig.Instance.ConfigData.SubscriptionProxyOpen && !string.IsNullOrEmpty(AppConfig.Instance.ConfigData.SubscriptionProxy))
+                {
+                    var proxyUrl = AppConfig.Instance.ConfigData.SubscriptionProxy;
+                    var proxy = new WebProxy(proxyUrl);
+                    var handler = new HttpClientHandler() { Proxy = proxy };
+                    var client = new HttpClient(handler);
 
-                var proxy = new WebProxy(proxyUrl);
-                var handler = new HttpClientHandler() { Proxy = proxy };
-                var client = new HttpClient(handler);
+                    // 注意这里的GET请求的地址需要替换为你需要请求的地址
+                    var response = client.GetAsync(url).Result;
+                    data = await response.Content.ReadAsByteArrayAsync();
+                }
+                else
+                {
+                    data = await url.GetBytesAsync();
+                }
 
-                // 注意这里的GET请求的地址需要替换为你需要请求的地址
-                var response = client.GetAsync(url).Result;
-
-                data = await response.Content.ReadAsByteArrayAsync();
-
-               
-            } 
-            else
-            {
-                data = await url.GetBytesAsync();
-            }
-
-            var config = new Dictionary<String, Object>
+                var config = new Dictionary<String, Object>
             {
                 { "dir", System.IO.Path.Combine(path, taskName)}
             };
 
-            WkyDownloadResult downloadResult = new WkyDownloadResult();
-            if (data.Length > 0)
-            {
-                var result = await _client.AddTorrentAsync(data, options: config, position: 0);
-                Debug.WriteLine($"DownloadBtFileUrl结果：{result}");
-                
-                downloadResult.isSuccessed = IsGid(result);
-                downloadResult.Gid = result;
+                WkyDownloadResult downloadResult = new WkyDownloadResult();
+                if (data.Length > 0)
+                {
+                    var result = await _client.AddTorrentAsync(data, options: config, position: 0);
+                    Debug.WriteLine($"DownloadBtFileUrl结果：{result}");
+
+                    downloadResult.isSuccessed = IsGid(result);
+                    downloadResult.Gid = result;
+                }
+                else
+                {
+                    downloadResult.isSuccessed = false;
+                }
+
+                return downloadResult;
             }
             else
             {
-                downloadResult.isSuccessed = false;
+                var config = new Dictionary<String, Object>
+                {
+                    { "dir", System.IO.Path.Combine(path, taskName)}
+                };
+
+                WkyDownloadResult downloadResult = new WkyDownloadResult();
+                if (data.Length > 0)
+                {
+                    var result = await _client.AddUriAsync(new List<string> { url }, options: config, position: 0);
+                    Debug.WriteLine($"DownloadBtFileUrl结果#2：{result}");
+
+                    downloadResult.isSuccessed = IsGid(result);
+                    downloadResult.Gid = result;
+                }
+                else
+                {
+                    downloadResult.isSuccessed = false;
+                }
+
+                return downloadResult;
             }
 
-            return downloadResult;
+            
         }
 
         public async Task<WkyDownloadResult> DownloadUrl(string url, string savePath = "")

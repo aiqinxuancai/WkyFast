@@ -190,7 +190,7 @@ namespace WkyFast.Service
             foreach (SyndicationItem item in Items)
             {
                 string subject = item.Title.Text;
-                string summary = item.Summary.Text;
+                string summary = item.Summary?.Text;
                 if (CheckTitle(model, subject))
                 {
                     count++;
@@ -319,6 +319,11 @@ namespace WkyFast.Service
             XmlReader reader;
             SyndicationFeed feed = null;
 
+            if (subscription.AlreadyAddedDownloadModel == null)
+            {
+                subscription.AlreadyAddedDownloadModel = new ObservableCollection<SubscriptionSubTaskModel> { };
+            }
+
             try
             {
 
@@ -363,8 +368,8 @@ namespace WkyFast.Service
             foreach (SyndicationItem item in feed.Items)
             {
                 string subject = item.Title.Text;
-                string summary = item.Summary.Text;
-
+                string summary = item.Summary?.Text;
+                
 
                 if (CheckTitle(subscription, subject))
                 {
@@ -376,57 +381,24 @@ namespace WkyFast.Service
                     continue;
                 }
 
+                var savePath = (subscription.Path.StartsWith("/") ? "" : "/") + subscription.Path;
+
                 foreach (var link in item.Links)
                 {
-                    if (link.RelationshipType == "enclosure" ||
-                        (!string.IsNullOrWhiteSpace(link.MediaType) && link.MediaType.Contains("bittorrent")))
+                    string downloadUrl = link.Uri.ToString();
+                    //没有下载过
+                    if (!subscription.AlreadyAddedDownloadModel.Any(a => a.Url.Contains(downloadUrl)))
                     {
-                        //"application/x-bittorrent"
-                        string downloadUrl = link.Uri.ToString();
-
-                        if (subscription.AlreadyAddedDownloadModel == null)
-                        {
-                            subscription.AlreadyAddedDownloadModel = new ObservableCollection<SubscriptionSubTaskModel> { };
-                        }
-
-
-                        //如果没有下载过
-                        if (!subscription.AlreadyAddedDownloadModel.Any(a => a.Url.Contains(downloadUrl)))
+                        if (link.RelationshipType == "enclosure" ||
+                           (!string.IsNullOrWhiteSpace(link.MediaType) && link.MediaType.Contains("bittorrent")))  //"application/x-bittorrent"
                         {
                             try
                             {
-                                var savePath = (subscription.Path.StartsWith("/") ? "" : "/") + subscription.Path;
-                                var episodeTitle = "";
-                                if (subscription.AutoDir)
-                                {
-                                    EasyLogManager.Logger.Info($"使用自动目录分组");
-                                    if (subscription.EpisodeTitleList == null)
-                                    {
-                                        subscription.EpisodeTitleList = new List<string>();
-                                    }
-                                    episodeTitle = subscription.EpisodeTitleList.FirstOrDefault(a => subject.Contains(a));
-                                    if (string.IsNullOrEmpty(episodeTitle) && AppConfig.Instance.ConfigData.OpenAIOpen)
-                                    {
-                                        EasyLogManager.Logger.Info($"获取剧集名称...");
-                                        //使用ChatGPT
-                                        episodeTitle = await ChatGPTTranslatorManager.GetEpisode(subject);
-
-                                        EasyLogManager.Logger.Info($"剧集名称：{episodeTitle}");
-                                        if (!string.IsNullOrEmpty(episodeTitle))
-                                        {
-                                            subscription.EpisodeTitleList.Add(episodeTitle);
-                                        }
-                                    }
-                                }
-
-                                if (!string.IsNullOrEmpty(episodeTitle))
-                                {
-                                    savePath = savePath + "/" + PathHelper.RemoveInvalidChars(episodeTitle);
-                                }
+                                savePath = await AutoEpisodeTitle(subscription, subject, savePath);
 
                                 EasyLogManager.Logger.Info($"添加下载{subject} {link.Uri} {savePath}");
 
-                                //subject
+                                //支持由http开头的bt文件和magnet:?xt=urn:btih:开头的文件
                                 var aria2Result = Aria2ApiManager.Instance.DownloadBtFileUrl(downloadUrl, savePath).Result;
 
                                 if (aria2Result.isSuccessed)
@@ -436,7 +408,7 @@ namespace WkyFast.Service
 
                                 if (aria2Result.isSuccessed)
                                 {
-                                    subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now});
+                                    subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now });
                                     EasyLogManager.Logger.Info($"添加成功");
                                 }
                                 else
@@ -449,8 +421,41 @@ namespace WkyFast.Service
                                 EasyLogManager.Logger.Error(ex.ToString());
                             }
 
+
                         }
+                        else
+                        {
+                            //其他类型订阅，如https、ftp
+                            try
+                            {
+                                savePath = await AutoEpisodeTitle(subscription, subject, savePath);
+
+                                EasyLogManager.Logger.Info($"添加下载{subject} {link.Uri} {savePath}");
+                                var aria2Result = Aria2ApiManager.Instance.DownloadUrl(downloadUrl, savePath).Result;
+
+                                if (aria2Result.isSuccessed)
+                                {
+                                    TaskUrlToSubscriptionName[aria2Result.Gid] = subject;
+                                }
+
+                                if (aria2Result.isSuccessed)
+                                {
+                                    subscription.AlreadyAddedDownloadModel.Add(new SubscriptionSubTaskModel() { Name = subject, Url = downloadUrl, Time = DateTime.Now });
+                                    EasyLogManager.Logger.Info($"添加成功");
+                                }
+                                else
+                                {
+                                    EasyLogManager.Logger.Error($"添加失败");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                EasyLogManager.Logger.Error(ex.ToString());
+                            }
+                        }
+
                     }
+                       
                 }
 
 
@@ -475,6 +480,40 @@ namespace WkyFast.Service
             }
             Save();
             
+        }
+
+        private static async Task<string> AutoEpisodeTitle(SubscriptionModel subscription, string subject, string savePath)
+        {
+            var episodeTitle = "";
+            //使用自动的剧集名称，来源gpt
+            if (subscription.AutoDir)
+            {
+                EasyLogManager.Logger.Info($"使用自动目录分组");
+                if (subscription.EpisodeTitleList == null)
+                {
+                    subscription.EpisodeTitleList = new List<string>();
+                }
+                episodeTitle = subscription.EpisodeTitleList.FirstOrDefault(a => subject.Contains(a));
+                if (string.IsNullOrEmpty(episodeTitle) && AppConfig.Instance.ConfigData.OpenAIOpen)
+                {
+                    EasyLogManager.Logger.Info($"获取剧集名称...");
+                    //使用ChatGPT
+                    episodeTitle = await ChatGPTTranslatorManager.GetEpisode(subject);
+
+                    EasyLogManager.Logger.Info($"剧集名称：{episodeTitle}");
+                    if (!string.IsNullOrEmpty(episodeTitle))
+                    {
+                        subscription.EpisodeTitleList.Add(episodeTitle);
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(episodeTitle))
+            {
+                savePath = savePath + "/" + PathHelper.RemoveInvalidChars(episodeTitle);
+            }
+
+            return savePath;
         }
 
         public void LoadTrueName()
