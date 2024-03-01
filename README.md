@@ -16,8 +16,16 @@
 简易玩客云PC客户端，支持批量任务添加和订阅下载 <br>
 </p>
 
-## 下载
-https://github.com/aiqinxuancai/WkyFast/releases
+## 注意 
+**在玩客云在2024年2月29日停止运营，但我们迎来了新的项目，基于Aria2的订阅下载工具：**
+[Aria2Fast](https://github.com/aiqinxuancai/Aria2Fast)
+
+欢迎使用新工具！
+
+
+---
+
+
 
 ## 功能
 <img src="./docs/images/wkyfast.png" alt="WkyFast">
